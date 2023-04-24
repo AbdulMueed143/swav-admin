@@ -10,12 +10,7 @@ import i18n from 'i18next'
 
 import { HiCheck } from 'react-icons/hi'
 
-const languageList = [
-    { label: 'English', value: 'en', flag: 'us' },
-    { label: 'Chinese', value: 'zh-cn', flag: 'cn' },
-    { label: 'Espanol', value: 'es', flag: 'sp' },
-    { label: 'Arabic', value: 'ar', flag: 'ar' },
-]
+const languageList = [{ label: 'English', value: 'en', flag: 'us' }]
 
 export const LanguageSelector = ({ className }) => {
     const [loading, setLoading] = useState(false)

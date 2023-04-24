@@ -8,17 +8,14 @@ const Sorter = ({ sort }) => {
     const color = `text-${themeColor}-${primaryColorLevel}`
 
     const renderSort = () => {
-        if (typeof sort === 'boolean' && !sort) {
+        if (typeof sort !== 'boolean') {
             return <FaSort />
         }
-
-        if (typeof sort === 'string' && sort === 'asc') {
-            return <FaSortDown className={color} />
-        }
-
-        if (typeof sort === 'string' && sort === 'desc') {
-            return <FaSortUp className={color} />
-        }
+        return sort ? (
+            <FaSortDown className={color} />
+        ) : (
+            <FaSortUp className={color} />
+        )
     }
 
     return <div className="inline-flex">{renderSort()}</div>

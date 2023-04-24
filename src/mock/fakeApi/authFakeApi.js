@@ -20,7 +20,7 @@ export default function authFakeApi(server, apiPrefix) {
         return new Response(
             401,
             { some: 'header' },
-            { message: 'Invalid email or password!' }
+            { message: `userName: admin | password: 123Qwe` }
         )
     })
 

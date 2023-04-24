@@ -85,7 +85,7 @@ const Month = forwardRef((props, ref) => {
 
                     return !dayProps.disabled && !dayProps.outOfMonth
                 }) || dayjs(month).startOf('month').toDate(),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         []
     )
 

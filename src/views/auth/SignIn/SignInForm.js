@@ -52,6 +52,7 @@ const SignInForm = (props) => {
                 </Alert>
             )}
             <Formik
+                // Remove this initial value
                 initialValues={{
                     userName: 'admin',
                     password: '123Qwe',
