@@ -7,50 +7,37 @@ export const protectedRoutes = [
     {
         key: 'home',
         path: '/home',
-        component: React.lazy(() => import('views/Home')),
-        authority: [],
-    },
-    /** Example purpose only, please remove */
-    {
-        key: 'singleMenuItem',
-        path: '/single-menu-view',
-        component: React.lazy(() => import('views/demo/SingleMenuView')),
+        component: React.lazy(() => import('views/home/Home')),
         authority: [],
     },
     {
-        key: 'collapseMenu.item1',
-        path: '/collapse-menu-item-view-1',
-        component: React.lazy(() => import('views/demo/CollapseMenuItemView1')),
+        key: 'calendar.dashboard',
+        path: '/calendar',
+        component: React.lazy(() => import('views/calendar/dashboard/DashboardView')),
         authority: [],
     },
     {
-        key: 'collapseMenu.item2',
-        path: '/collapse-menu-item-view-2',
-        component: React.lazy(() => import('views/demo/CollapseMenuItemView2')),
+        key: 'calendar.availability',
+        path: '/availability',
+        component: React.lazy(() => import('views/calendar/availability/AvailabilityView')),
         authority: [],
     },
     {
-        key: 'groupMenu.single',
-        path: '/group-single-menu-item-view',
-        component: React.lazy(() =>
-            import('views/demo/GroupSingleMenuItemView')
-        ),
+        key: 'calendar.scheduling',
+        path: '/scheduling',
+        component: React.lazy(() => import('views/calendar/scheduling/SchedulingView')),
         authority: [],
     },
     {
-        key: 'groupMenu.collapse.item1',
-        path: '/group-collapse-menu-item-view-1',
-        component: React.lazy(() =>
-            import('views/demo/GroupCollapseMenuItemView1')
-        ),
+        key: 'store',
+        path: '/store',
+        component: React.lazy(() => import('views/store/StoreView')),
         authority: [],
     },
     {
-        key: 'groupMenu.collapse.item2',
-        path: '/group-collapse-menu-item-view-2',
-        component: React.lazy(() =>
-            import('views/demo/GroupCollapseMenuItemView2')
-        ),
+        key: 'analytics',
+        path: '/analytics',
+        component: React.lazy(() => import('views/analytics/Analytics')),
         authority: [],
     },
 ]

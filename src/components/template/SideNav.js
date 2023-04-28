@@ -88,7 +88,7 @@ const SideNav = () => {
                         !sideNavCollapse && 'side-nav-expand'
                     )}
                 >
-                    <div className="side-nav-header">
+                    <div className="side-nav-header flex justify-center">
                         <Logo
                             mode={logoMode()}
                             type={sideNavCollapse ? 'streamline' : 'full'}
@@ -97,6 +97,8 @@ const SideNav = () => {
                                     ? SIDE_NAV_CONTENT_GUTTER
                                     : LOGO_X_GUTTER
                             }
+                            logoWidth={'8rem'}
+                            style={{margin:"1rem 0"}}
                         />
                     </div>
                     {sideNavCollapse ? (

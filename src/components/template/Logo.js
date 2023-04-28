@@ -13,7 +13,7 @@ const Logo = (props) => {
             className={classNames('logo', className, gutter)}
             style={{
                 ...style,
-                ...{ width: logoWidth },
+                ...{ width: logoWidth},
             }}
         >
             <img
