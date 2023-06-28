@@ -14,12 +14,10 @@ const Cover = ({ children, content, ...rest }) => {
                 <Logo mode="dark" />
                 <div>
                     <h3 className="text-white mb-4">
-                        Jump start your project with Elstar
+                        Everyone wins when you stay SUAVE with SWAV
                     </h3>
                     <p className="text-lg text-white opacity-80 max-w-[700px]">
-                        Elstar comes with a complete set of UI components
-                        crafted with Tailwind CSS, it fulfilled most of the use
-                        case to create modern and beautiful UI and application
+                    A system made and tailored to you At the guidance of the Australian Barbering Community OUR MISSION is to constantly better the barbering experience  OUR VISION is to become the best tool for all barbers 
                     </p>
                 </div>
                 <span className="text-white">

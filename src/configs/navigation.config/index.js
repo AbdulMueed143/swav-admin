@@ -59,12 +59,14 @@ const navigationConfig = [
     {
         key: 'store',
         path: '/store',
-        title: 'Your Store',
+        title: 'Barbers',
         translateKey: 'nav.store',
         icon: 'store',
         type: NAV_ITEM_TYPE_ITEM,
         authority: [],
-        subMenu: [],
+        subMenu: [
+            
+        ],
     },
     {
         key: 'analytics',

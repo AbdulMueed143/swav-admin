@@ -2,9 +2,17 @@ import React from 'react'
 import { Input, Button, FormItem, FormContainer, Alert } from 'components/ui'
 import { PasswordInput, ActionLink } from 'components/shared'
 import useTimeOutMessage from 'utils/hooks/useTimeOutMessage'
-import { Field, Form, Formik } from 'formik'
+import { Field, Form, Formik, useFormikContext } from 'formik'
 import * as Yup from 'yup'
 import useAuth from 'utils/hooks/useAuth'
+import Autocomplete from 'react-google-autocomplete';
+import BarberShopAutocomplete from 'components/ui/custom/barbers/BarbershopAutocomplete'
+
+{/* <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB01eSc8cHSkUO3H1HXBiaeGWE8qBJcjoI&libraries=places"></script> */}
+
+
+// We are using following for the auto complete of places api 
+// https://www.npmjs.com/package/react-google-autocomplete
 
 const validationSchema = Yup.object().shape({
     userName: Yup.string().required('Please enter your user name'),
@@ -37,6 +45,16 @@ const SignUpForm = (props) => {
         setSubmitting(false)
     }
 
+    const [name, setName] = React.useState("");
+    const [address, setAddress] = React.useState("");
+    const [phoneNumber, setPhoneNumber] = React.useState("");
+    const [website, setWebsite] = React.useState("");
+    const [email, setEmail] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [confirmPassword, setConfirmPassword] = React.useState("");
+
+
+
     return (
         <div className={className}>
             {message && (
@@ -45,10 +63,13 @@ const SignUpForm = (props) => {
                 </Alert>
             )}
             <Formik
+            
                 initialValues={{
-                    userName: 'admin1',
+                    name: 'admin1',
                     password: '123Qwe1',
                     confirmPassword: '123Qwe1',
+                    address: '',
+                    phoneNumber: '',
                     email: 'test@testmail.com',
                 }}
                 validationSchema={validationSchema}
@@ -62,18 +83,34 @@ const SignUpForm = (props) => {
             >
                 {({ touched, errors, isSubmitting }) => (
                     <Form>
+                        
                         <FormContainer>
+                        <FormItem
+                                label="Find Your Shop"
+                                invalid={errors.shopName && touched.shopName}
+                                errorMessage={errors.shopName}
+                            >
+                            <BarberShopAutocomplete 
+                                setName={setName}
+                                setAddress={setAddress}
+                                setPhoneNumber={setPhoneNumber}
+                                setWebsite={setWebsite}
+                            />
+                        </FormItem>
+
                             <FormItem
-                                label="User Name"
-                                invalid={errors.userName && touched.userName}
-                                errorMessage={errors.userName}
+                                label="Shop Name"
+                                invalid={errors.shopName && touched.shopName}
+                                errorMessage={errors.shopName}
                             >
                                 <Field
                                     type="text"
                                     autoComplete="off"
-                                    name="userName"
-                                    placeholder="User Name"
+                                    name="shopName"
+                                    placeholder="Shop Name"
                                     component={Input}
+                                    value={name}
+                                    onChange={e => setName(e.target.value)}
                                 />
                             </FormItem>
                             <FormItem
@@ -87,8 +124,43 @@ const SignUpForm = (props) => {
                                     name="email"
                                     placeholder="Email"
                                     component={Input}
+                                    value={email}
+                                    onChange={e => setEmail(e.target.value)}
                                 />
                             </FormItem>
+
+                            <FormItem
+                                label="Address"
+                                invalid={errors.phoneNumber && touched.phoneNumber}
+                                errorMessage={errors.phoneNumber}
+                            >
+                                <Field
+                                    type="text"
+                                    autoComplete="off"
+                                    name="address"
+                                    placeholder="Shop Address"
+                                    component={Input}
+                                    value={address}
+                                    onChange={e => setAddress(e.target.value)}
+                                />
+                            </FormItem>
+
+                            <FormItem
+                                label="Phone Number"
+                                invalid={errors.phoneNumber && touched.phoneNumber}
+                                errorMessage={errors.phoneNumber}
+                            >
+                                <Field
+                                    type="phone"
+                                    autoComplete="off"
+                                    name="phoneNumber"
+                                    placeholder="Phone Number"
+                                    component={Input}
+                                    value={phoneNumber}
+                                    onChange={e => setPhoneNumber(e.target.value)}
+                                />
+                            </FormItem>
+
                             <FormItem
                                 label="Password"
                                 invalid={errors.password && touched.password}
@@ -99,6 +171,8 @@ const SignUpForm = (props) => {
                                     name="password"
                                     placeholder="Password"
                                     component={PasswordInput}
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
                                 />
                             </FormItem>
                             <FormItem
@@ -114,6 +188,8 @@ const SignUpForm = (props) => {
                                     name="confirmPassword"
                                     placeholder="Confirm Password"
                                     component={PasswordInput}
+                                    value={confirmPassword}
+                                    onChange={e => setConfirmPassword(e.target.value)}
                                 />
                             </FormItem>
                             <Button

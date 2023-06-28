@@ -52,6 +52,7 @@ function useAuth() {
     }
 
     const signUp = async (values) => {
+
         try {
             const resp = await apiSignUp(values)
             if (resp.data) {
