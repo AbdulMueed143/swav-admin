@@ -2,15 +2,15 @@ import React from 'react';
 import Autocomplete from 'react-google-autocomplete';
 import { useFormikContext } from 'formik';
 
-const BarberShopAutocomplete = ({ setName, setAddress, setWebsite }) => {
+const AddressAutocomplete = ({ setName, setAddress }) => {
   const [value, setValue] = React.useState('');
 
   const options = {
     componentRestrictions: {
       country: "AU",
     },
-    types: ["establishment"],
-    fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'opening_hours', 'place_id']
+    types: ["street_address"],
+    fields: ['name', 'formatted_address',  'place_id']
   };
 
   return (
@@ -23,10 +23,9 @@ const BarberShopAutocomplete = ({ setName, setAddress, setWebsite }) => {
         console.log(place);
         setName(place.name);
         setAddress(place.formatted_address);
-        setWebsite(place.website);
       }}
     />
   );
 };
 
-export default BarberShopAutocomplete;
+export default AddressAutocomplete;

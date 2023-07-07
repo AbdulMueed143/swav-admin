@@ -4,9 +4,9 @@ import { APP_NAME } from 'constants/app.constant'
 
 const Cover = ({ children, content, ...rest }) => {
     return (
-        <div className="grid lg:grid-cols-3 h-full">
+        <div className="grid lg:grid-cols-2 h-full">
             <div
-                className="col-span-2 bg-no-repeat bg-cover py-6 px-16 flex-col justify-between bg-white dark:bg-gray-800 hidden lg:flex"
+                className="bg-no-repeat bg-cover py-6 px-16 flex-col justify-between bg-white dark:bg-gray-800 hidden lg:flex"
                 style={{
                     backgroundImage: `url('/img/others/auth-cover-bg.jpg')`,
                 }}

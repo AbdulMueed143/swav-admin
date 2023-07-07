@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import NumberFormat from 'react-number-format'
+import { NumberFormatBase as NumberFormat } from 'react-number-format';
 import { Input } from 'components/ui'
 
 const NumberInput = ({ inputSuffix, inputPrefix, ...props }) => {

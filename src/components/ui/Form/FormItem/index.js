@@ -96,7 +96,7 @@ const FormItem = React.forwardRef((props, ref) => {
                 }
             >
                 {children}
-                <AnimatePresence exitBeforeEnter>
+                <AnimatePresence mode="wait">
                     {invalid && (
                         <motion.div
                             className="form-explain"

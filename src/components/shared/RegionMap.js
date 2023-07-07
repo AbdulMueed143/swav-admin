@@ -6,7 +6,7 @@ import { THEME_ENUM } from 'constants/theme.constant'
 import WorldMap from 'assets/maps/world-countries-sans-antarctica.json'
 import shadeColor from 'utils/shadeColor'
 import { useSelector } from 'react-redux'
-import ReactTooltip from 'react-tooltip'
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { theme } from 'twin.macro'
 
 const twColor = theme`colors`

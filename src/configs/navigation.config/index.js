@@ -57,15 +57,24 @@ const navigationConfig = [
         ],
     },
     {
-        key: 'store',
-        path: '/store',
+        key: 'barbers',
+        path: '',
         title: 'Barbers',
-        translateKey: 'nav.store',
-        icon: 'store',
-        type: NAV_ITEM_TYPE_ITEM,
+        translateKey: 'nav.barberviews.barbers',
+        icon: 'HiScissors',
+        type: NAV_ITEM_TYPE_COLLAPSE,
         authority: [],
         subMenu: [
-            
+            {
+                key: 'barbers',
+                path: '/Barbers',
+                title: 'Barbers',
+                translateKey: 'nav.barbers',
+                icon: 'HiScissors',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: [],
+            }
         ],
     },
     {

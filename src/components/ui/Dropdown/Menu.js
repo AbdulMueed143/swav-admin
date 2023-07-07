@@ -54,7 +54,7 @@ const Menu = React.forwardRef((props, ref) => {
             }}
         >
             <DropdownMenuContextProvider value={menuControl}>
-                <AnimatePresence exitBeforeEnter>
+                <AnimatePresence mode="wait">
                     {!hidden && (
                         <motion.ul
                             id={menuId}

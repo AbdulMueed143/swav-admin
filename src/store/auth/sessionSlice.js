@@ -15,13 +15,18 @@ export const sessionSlice = createSlice({
             state.signedIn = false
             state.token = ''
         },
+        onSignInFailure: (state) => {
+            state.signedIn = false
+            state.token = ''
+        },
         setToken: (state, action) => {
             state.token = action.payload
         },
+        
     },
 })
 
-export const { onSignInSuccess, onSignOutSuccess, setToken } =
+export const { onSignInSuccess, onSignOutSuccess, onSignInFailure, setToken } =
     sessionSlice.actions
 
 export default sessionSlice.reducer

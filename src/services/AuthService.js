@@ -39,3 +39,13 @@ export async function apiResetPassword(data) {
         data,
     })
 }
+
+//Links
+
+export async function apiRegister(data) {
+    return ApiService.fetchData({
+        url: '/register',
+        method: 'post',
+        data,
+    })
+}

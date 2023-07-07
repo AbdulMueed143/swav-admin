@@ -2,7 +2,8 @@ import { Chart, GrowShrinkTag, Loading } from 'components/shared';
 import { Card } from 'components/ui';
 import React from 'react';
 import dayjs from 'dayjs';
-import NumberFormat from 'react-number-format';
+import { NumberFormatBase as NumberFormat } from 'react-number-format';
+
 
 const StatisticCard = ({ data = {}, label, valuePrefix, date }) => {
     return (
