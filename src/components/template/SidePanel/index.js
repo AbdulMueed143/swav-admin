@@ -37,7 +37,8 @@ export const SidePanel = (props) => {
             >
                 <HiOutlineCog />
             </div>
-            <Drawer
+            {/* You can add different link here, maybe go to different page when click on settings */}
+            {/* <Drawer
                 title="Theme Config"
                 isOpen={panelExpand}
                 onClose={closePanel}
@@ -46,7 +47,7 @@ export const SidePanel = (props) => {
                 width={375}
             >
                 <SidePanelContent callBackClose={closePanel} />
-            </Drawer>
+            </Drawer> */}
         </>
     )
 }

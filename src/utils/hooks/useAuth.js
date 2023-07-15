@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { setUser, initialState } from 'store/auth/userSlice'
-import { apiSignIn, apiSignOut, apiSignUp, apiRegister } from 'services/AuthService'
-import { onSignInSuccess, onSignOutSuccess, onSignInFailure } from 'store/auth/sessionSlice'
+import { apiSignIn, apiSignOut, apiSignUp, apiRegister, apiUpdateBusinessDetails } from 'services/AuthService'
+import { onSignInSuccess, onSignOutSuccess, onSignInFailure, setToken, setSignedIn } from 'store/auth/sessionSlice'
 import appConfig from 'configs/app.config'
 import { REDIRECT_URL_KEY } from 'constants/app.constant'
 import { useNavigate } from 'react-router-dom'
@@ -18,9 +18,14 @@ function useAuth() {
 
     const signIn = async (values) => {
         try {
+            console.log("Requesting")
+
             const resp = await apiSignIn(values)
+            console.log(resp)
             if (resp.data) {
-                const { token } = resp.data
+                const token  = resp.data.accessToken
+                const refreshToken = resp.data.refreshToken
+
                 dispatch(onSignInSuccess(token))
                 if (resp.data.user) {
                     dispatch(
@@ -29,7 +34,7 @@ function useAuth() {
                                 avatar: '',
                                 userName: 'Anonymous',
                                 authority: ['USER'],
-                                email: '',
+                                email: values.email,
                             }
                         )
                     )
@@ -51,26 +56,53 @@ function useAuth() {
         }
     }
 
-    const createAccount = async (values) => {
+    const updateBusinessDetails = async(values) => {
+
         try {
+            const resp = await apiUpdateBusinessDetails(values)
+            if(resp.status === 200) { 
+                dispatch(setSignedIn(token))
+            }
+
+        } catch (errors) {
+            return {
+                status: 'failed',
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+
+    }
+
+    const createAccount = async (values) => {
+
+        try {
+            console.log("Requesting");
+            console.log(values);
+
             const resp = await apiRegister(values)
 
-            if(resp.data.code === 200) {
+            console.log("Request complete");
 
-                const { token } = resp.data
-                const { refreshToken } = resp.data
-                dispatch(onSignInSuccess(token))
+            console.log(values);
 
-                dispatch(
-                    setUser(
-                        resp.data.user || {
-                            avatar: '',
-                            userName: 'Anonymous',
-                            authority: ['USER'],
-                            email: '',
-                        }
-                    )
-                )
+            if(resp.status === 200) {
+                const  token  = resp.data.accessToken
+                const refreshToken = resp.data.refreshToken
+
+                dispatch(setToken(token))
+
+                //Uncomment and add user detail
+
+                // dispatch(
+                //     setUser(
+                //         resp.data.user || {
+                //             avatar: '',
+                //             userName: 'Anonymous',
+                //             authority: ['USER'],
+                //             email: '',
+                //         }
+                //     )
+                // )
 
                 return {
                     status: 'success',
@@ -94,41 +126,41 @@ function useAuth() {
         }
     }
 
-    const signUp = async (values) => {
+    // const signUp = async (values) => {
 
-        try {
-            const resp = await apiSignUp(values)
-            if (resp.data) {
-                const { token } = resp.data
-                dispatch(onSignInSuccess(token))
-                if (resp.data.user) {
-                    dispatch(
-                        setUser(
-                            resp.data.user || {
-                                avatar: '',
-                                userName: 'Anonymous',
-                                authority: ['USER'],
-                                email: '',
-                            }
-                        )
-                    )
-                }
-                const redirectUrl = query.get(REDIRECT_URL_KEY)
-                navigate(
-                    redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
-                )
-                return {
-                    status: 'success',
-                    message: '',
-                }
-            }
-        } catch (errors) {
-            return {
-                status: 'failed',
-                message: errors?.response?.data?.message || errors.toString(),
-            }
-        }
-    }
+    //     try {
+    //         const resp = await apiSignUp(values)
+    //         if (resp.data) {
+    //             const { token } = resp.data
+    //             dispatch(onSignInSuccess(token))
+    //             if (resp.data.user) {
+    //                 dispatch(
+    //                     setUser(
+    //                         resp.data.user || {
+    //                             avatar: '',
+    //                             userName: 'Anonymous',
+    //                             authority: ['USER'],
+    //                             email: '',
+    //                         }
+    //                     )
+    //                 )
+    //             }
+    //             const redirectUrl = query.get(REDIRECT_URL_KEY)
+    //             navigate(
+    //                 redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
+    //             )
+    //             return {
+    //                 status: 'success',
+    //                 message: '',
+    //             }
+    //         }
+    //     } catch (errors) {
+    //         return {
+    //             status: 'failed',
+    //             message: errors?.response?.data?.message || errors.toString(),
+    //         }
+    //     }
+    // }
 
     const handleSignOut = () => {
         dispatch(onSignOutSuccess())
@@ -144,9 +176,10 @@ function useAuth() {
     return {
         authenticated: token && signedIn,
         signIn,
-        signUp,
+        // signUp,
         signOut,
-        createAccount
+        createAccount,
+        updateBusinessDetails
     }
 }
 

@@ -40,4 +40,16 @@ export const protectedRoutes = [
         component: React.lazy(() => import('views/analytics/Analytics')),
         authority: [],
     },
+    {
+        key: 'barbers',
+        path: '/barbers',
+        component: React.lazy(() => import('views/barberviews/barbers/BarbersViews')),
+        authority: [],
+    },
+    {
+        key: 'services',
+        path: '/services',
+        component: React.lazy(() => import('views/serviceviews/services/ServicesViews')),
+        authority: [],
+    },
 ]

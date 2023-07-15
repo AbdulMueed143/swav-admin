@@ -1,9 +1,9 @@
 import { ActionLink, CalendarView, Loading } from 'components/shared'
-import { Calendar, Card, Pagination } from 'components/ui'
-import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon'
+import { Calendar, Card } from 'components/ui'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import BarbersGrid from './BarbersGrid'
+import ServiceCard from './ServiceCard'
+import ServicesGrid from './ServicesGrid'
 
 const Home = () => {
     const userName = useSelector((state) => state.auth.user.userName)
@@ -11,14 +11,18 @@ const Home = () => {
     return <>
         <div class="flex flex-col h-full">
             <Loading loading={loading} >
-
             <div class="flex flex-col xl:flex-row gap-4 mt-4">
                 {/* ====CONTENT==== */}
-                
-            </div>
 
-            <BarbersGrid ></BarbersGrid>
+            </div>
+            
             </Loading>
+
+            <div class="flex gap-4">
+
+                <ServicesGrid />
+
+            </div>
         </div>
     </>
 }

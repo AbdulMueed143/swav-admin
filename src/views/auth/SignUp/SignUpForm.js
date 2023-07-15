@@ -9,6 +9,8 @@ import BarberShopAutocomplete from 'components/ui/custom/barbers/BarbershopAutoc
 import AddressAutocomplete from 'components/ui/custom/barbers/AddressAutocomplete'
 import SelectableCard from './SelectableCard'
 import Stepper from '../Stepper'
+import { setSignedIn } from 'store/auth/sessionSlice'
+import { last, values } from 'lodash'
 
 
 {/* <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB01eSc8cHSkUO3H1HXBiaeGWE8qBJcjoI&libraries=places"></script> */}
@@ -17,13 +19,18 @@ import Stepper from '../Stepper'
 // https://www.npmjs.com/package/react-google-autocomplete
 
 const accountInformationSchemaValidation = Yup.object().shape({
-    email: Yup.string().email().required('Please enter your email'),
-    phoneNumber: Yup.string().required("Phone number is required"),
-    password: Yup.string().required('Please enter your password'),
-    confirmPassword: Yup.string().oneOf(
-        [Yup.ref('password'), null],
-        'Your passwords do not match'
-    ),
+//     email: Yup.string().email().required('Please enter your email'),
+//     phoneNumber: Yup.string()
+//     .required("Phone number is required")
+//     .matches(/^[0-9]{9,}$/, "Phone number must be at least 9 digits"),
+// password: Yup.string()
+//     .required('Please enter your password')
+//     .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$/, "Password must be at least 6 characters and include at least 1 uppercase letter"),
+// confirmPassword: Yup.string()
+//     .oneOf(
+//         [Yup.ref('password'), null],
+//         'Your passwords do not match'
+//     )
 })
 
 const businessTypeSchemaValidation = Yup.object().shape({
@@ -43,7 +50,6 @@ const validationSchemas = [
 ]
 
 
-
 const SignUpForm = (props) => {
 
     //References
@@ -51,54 +57,111 @@ const SignUpForm = (props) => {
 
     //Declaration of variables
     const { disableSubmit = false, className, signInUrl = '/sign-in' } = props
-    const { signUp, createAccount } = useAuth()
-    const [message, setMessage] = useTimeOutMessage()
+    const { signUp, createAccount, updateBusinessDetails } = useAuth()
+    const [ message, setMessage ] = useTimeOutMessage()
 
     //Variables
     const [step, setStep] = useState(0);
 
     const [name, setName] = useState("");
+    const [firstname, setFirstName] = useState("");
+    const [lastname, setLastName] = useState("");
     const [address, setAddress] = useState("");
+    const [placeId, setPlaceId] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [website, setWebsite] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] =useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [selectedCard, setSelectedCard] = useState(null);
+    const [selectedCard, setSelectedCard] = useState('individual');
 
     //Cards selection
     const handleCardClick = (cardType) => {
         setSelectedCard(cardType);
     };
-    
-    //Singup result
-    const onSignUp = async (values, setSubmitting) => {
-        const { userName, password, email } = values
-        setSubmitting(true)
-        const result = await signUp({ userName, password, email })
 
-        if (result.status === 'failed') {
+    //Breaking the signup processs, use following methods
+    const onAccountDetailsUpdate = async (values) => {
+        const { firstname, lastname, name, address, phoneNumber, placeId, password, email } = values
+        formIkRef.current.setSubmitting(true)
+        var result = null
+
+        if (selectedCard === "individual") {
+            // Map values to API expected variables
+            const apiValues = {
+                email: email,
+                address: {
+                    "line1": address,
+                    "placeId": placeId
+                },
+                businessType: "INDIVIDUAL",
+                properties : {
+                    "firstname": firstname,
+                    "lastname": lastname,
+                    "password": password
+
+                }
+            };
+
+            result = await updateBusinessDetails(apiValues)
+        }
+        else {
+
+            const apiValues = {
+                email: email,
+                address: {
+                    "line1": address,
+                    "placeId": placeId
+                },
+                businessType: "SHOP",
+                properties : {
+                    "name": name
+                }
+            };
+
+            result = await updateBusinessDetails(apiValues)
+        }
+
+
+        //depending on the result we will either show error or next step ...
+        if (result.status === 'success') {
+        }
+        else {
+            formIkRef.current.setSubmitting(false)
             setMessage(result.message)
         }
 
-        setSubmitting(false)
     }
-
+    
     //Breaking the signup processs, use following methods
     const onRegisterAccount = async (values, setSubmitting) => {
-        const { userName, password, email } = values
-        setSubmitting(true)
-        const result = await createAccount({ email, phoneNumber, password })
+        const { phoneNumber, password, email } = values
+        // Map values to API expected variables
+        const apiValues = {
+            ownerPhoneNumber: phoneNumber,
+            ownerPassword: password,
+            ownerEmail: email,
+        };
+        const result = await createAccount(apiValues)
+        
+        console.log(result);
+        formIkRef.current.setSubmitting(false)
+        //depending on the result we will either show error or next step ...
+        if (result.status === 'success') {
+            nextStep();
+        }
+        else {
+            console.log("Here we go")
+            setMessage(result.message)
+        }
 
-        setSubmitting(false)
     }
 
     //Moving in steps
     const nextStep = () => {
-        if(formIkRef.current.isValid) {
-
+        // if(formIkRef.current.isValid) {
             setStep(step + 1);
-        }
+        // }
     };
     
     const prevStep = () => {
@@ -127,22 +190,17 @@ const SignUpForm = (props) => {
                         address: '',
                         phoneNumber: '',
                         email: '',
-                        
+                        address: '',
+                        placeId: ''
                     }}
+                    onSubmit={(values) => {
+                        onRegisterAccount(values); // Call onRegisterAccount when form is submitted and valid
+                      }}
 
                     validationSchema={validationSchemas[step]}
-
-                    onSubmit={(values, { setSubmitting }) => {
-                        if (!disableSubmit) {
-                            onSignUp(values, setSubmitting)
-                        } else {
-                            setSubmitting(false)
-                        }
-
-                    }}
                     innerRef={formIkRef}
                 >
-                    {({ touched, errors, isSubmitting }) => (
+                    {({ touched, errors, isSubmitting, values }) => (
                         <Form >
                             
                             <FormContainer>
@@ -202,8 +260,6 @@ const SignUpForm = (props) => {
                                         name="confirmPassword"
                                         placeholder="Confirm Password"
                                         component={PasswordInput}
-                                        value={confirmPassword}
-                                        onChange={e => setConfirmPassword(e.target.value)}
                                     />
                                 </FormItem>
 
@@ -212,8 +268,11 @@ const SignUpForm = (props) => {
                                     loading={isSubmitting}
                                     variant="solid"
                                     type="submit"
-                                    onClick={nextStep}
-                                >
+                                    onClick={(event) => { 
+                                        event.preventDefault(); 
+                                        onRegisterAccount(values);
+                                    }}
+                                   >
                                     {isSubmitting
                                         ? 'Creating Account...'
                                         : 'Create Account'}
@@ -222,7 +281,7 @@ const SignUpForm = (props) => {
 
                                 )}
 
-                        {step === 1 && (
+                                {step === 1 && (
                                     <>
 
                                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -256,9 +315,9 @@ const SignUpForm = (props) => {
 
                                     
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <Button variant="solid" style={{ flex: 1, marginRight: '8px' }} onClick={prevStep}>
+                                        {/* <Button variant="solid" style={{ flex: 1, marginRight: '8px' }} onClick={prevStep}>
                                             Previous
-                                        </Button>
+                                        </Button> */}
                                         <Button variant="solid" style={{ flex: 1, marginLeft: '8px' }} onClick={nextStep}>
                                             Next
                                         </Button>
@@ -271,15 +330,29 @@ const SignUpForm = (props) => {
                                     <>
 
                                     <FormItem
-                                        label="Name"
-                                        invalid={errors.name && touched.name}
-                                        errorMessage={errors.name}
+                                        label="First Name"
+                                        invalid={errors.firstname && touched.firstname}
+                                        errorMessage={errors.firstname}
                                     >
                                         <Field
                                             type="text"
                                             autoComplete="off"
-                                            name="name"
-                                            placeholder="Name"
+                                            name="firstname"
+                                            placeholder="First Name"
+                                            component={Input}
+                                    
+                                        />
+                                    </FormItem>
+                                    <FormItem
+                                        label="Last Name"
+                                        invalid={errors.lastname && touched.lastname}
+                                        errorMessage={errors.lastname}
+                                    >
+                                        <Field
+                                            type="text"
+                                            autoComplete="off"
+                                            name="lastname"
+                                            placeholder="Last Name"
                                             component={Input}
                                     
                                         />
@@ -311,14 +384,19 @@ const SignUpForm = (props) => {
                                     </FormItem>
 
                                     
-
-                                    
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <Button variant="solid" style={{ flex: 1, marginRight: '8px' }} onClick={prevStep}>
                                             Previous
                                         </Button>
-                                        <Button variant="solid" style={{ flex: 1, marginLeft: '8px' }} onClick={nextStep}>
-                                            Complete
+                                        <Button variant="solid" type="submit" style={{ flex: 1, marginLeft: '8px' }} 
+                                        onClick={(event) => { 
+                                            event.preventDefault(); 
+                                            onAccountDetailsUpdate(values);
+                                        }}
+                                        >
+                                        {isSubmitting
+                                        ? 'Completing Registration'
+                                        : 'Complete'}
                                         </Button>
                                     </div>
                                     </>
@@ -388,8 +466,14 @@ const SignUpForm = (props) => {
                                         <Button variant="solid" style={{ flex: 1, marginRight: '8px' }} onClick={prevStep}>
                                             Previous
                                         </Button>
-                                        <Button variant="solid" style={{ flex: 1, marginLeft: '8px' }} onClick={nextStep}>
-                                            Complete
+                                        <Button variant="solid" type="submit" style={{ flex: 1, marginLeft: '8px' }} 
+                                        onClick={(event) => { 
+                                            event.preventDefault(); 
+                                            onAccountDetailsUpdate(values);
+                                        }}>
+                                        {isSubmitting
+                                        ? 'Completing Registration'
+                                        : 'Complete'}
                                         </Button>
                                     </div>
                                     </>

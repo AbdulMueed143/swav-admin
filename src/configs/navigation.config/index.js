@@ -58,43 +58,36 @@ const navigationConfig = [
     },
     {
         key: 'barbers',
-        path: '',
+        path: '/barbers',
         title: 'Barbers',
-        translateKey: 'nav.barberviews.barbers',
-        icon: 'HiScissors',
-        type: NAV_ITEM_TYPE_COLLAPSE,
+        translateKey: 'nav.barbers.barberviews',
+        icon: 'barber',
+        type: NAV_ITEM_TYPE_ITEM,
         authority: [],
-        subMenu: [
-            {
-                key: 'barbers',
-                path: '/Barbers',
-                title: 'Barbers',
-                translateKey: 'nav.barbers',
-                icon: 'HiScissors',
-                type: NAV_ITEM_TYPE_ITEM,
-                authority: [],
-                subMenu: [],
-            }
-        ],
+        subMenu: [],
     },
     {
-        key: 'analytics',
-        path: '/analytics',
-        title: 'Analytics & Reporting',
-        translateKey: 'nav.analytics',
-        icon: 'analytics',
+        key: 'services',
+        path: '/services',
+        title: 'Services',
+        translateKey: 'nav.services.servicesviews',
+        icon: 'services',
         type: NAV_ITEM_TYPE_ITEM,
         authority: [],
         subMenu: [],
     },
 
 
-
-
-
-
-
-
+    // {
+    //     key: 'analytics',
+    //     path: '/analytics',
+    //     title: 'Analytics & Reporting',
+    //     translateKey: 'nav.analytics',
+    //     icon: 'analytics',
+    //     type: NAV_ITEM_TYPE_ITEM,
+    //     authority: [],
+    //     subMenu: [],
+    // },
     // {
     //     key: 'collapseMenu',
     //     path: '',

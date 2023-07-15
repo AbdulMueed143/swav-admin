@@ -2,7 +2,7 @@ import ApiService from './ApiService'
 
 export async function apiSignIn(data) {
     return ApiService.fetchData({
-        url: '/sign-in',
+        url: 'http://127.0.0.1:8080/api/v1/auth/authenticate',
         method: 'post',
         data,
     })
@@ -18,7 +18,7 @@ export async function apiSignUp(data) {
 
 export async function apiSignOut(data) {
     return ApiService.fetchData({
-        url: '/sign-out',
+        url: 'http://127.0.0.1:8080/api/v1/auth/logout',
         method: 'post',
         data,
     })
@@ -44,8 +44,16 @@ export async function apiResetPassword(data) {
 
 export async function apiRegister(data) {
     return ApiService.fetchData({
-        url: '/register',
+        url: 'http://127.0.0.1:8080/api/v1/auth/register',
         method: 'post',
+        data,
+    })
+}
+
+export async function apiUpdateBusinessDetails(data) {
+    return ApiService.fetchData({
+        url: 'http://127.0.0.1:8080/api/v1/auth/updateBusinessDetails',
+        method: 'put',
         data,
     })
 }
