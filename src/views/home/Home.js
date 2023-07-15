@@ -1,17 +1,55 @@
 import { ActionLink, CalendarView, Loading } from 'components/shared'
-import { Calendar, Card } from 'components/ui'
+import { Calendar } from 'components/ui'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import AppointmentTimeline from './timeline/AppointmentTimeline'
+import { useEffect, useState } from 'react';
+import { Card, CardContent, Typography, Box } from '@material-ui/core';
+import BaseMatrixCard from './basematrix/BaseMatrixCard'
 
 const Home = () => {
     const userName = useSelector((state) => state.auth.user.userName)
     const loading = false
+
+    const [appointmentsCount, setAppointmentsCount] = useState(0);
+    const [totalEarnings, setTotalEarnings] = useState(0);
+    const [customerCount, setCustomerCount] = useState(0);
+    const [productSales, setProductSales] = useState(0);
+
+    useEffect(() => {
+        // Replace these with actual API calls or functions
+        const api = {
+            getAppointmentsCount: () => Promise.resolve(50),
+            getTotalEarnings: () => Promise.resolve(10000),
+            getCustomerCount: () => Promise.resolve(200),
+            getProductSales: () => Promise.resolve(300),
+        };
+
+        api.getAppointmentsCount().then(setAppointmentsCount);
+        api.getTotalEarnings().then(setTotalEarnings);
+        api.getCustomerCount().then(setCustomerCount);
+        api.getProductSales().then(setProductSales);
+    }, []);
+
+
+    const services = [
+        { label: "New Customers", value: 13, description: "Total new customers today." },
+        { label: "Bookings", value: 7, description: "Total bookings today." },
+        { label: "Sales up", value: "15%", description: "Today." },
+
+    ];
+
     return <>
         <div class="flex flex-col h-full">
             <Loading loading={loading} >
                 <>
-                    <h4>Welcome {userName}</h4>
-                    <p>You have [x] appointments today</p>
+                <div className="flex gap-4 flex-wrap mt-4"> 
+                    {services.map((matrix, index) => (
+                        <div  style={{ width: 300 }}>
+                        <BaseMatrixCard label={matrix.label} value={matrix.value} description={matrix.description}></BaseMatrixCard>
+                        </div>
+                    ))}
+                </div>
                 </>
 
             <div class="flex flex-col xl:flex-row gap-4 mt-4">
@@ -19,34 +57,14 @@ const Home = () => {
                 <div class="flex flex-col gap-4 flex-auto">
                     <div class="flex flex-col gap-4">
                     <Card>
-                            <CalendarView initialView="dayGrid">
-
-                            </CalendarView>
+                        <AppointmentTimeline />
                     </Card>
               
 
                     </div>
                 </div>
                 <div class="flex flex-col gap-4">
-                    <Card>
-                        <Calendar>
-
-                        </Calendar>      
-                    </Card>
-                    <Card>
-                        <h5>Quick Links:</h5>
-                        <ul>
-                            <li>
-                                <ActionLink>Action 1</ActionLink>
-                            </li>
-                            <li>
-                                <ActionLink>Action 2</ActionLink>
-                            </li>
-                            <li>
-                                <ActionLink>Action 3</ActionLink>
-                            </li>
-                        </ul>
-                    </Card>
+                    
                 </div>
             </div>
             </Loading>

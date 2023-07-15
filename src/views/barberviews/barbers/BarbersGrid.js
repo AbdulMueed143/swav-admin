@@ -1,16 +1,27 @@
 import { useState } from 'react';
 import BarberCard from './BarberCard';
 import ButtonWithIcon from '../../../components/ui/custom/barbers/ButtonWithIcon'
+import AddBarberModal from './dialogs/AddBarberModal';
 
 const BarbersGrid = () => {
     // Initialize state for the search input
     const [search, setSearch] = useState('');
+    const [open, setOpen] = useState(false);
+ 
+    const handleClickToOpen = () => {
+        setOpen(true);
+    };
+ 
+    const handleToClose = () => {
+        setOpen(false);
+    };
+
 
     // Mock data for your services
     const services = [
-        { name: 'Service 1' },
+        { name: 'Barber 1' },
         { name: 'Service 2' },
-        { name: 'Service 3' },
+        { name: 'Barber 3' },
         { name: 'Service 4' },
         { name: 'Service 5' },
     ];
@@ -30,13 +41,16 @@ const BarbersGrid = () => {
                     placeholder="Search for a barber..."
                     className="p-2 border rounded"
                 />
-                <ButtonWithIcon label="Add Barber" />
+                <ButtonWithIcon 
+                label="Add Barber"  onClick={handleClickToOpen} />
             </div>
             <div className="flex gap-4 flex-wrap mt-4"> 
                 {filteredServices.map((service, index) => (
                     <BarberCard key={index} name={service.name} />
                 ))}
             </div>
+
+            <AddBarberModal open={open} handleToClose={handleToClose} />
         </div>
     );
 };
