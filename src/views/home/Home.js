@@ -64,7 +64,6 @@ const Home = () => {
                     </div>
                 </div>
                 <div class="flex flex-col gap-4">
-                    
                 </div>
             </div>
             </Loading>

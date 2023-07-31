@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { setUser, initialState } from 'store/auth/userSlice'
-import { apiSignIn, apiSignOut, apiSignUp, apiRegister, apiUpdateBusinessDetails } from 'services/AuthService'
+import { apiSignIn, apiSignOut, apiSignUp, apiRegister } from 'services/AuthService'
 import { onSignInSuccess, onSignOutSuccess, onSignInFailure, setToken, setSignedIn } from 'store/auth/sessionSlice'
 import appConfig from 'configs/app.config'
 import { REDIRECT_URL_KEY } from 'constants/app.constant'
@@ -56,40 +56,38 @@ function useAuth() {
         }
     }
 
-    const updateBusinessDetails = async(values) => {
-
-        try {
-            const resp = await apiUpdateBusinessDetails(values)
-            if(resp.status === 200) { 
-                dispatch(setSignedIn(token))
-            }
-
-        } catch (errors) {
-            return {
-                status: 'failed',
-                message: errors?.response?.data?.message || errors.toString(),
-            }
-        }
-
-    }
-
     const createAccount = async (values) => {
 
+        // try {
+
+        //     if(resp.status === 200) { 
+        //         dispatch(setSignedIn(token))
+        //     }
+
+        // } catch (errors) {
+        //     return {
+        //         status: 'failed',
+        //         message: errors?.response?.data?.message || errors.toString(),
+        //     }
+        // }
+
         try {
-            console.log("Requesting");
+            console.log('Sending api Register request');
             console.log(values);
 
             const resp = await apiRegister(values)
+            console.log('Response from api ');
+            console.log(resp);
 
-            console.log("Request complete");
-
-            console.log(values);
+            console.log('Response Status');
+            console.log(resp.status);
 
             if(resp.status === 200) {
                 const  token  = resp.data.accessToken
                 const refreshToken = resp.data.refreshToken
 
                 dispatch(setToken(token))
+                dispatch(setSignedIn())
 
                 //Uncomment and add user detail
 
@@ -178,8 +176,7 @@ function useAuth() {
         signIn,
         // signUp,
         signOut,
-        createAccount,
-        updateBusinessDetails
+        createAccount
     }
 }
 

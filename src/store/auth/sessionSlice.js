@@ -19,8 +19,8 @@ export const sessionSlice = createSlice({
             state.signedIn = false
             state.token = ''
         },
-        setToken: (state, action) => {
-            state.token = action.payload
+        setToken: (state, payload) => {
+            state.token = payload
         },
         setSignedIn: (state) => {
             state.signedIn = true

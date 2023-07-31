@@ -5,49 +5,30 @@ import useTimeOutMessage from 'utils/hooks/useTimeOutMessage'
 import { Field, Form, Formik, useFormikContext, FormikStep } from 'formik'
 import * as Yup from 'yup'
 import useAuth from 'utils/hooks/useAuth'
-import BarberShopAutocomplete from 'components/ui/custom/barbers/BarbershopAutocomplete'
 import AddressAutocomplete from 'components/ui/custom/barbers/AddressAutocomplete'
-import SelectableCard from './SelectableCard'
-import Stepper from '../Stepper'
-import { setSignedIn } from 'store/auth/sessionSlice'
-import { last, values } from 'lodash'
-
+import { current } from '@reduxjs/toolkit'
 
 {/* <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB01eSc8cHSkUO3H1HXBiaeGWE8qBJcjoI&libraries=places"></script> */}
 
 // We are using following for the auto complete of places api 
 // https://www.npmjs.com/package/react-google-autocomplete
 
-const accountInformationSchemaValidation = Yup.object().shape({
-//     email: Yup.string().email().required('Please enter your email'),
-//     phoneNumber: Yup.string()
-//     .required("Phone number is required")
-//     .matches(/^[0-9]{9,}$/, "Phone number must be at least 9 digits"),
-// password: Yup.string()
-//     .required('Please enter your password')
-//     .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$/, "Password must be at least 6 characters and include at least 1 uppercase letter"),
-// confirmPassword: Yup.string()
-//     .oneOf(
-//         [Yup.ref('password'), null],
-//         'Your passwords do not match'
-//     )
+const signupFormValidationSchema = Yup.object().shape({
+    email: Yup.string().email().required('Please enter your email'),
+    phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{9,}$/, "Phone number must be at least 9 digits"),
+password: Yup.string()
+    .required('Please enter your password')
+    .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$/, "Min 1 uppercase, 1 Number and 6 charachters"),
+confirmPassword: Yup.string()
+    .oneOf(
+        [Yup.ref('password'), null],
+        'Your passwords do not match'
+    ),
+address: Yup.string().required('Please enter your address'),
+
 })
-
-const businessTypeSchemaValidation = Yup.object().shape({
-    selectedCard: Yup.string()
-      .oneOf(['individual', 'b2plus', 'b5plus'], 'Please select a valid card')
-      .required('You must select at least one card')
-  });
-
-const businessDetailSchemaValidation = Yup.object().shape({
-    address: Yup.string().required('Please enter your address'),
-})
-
-const validationSchemas = [
-    accountInformationSchemaValidation,
-    businessTypeSchemaValidation,
-    businessDetailSchemaValidation
-]
 
 
 const SignUpForm = (props) => {
@@ -57,129 +38,106 @@ const SignUpForm = (props) => {
 
     //Declaration of variables
     const { disableSubmit = false, className, signInUrl = '/sign-in' } = props
-    const { signUp, createAccount, updateBusinessDetails } = useAuth()
+    const { signUp, createAccount } = useAuth()
     const [ message, setMessage ] = useTimeOutMessage()
 
-    //Variables
-    const [step, setStep] = useState(0);
 
-    const [name, setName] = useState("");
-    const [firstname, setFirstName] = useState("");
-    const [lastname, setLastName] = useState("");
-    const [address, setAddress] = useState("");
-    const [placeId, setPlaceId] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
+    const [businessName, setBusinessName] = useState("");
     const [website, setWebsite] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] =useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [selectedCard, setSelectedCard] = useState('individual');
+    const [placeId, setPlaceId] = useState("");
+    const [googleAddress, setGoogleAddress] = useState("");
+    const [googlePhoneNumber, setGooglePhoneNumber] = useState("");
+    const [openingHours, setOpeningHours] = useState("");
 
-    //Cards selection
-    const handleCardClick = (cardType) => {
-        setSelectedCard(cardType);
-    };
+    //Address type change
+    const [manualEntry, setManualEntry] = useState(false);
+    const toggleManualEntry = () => setManualEntry(!manualEntry);
 
-    //Breaking the signup processs, use following methods
-    const onAccountDetailsUpdate = async (values) => {
-        const { firstname, lastname, name, address, phoneNumber, placeId, password, email } = values
-        formIkRef.current.setSubmitting(true)
-        var result = null
-
-        if (selectedCard === "individual") {
-            // Map values to API expected variables
-            const apiValues = {
-                email: email,
-                address: {
-                    "line1": address,
-                    "placeId": placeId
-                },
-                businessType: "INDIVIDUAL",
-                properties : {
-                    "firstname": firstname,
-                    "lastname": lastname,
-                    "password": password
-
-                }
-            };
-
-            result = await updateBusinessDetails(apiValues)
-        }
-        else {
-
-            const apiValues = {
-                email: email,
-                address: {
-                    "line1": address,
-                    "placeId": placeId
-                },
-                businessType: "SHOP",
-                properties : {
-                    "name": name
-                }
-            };
-
-            result = await updateBusinessDetails(apiValues)
-        }
-
-
-        //depending on the result we will either show error or next step ...
-        if (result.status === 'success') {
-        }
-        else {
-            formIkRef.current.setSubmitting(false)
-            setMessage(result.message)
-        }
-
-    }
     
     //Breaking the signup processs, use following methods
     const onRegisterAccount = async (values, setSubmitting) => {
-        const { phoneNumber, password, email } = values
-        // Map values to API expected variables
-        const apiValues = {
-            ownerPhoneNumber: phoneNumber,
-            ownerPassword: password,
-            ownerEmail: email,
-        };
-        const result = await createAccount(apiValues)
+        formIkRef.current.setSubmitting(true)
+
+        const { firstname, lastname , address, city, state, postcode, country, phoneNumber, password, email }  = values
         
-        console.log(result);
-        formIkRef.current.setSubmitting(false)
-        //depending on the result we will either show error or next step ...
-        if (result.status === 'success') {
-            nextStep();
+        var currentAddress = ""
+        var extraProperties = {}
+        var shopName = ""
+
+        if (manualEntry === true) {
+            //Address depends on how it was added ...
+            //If user added address manually the we do it differently otherwise differently
+            currentAddress = {
+                line1: address,
+                city: city,
+                state: state,
+                postalCode: postcode,
+                country: country,
+                placeId: placeId
+            }
         }
         else {
-            console.log("Here we go")
+            shopName = businessName
+            currentAddress = {
+                line1: googleAddress,
+                placeId: placeId,
+                properties: {
+                    "website" : website,
+                }
+            }
+        }
+
+        // Map values to API expected variables
+        const apiValues = {
+            businessName: shopName,
+            shopName: shopName,
+            ownerFirstName: firstname,
+            ownerLastName: lastname,
+            ownerEmail: email,
+            ownerPhoneNumber: phoneNumber,
+            ownerPassword: password,
+            address: currentAddress,
+            properties: extraProperties
+        }
+
+        // Expected payload
+        // {
+        //     "businessName": "Some business name",
+        //     "shopName": "Some shop name",
+        //     "ownerFirstName": "Avenash",
+        //     "ownerLastName": "Kumar",
+        //     "ownerEmail": "someemail1@swav.app",
+        //     "ownerPhoneNumber": "3473246772",
+        //     "ownerPassword": "hello",
+        //     "address": {
+        //         "line1": "82B Anderson Hill rd",
+        //         "line2": "APT 21",
+        //         "city": "Bernardsville",
+        //         "state": "NJ",
+        //         "postalCode": "07075",
+        //         "country": "USA"
+        //     },
+        //     "properties": {
+        //         "shopLogoImage": "https://d2zdpiztbgorvt.cloudfront.net/region1/us/198641/biz_photo/861cf7a9a93f45d2acb78a29bc4f52-sam-s-barber-shop-llc-biz-photo-ee1a382b979040898be85eb00d26a6-booksy.jpeg"
+        //     }
+        // }
+
+        const result = await createAccount(apiValues)
+        //depending on the result we will either show error or next step ...
+        if (result.status === 'success') {
+            console.log("Success")
+        }
+        else {
+            console.log("No success")
+            console.log(result.message)
             setMessage(result.message)
+            formIkRef.current.setSubmitting(false)
         }
 
     }
 
-    //Moving in steps
-    const nextStep = () => {
-        // if(formIkRef.current.isValid) {
-            setStep(step + 1);
-        // }
-    };
-    
-    const prevStep = () => {
-        setStep(step - 1);
-    };
-
     return (
         <div className={className} style={{ padding:'10px', display: 'flex', flexDirection: 'column', height: '100vh' }}>
-
-            {/* {message && (
-                <Alert className="mb-4" type="danger" showIcon>
-                    {message}
-                </Alert>
-            )} */}
-
-            <div style={{ flex: 1 }}>
-                <Stepper currentStep={step} />
-             </div>
 
              <div style={{ flex: 6, overflowY: 'auto', padding: '2px'  }}>
                 <Formik
@@ -187,26 +145,55 @@ const SignUpForm = (props) => {
                         name: '',
                         password: '',
                         confirmPassword: '',
-                        address: '',
+                        googleAddress: '',
                         phoneNumber: '',
                         email: '',
-                        address: '',
                         placeId: ''
                     }}
                     onSubmit={(values) => {
-                        onRegisterAccount(values); // Call onRegisterAccount when form is submitted and valid
+                        // onRegisterAccount(values); // Call onRegisterAccount when form is submitted and valid
                       }}
 
-                    validationSchema={validationSchemas[step]}
+                    validationSchema={signupFormValidationSchema}
                     innerRef={formIkRef}
                 >
                     {({ touched, errors, isSubmitting, values }) => (
                         <Form >
                             
                             <FormContainer>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
-                                {step === 0 && (
-                                <>
+                            <FormItem
+                                        label="First Name"
+                                        invalid={errors.firstname && touched.firstname}
+                                        errorMessage={errors.firstname}
+                                    >
+                                        <Field
+                                            type="text"
+                                            autoComplete="off"
+                                            name="firstname"
+                                            placeholder="First Name"
+                                            component={Input}
+                                    
+                                        />
+                                    </FormItem>
+                                    <div style={{width:"10px"}}> </div>
+                                    <FormItem
+                                        label="Last Name"
+                                        invalid={errors.lastname && touched.lastname}
+                                        errorMessage={errors.lastname}
+                                    >
+                                        <Field
+                                            type="text"
+                                            autoComplete="off"
+                                            name="lastname"
+                                            placeholder="Last Name"
+                                            component={Input}
+                                        />
+                                    </FormItem>
+
+                                </div>
+
                                 <FormItem
                                     label="Email"
                                     invalid={errors.email && touched.email}
@@ -221,6 +208,112 @@ const SignUpForm = (props) => {
                                 />
                                 </FormItem>
 
+                                    <div>
+
+                                    {!manualEntry && (
+                                        <FormItem
+                                        label="Find Your Address"
+                                        invalid={errors.googleAddress && touched.googleAddress}
+                                        errorMessage={errors.googleAddress}
+                                        >
+                                        <AddressAutocomplete 
+                                            setBusinessName={setBusinessName}
+                                            setGoogleAddress={setGoogleAddress}
+                                            setWebsite={setWebsite}
+                                            setPlaceId={setPlaceId}
+                                            setOpeningHours={setOpeningHours}
+                                        />
+                                        </FormItem>
+                                    )}
+
+                        {manualEntry && (
+                                <>
+
+                            <FormItem
+                                    label="Address"
+                                    invalid={errors.address && touched.address}
+                                    errorMessage={errors.address}>
+
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="address"
+                                        placeholder="Address"
+                                        component={Input}
+                                />
+                                </FormItem>
+
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+
+          <FormItem
+            label="State"
+            invalid={errors.state && touched.state}
+            errorMessage={errors.state}
+          >
+                <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="state"
+                                        placeholder="State"
+                                        component={Input} />
+          </FormItem>
+
+          <FormItem
+            label="Postcode"
+            invalid={errors.postcode && touched.postcode}
+            errorMessage={errors.postcode}
+          >
+             <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="postcode"
+                                        placeholder="Postcode"
+                                        component={Input} />
+          </FormItem>
+          </div>
+
+          <FormItem
+            label="Country"
+            invalid={errors.country && touched.country}
+            errorMessage={errors.country}
+          >
+                        <Field
+                            type="text"
+                            autoComplete="off"
+                            name="country"
+                            placeholder="Country"
+                            component={Input} />
+          </FormItem>
+        </>
+      )}
+
+      
+
+
+                                    </div>
+
+
+                                <FormItem>                    
+                                            <button 
+                                                style={{ 
+                                                    float: 'right', 
+                                                    backgroundColor: 'blue', // replace 'blue' with your desired color
+                                                    color: 'white', 
+                                                    border: 'none',
+                                                    padding: '5px 10px',
+                                                    borderRadius: '5px',
+                                                    cursor: 'pointer'
+                                                }}
+                                                variant="solid"
+                                                type="submit"
+                                                onClick={(event) => { 
+                                                    event.preventDefault(); 
+                                                    toggleManualEntry();
+                                                }}>
+                                                {manualEntry ? 'Find Address Using Google' : 'Add Address Manually'}
+                                            </button>
+                                </FormItem>   
+
                                 <FormItem
                                     label="Phone Number"
                                     invalid={errors.phoneNumber && touched.phoneNumber}
@@ -234,7 +327,6 @@ const SignUpForm = (props) => {
                                     />
                                 </FormItem>
 
-                                
                                 <FormItem
                                     label="Password"
                                     invalid={errors.password && touched.password}
@@ -250,8 +342,7 @@ const SignUpForm = (props) => {
                                 <FormItem
                                     label="Confirm Password"
                                     invalid={
-                                        errors.confirmPassword &&
-                                        touched.confirmPassword
+                                        errors.confirmPassword && touched.confirmPassword
                                     }
                                     errorMessage={errors.confirmPassword}
                                 >
@@ -262,6 +353,19 @@ const SignUpForm = (props) => {
                                         component={PasswordInput}
                                     />
                                 </FormItem>
+
+                                <FormItem
+                                        label="Upload Logo"
+                                        invalid={errors.logo && touched.logo}
+                                        errorMessage={errors.logo}
+                                    >
+                                        <Field
+                                            type="file"
+                                            autoComplete="off"
+                                            name="logo"
+                                            component={Input}
+                                        />
+                                    </FormItem>
 
                                     <Button
                                     block
@@ -277,208 +381,8 @@ const SignUpForm = (props) => {
                                         ? 'Creating Account...'
                                         : 'Create Account'}
                                 </Button>
-                                    </>
-
-                                )}
-
-                                {step === 1 && (
-                                    <>
-
-                                    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-
-                                        <SelectableCard
-                                            title="Individual"
-                                            description="Solo barber working as freelancer from home."
-                                            selected={selectedCard === 'individual'}
-                                            onClick={() => handleCardClick('individual')}
-                                        />
-
-                                        <SelectableCard
-                                            title="Barber Shop"
-                                            description="With 2+ barbers."
-                                            selected={selectedCard === 'b2plus'}
-                                            onClick={() => handleCardClick('b2plus')}
-                                            style="margin-left:20px; margin-bottom:20px;"
-
-                                        />
-
-                                        <SelectableCard
-                                            title="Barber Shop"
-                                            description="With 5+ barbers."
-                                            selected={selectedCard === 'b5plus'}
-                                            onClick={() => handleCardClick('b5plus')}
-                                            style="margin-left:20px; margin-bottom:20px;"
-
-                                        />
-
-                                    </div>
 
                                     
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        {/* <Button variant="solid" style={{ flex: 1, marginRight: '8px' }} onClick={prevStep}>
-                                            Previous
-                                        </Button> */}
-                                        <Button variant="solid" style={{ flex: 1, marginLeft: '8px' }} onClick={nextStep}>
-                                            Next
-                                        </Button>
-                                    </div>
-
-                                    </>
-                                )}
-
-                                {step === 2 && selectedCard ===  'individual' && (
-                                    <>
-
-                                    <FormItem
-                                        label="First Name"
-                                        invalid={errors.firstname && touched.firstname}
-                                        errorMessage={errors.firstname}
-                                    >
-                                        <Field
-                                            type="text"
-                                            autoComplete="off"
-                                            name="firstname"
-                                            placeholder="First Name"
-                                            component={Input}
-                                    
-                                        />
-                                    </FormItem>
-                                    <FormItem
-                                        label="Last Name"
-                                        invalid={errors.lastname && touched.lastname}
-                                        errorMessage={errors.lastname}
-                                    >
-                                        <Field
-                                            type="text"
-                                            autoComplete="off"
-                                            name="lastname"
-                                            placeholder="Last Name"
-                                            component={Input}
-                                    
-                                        />
-                                    </FormItem>
-                                    <FormItem
-                                        label="Find Your Address"
-                                        invalid={errors.address && touched.address}
-                                        errorMessage={errors.address}
-                                    >
-                                        <AddressAutocomplete 
-                                            setName={setName}
-                                            setAddress={setAddress}
-                                            setWebsite={setWebsite}
-                                        />
-                                    </FormItem>
-
-
-                                    <FormItem
-                                        label="Upload Logo"
-                                        invalid={errors.phoneNumber && touched.phoneNumber}
-                                        errorMessage={errors.phoneNumber}
-                                    >
-                                        <Field
-                                            type="file"
-                                            autoComplete="off"
-                                            name="logo"
-                                            component={Input}
-                                        />
-                                    </FormItem>
-
-                                    
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <Button variant="solid" style={{ flex: 1, marginRight: '8px' }} onClick={prevStep}>
-                                            Previous
-                                        </Button>
-                                        <Button variant="solid" type="submit" style={{ flex: 1, marginLeft: '8px' }} 
-                                        onClick={(event) => { 
-                                            event.preventDefault(); 
-                                            onAccountDetailsUpdate(values);
-                                        }}
-                                        >
-                                        {isSubmitting
-                                        ? 'Completing Registration'
-                                        : 'Complete'}
-                                        </Button>
-                                    </div>
-                                    </>
-                                )}
-
-                                {step === 2 && selectedCard !==  'individual' && (
-                                    <>
-
-                                    <FormItem
-                                        label="Find Your Shop"
-                                        invalid={errors.shopName && touched.shopName}
-                                        errorMessage={errors.shopName}
-                                    >
-                                        <BarberShopAutocomplete 
-                                            setName={setName}
-                                            setAddress={setAddress}
-                                            setWebsite={setWebsite}
-                                        />
-                                    </FormItem>
-
-                                    <FormItem
-                                        label="Upload Logo"
-                                        invalid={errors.phoneNumber && touched.phoneNumber}
-                                        errorMessage={errors.phoneNumber}
-                                    >
-                                        <Field
-                                            type="file"
-                                            autoComplete="off"
-                                            name="logo"
-                                            component={Input}
-                                        />
-                                    </FormItem>
-
-                                    <FormItem
-                                        label="Name"
-                                        invalid={errors.name && touched.name}
-                                        errorMessage={errors.name}
-                                    >
-                                        <Field
-                                            type="text"
-                                            autoComplete="off"
-                                            name="name"
-                                            placeholder="Name"
-                                            component={Input}
-                                            value={name}
-                                            onChange={e => setAddress(e.target.value)}
-                                        />
-                                    </FormItem>
-
-                                    <FormItem
-                                        label="Shop Address"
-                                        invalid={errors.address && touched.address}
-                                        errorMessage={errors.address}
-                                    >
-                                        <Field
-                                            type="text"
-                                            autoComplete="off"
-                                            name="address"
-                                            placeholder="Shop Address"
-                                            component={Input}
-                                            value={address}
-                                            onChange={e => setAddress(e.target.value)}
-                                        />
-                                    </FormItem>
-                                    
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <Button variant="solid" style={{ flex: 1, marginRight: '8px' }} onClick={prevStep}>
-                                            Previous
-                                        </Button>
-                                        <Button variant="solid" type="submit" style={{ flex: 1, marginLeft: '8px' }} 
-                                        onClick={(event) => { 
-                                            event.preventDefault(); 
-                                            onAccountDetailsUpdate(values);
-                                        }}>
-                                        {isSubmitting
-                                        ? 'Completing Registration'
-                                        : 'Complete'}
-                                        </Button>
-                                    </div>
-                                    </>
-                                )}
-                            
                                 <div className="mt-4 text-center">
                                     <span>Already have an account? </span>
                                     <ActionLink to={signInUrl}>Sign in</ActionLink>

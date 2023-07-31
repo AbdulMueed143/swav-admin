@@ -102,9 +102,9 @@ const SignInForm = (props) => {
                                     component={Checkbox}
                                     children="Remember Me"
                                 />
-                                <ActionLink to={forgotPasswordUrl}>
+                                {/* <ActionLink to={forgotPasswordUrl}>
                                     Forgot Password?
-                                </ActionLink>
+                                </ActionLink> */}
                             </div>
                             <Button
                                 block

@@ -7,7 +7,8 @@ import {
     HiOutlineHome,
     HiOutlineChartPie,
     HiOutlineUserAdd,
-    HiScissors
+    HiScissors,
+    HiGift
 } from 'react-icons/hi'
 import { HiCalendarDays, HiBuildingStorefront } from 'react-icons/hi2'
 import { TfiDashboard } from 'react-icons/tfi'
@@ -23,7 +24,8 @@ const navigationIcon = {
     calendar: <HiCalendarDays />,
     store: <HiBuildingStorefront />,
     barber: <HiOutlineUserAdd />,
-    services: <HiScissors />
+    services: <HiScissors />,
+    rewards: <HiGift />
 
 }
 
