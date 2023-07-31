@@ -2,7 +2,7 @@ FROM node:lts-alpine as builder
 
 # by only copying package.json, before running npm install. We can leverage dockers caching strategy for steps. Otherwise docker needs to run npm install every time you change any of the code.
 COPY package.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN mkdir /app-ui
 RUN mv ./node_modules ./app-ui
 WORKDIR /app-ui
