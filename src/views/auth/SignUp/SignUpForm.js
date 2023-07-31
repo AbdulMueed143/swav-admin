@@ -14,6 +14,8 @@ import { current } from '@reduxjs/toolkit'
 // https://www.npmjs.com/package/react-google-autocomplete
 
 const signupFormValidationSchema = Yup.object().shape({
+    firstname: Yup.string().required('Firstname Required'),
+    lastname: Yup.string().required('Lastname Required'),
     email: Yup.string().email().required('Please enter your email'),
     phoneNumber: Yup.string()
     .required("Phone number is required")
@@ -158,17 +160,21 @@ const SignUpForm = (props) => {
                     innerRef={formIkRef}
                 >
                     {({ touched, errors, isSubmitting, values }) => (
+                        
                         <Form >
                             
                             <FormContainer>
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
-                            <FormItem
-                                        label="First Name"
-                                        invalid={errors.firstname && touched.firstname}
-                                        errorMessage={errors.firstname}
-                                    >
+
+                                    <FormItem
+                                            
+                                            label="First Name"
+                                            invalid={errors.firstname && touched.firstname}
+                                            errorMessage={errors.firstname}
+                                        >
                                         <Field
+                                        asterick
                                             type="text"
                                             autoComplete="off"
                                             name="firstname"
@@ -179,6 +185,7 @@ const SignUpForm = (props) => {
                                     </FormItem>
                                     <div style={{width:"10px"}}> </div>
                                     <FormItem
+                                    required
                                         label="Last Name"
                                         invalid={errors.lastname && touched.lastname}
                                         errorMessage={errors.lastname}

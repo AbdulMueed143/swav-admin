@@ -18,7 +18,7 @@ export async function apiSignOut(data) {
 
 export async function apiForgotPassword(data) {
     return ApiService.fetchData({
-        url: '/forgot-password',
+        url: '/api/v1/auth/forgot-password',
         method: 'post',
         data,
     })

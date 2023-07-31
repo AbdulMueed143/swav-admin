@@ -9,15 +9,15 @@ const AddressAutocomplete = ({ setBusinessName, setGoogleAddress, setWebsite, se
     componentRestrictions: {
       country: "AU",
     },
-    types: ["street_address", "establishment"],
+    types: ['establishment'],
     fields: ['name', 'formatted_address',  'formatted_phone_number', 'website', 'opening_hours',  'place_id']
   };
 
   return (
     <Autocomplete
       className='input input-md h-11 focus:ring-indigo-600 focus-within:ring-indigo-600 focus-within:border-indigo-600 focus:border-indigo-600'
-      apiKey="AIzaSyB80I3jK3Bb3PiUOr1KGEEmxx5UyiUm8do"
-      onChange={setValue}
+      apiKey={process.env.REACT_APP_GOOGLE_API_KEY}
+      // onChange={setValue}
       options={options}
       onPlaceSelected={(place) => {
         console.log(place);

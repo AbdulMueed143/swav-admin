@@ -21,7 +21,8 @@ const ForgotPasswordForm = (props) => {
         setSubmitting(true)
         try {
             const resp = await apiForgotPassword(values)
-            if (resp.data) {
+
+            if (resp.status == 200) {
                 setSubmitting(false)
                 setEmailSent(true)
             }
@@ -59,7 +60,7 @@ const ForgotPasswordForm = (props) => {
             )}
             <Formik
                 initialValues={{
-                    email: 'admin@mail.com',
+                    email: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
