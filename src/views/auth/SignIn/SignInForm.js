@@ -12,6 +12,9 @@ import useTimeOutMessage from 'utils/hooks/useTimeOutMessage'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import useAuth from 'utils/hooks/useAuth'
+import { APP_NAME } from 'constants/app.constant'
+
+
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().required('Please enter your user name'),
@@ -46,6 +49,7 @@ const SignInForm = (props) => {
 
     return (
         <div className={className}>
+
             {message && (
                 <Alert className="mb-4" type="danger" showIcon>
                     {message}
@@ -122,6 +126,8 @@ const SignInForm = (props) => {
                     </Form>
                 )}
             </Formik>
+
+           
         </div>
     )
 }

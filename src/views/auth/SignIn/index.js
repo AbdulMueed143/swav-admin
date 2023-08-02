@@ -1,14 +1,17 @@
 import React from 'react'
 import SignInForm from './SignInForm'
+import logo from './../../../assets/images/logo.png'; // Adjust the path as needed
+
 
 const SignIn = () => {
     return (
         <>
-            <div className="mb-8">
-                <h3 className="mb-1">Welcome back!</h3>
-                <p>Please enter your credentials to sign in!</p>
-            </div>
+
+        <div className="center-content"> 
+            <img src={logo} alt="SWAV Logo" className="logo" />
+
             <SignInForm disableSubmit={false} />
+            </div>
         </>
     )
 }

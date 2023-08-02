@@ -40,3 +40,37 @@
         @apply text-gray-900 dark:text-gray-100;
     }
 }
+
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .fullscreen-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This will ensure the video covers the entire container without distortion */
+  }
+  
+  .center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers children horizontally */
+    justify-content: center; /* Centers children vertically */
+    min-height: 100vh; /* Takes at least full viewport height */
+  }
+  
+  .logo {
+    width: 120px; /* Adjust as needed */
+    height: auto;
+    margin-bottom: 20px; /* Space between the logo and the form, adjust as needed */
+  }
+
+  
+  
+  
