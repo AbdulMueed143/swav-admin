@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -15,78 +15,75 @@ const validationSchema = Yup.object().shape({
         .min(3, 'Too Short!')
         .max(20, 'Too Long!')
         .required('Please input user name!'),
-    cost: Yup
+    price: Yup
         .number()
-        .required("Cost is required")
-        .positive("Cost should be a positive number")
-        .integer("Cost should be an integer"),
-    duration: Yup
+        .required("Price is required")
+        .positive("Price should be a positive number")
+        .integer("Price should be an integer"),
+    averageTimeInMinutes: Yup
         .number()
         .required("Duration is required")
         .positive("Duration should be a positive number")
         .integer("Duration should be an integer"),
 })
 
+
  
-export default function AddServiceModal({open, handleToClose}) {
+export default function AddServiceModal({open, handleToClose, handleServiceSave}) {
+
+    const formIkRef = useRef();
+
     return (
         <div stlye={{}}>
             <Dialog open={open} onClose={handleToClose}  fullWidth={true}
-PaperProps={{
-    style: {
-        minWidth: '400px', // Your desired minimum width
-        maxWidth: '600px', // Your desired maximum width
-    },
-}}> 
+                PaperProps={{
+                    style: {
+                        minWidth: '400px', // Your desired minimum width
+                        maxWidth: '600px', // Your desired maximum width
+                    },
+                }}> 
                 <DialogTitle>{"Add Service"}</DialogTitle>
                 <DialogContent>
 
             <Formik
                 enableReinitialize
                 initialValues={{
-                    input: '',
-                    select: '',
-                    multipleSelect: [],
-                    date: null,
-                    time: null,
-                    singleCheckbox: false,
-                    multipleCheckbox: [],
-                    radio: '',
-                    switcher: false,
-                    segment: [],
-                    upload: [],
+                    name: '',
+                    description: '',
+                    price: 0,
+                    averageTimeInMinutes: 0,
+                    properties : {}
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                    console.log('values', values)
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2))
-                        setSubmitting(false)
-                    }, 400)
+                    // handleServiceSave(values); // Call handleServiceSave with form values
+                    setSubmitting(false);
+                    
                 }}
+                innerRef={formIkRef}
+
             >
-                {({ values, touched, errors, resetForm }) => (
+
+                {({ values, touched, errors, resetForm, submitForm }) => (
+                    <div>
                       <Form>
-                      <FormContainer>
-                          <FormItem
-                              asterisk
-                              label="Service Name"
-                              invalid={errors.input && touched.input}
-                              errorMessage={errors.input}
-                          >
+                        <FormContainer>
+                            <FormItem
+                                asterisk
+                                label="Service Name"
+                                invalid={errors.name && touched.name}
+                                errorMessage={errors.name}>
                               <Field
                                   type="text"
-                                  name="serviceName"
+                                  name="name"
                                   placeholder="Service Name"
                                   component={Input}
                               />
                           </FormItem>
-
                           <FormItem
                               label="Description"
-                              invalid={errors.input && touched.input}
-                              errorMessage={errors.input}
-                          >
+                              invalid={errors.description && touched.description}
+                              errorMessage={errors.description}>
                               <Field
                                   type="text"
                                   name="description"
@@ -99,19 +96,19 @@ PaperProps={{
     <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingRight: '10px' }}>
         <FormItem
             asterisk
-            label="Cost"
-            invalid={errors.input && touched.input}
-            errorMessage={errors.input}
+            label="Price"
+            invalid={errors.price && touched.price}
+            errorMessage={errors.price}
         >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Field
                     type="number"
-                    name="cost"
-                    placeholder="Cost"
+                    name="price"
+                    placeholder="Price"
                     component={Input}
                     inputMode="numeric"
                     min="0" // If you don't want negative values
-                    step="0.01" // If you want to allow cents
+                    step="0.1" // If you want to allow cents
                     style={{ flex: 1 }} // Make the input take as much space as possible
                 />
                 <span>$</span>
@@ -122,16 +119,17 @@ PaperProps={{
         <FormItem
             asterisk
             label="Duration"
-            invalid={errors.duration && touched.duration}
-            errorMessage={errors.duration}
+            invalid={errors.averageTimeInMinutes && touched.averageTimeInMinutes}
+            errorMessage={errors.averageTimeInMinutes}
         >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Field
                     type="number"
-                    name="duration"
+                    name="averageTimeInMinutes"
                     placeholder="Duration in minutes"
                     component={Input}
-                    min="1" // Assuming the minimum duration is 1 minute
+                    step="5" // If you want to allow cents
+                    min="5" // Assuming the minimum duration is 1 minute
                     style={{ flex: 1 }} // Make the input take as much space as possible
                 />
                 <span>Min</span>
@@ -140,21 +138,24 @@ PaperProps={{
     </div>
 </div>
 
-                          </FormContainer>
+                        </FormContainer>
                     </Form>
-                )}
-            </Formik>
-                </DialogContent>
-                <DialogActions>
+
+                    <DialogActions>
                     <Button onClick={handleToClose}
                         color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleToClose}
+                    <Button onClick={() => handleServiceSave(values)}
                         color="primary">
                         Save
                     </Button>
                 </DialogActions>
+                    </div>
+                )}
+            </Formik>
+                </DialogContent>
+                
             </Dialog>
         </div>
     );
