@@ -64,4 +64,10 @@ export const protectedRoutes = [
         component: React.lazy(() => import('views/rewards/RewardsView')),
         authority: [],
     },
+    {
+        key: 'subscriptions',
+        path: '/subscriptions',
+        component: React.lazy(() => import('views/subscriptions/SubscriptionsView')),
+        authority: [],
+    },
 ]

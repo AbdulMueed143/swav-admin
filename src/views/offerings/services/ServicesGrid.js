@@ -4,11 +4,13 @@ import ButtonWithIcon from '../../../components/ui/custom/barbers/ButtonWithIcon
 import { Dialog } from 'components/ui';
 import AddServiceModal from './dialog/AddServiceModal';
 import useBookingServices from 'utils/hooks/useBookingService'
+import { Loading } from 'components/shared';
 
 
 
 const ServicesGrid = () => {
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const { getServices, addService } = useBookingServices();
     const [services, setServices] = useState([]); // Initial state as an empty array
@@ -16,8 +18,10 @@ const ServicesGrid = () => {
 
     // Define a function to fetch and update the services
     const fetchServices = async () => {
+        setLoading(true);
         const data = await getServices();
         setServices(data);
+        setLoading(false);
     };
     
   useEffect(() => {
@@ -71,11 +75,13 @@ const ServicesGrid = () => {
                 onClick={handleClickToOpen}
             />
             </div>
-            <div className="flex gap-4 flex-wrap mt-4"> 
-                 {filteredServices.map((service, index) => (
-                    <ServiceCard key={index} service={service} />
-                ))} 
-            </div>
+            <Loading loading={loading} >
+                <div className="flex gap-4 flex-wrap mt-4"> 
+                    {filteredServices.map((service, index) => (
+                        <ServiceCard key={index} service={service} />
+                    ))} 
+                </div>
+            </Loading>
             <AddServiceModal open={open} handleToClose={handleToClose} handleServiceSave={handleServiceSave} />
 
         </div>

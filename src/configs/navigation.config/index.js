@@ -108,6 +108,17 @@ const navigationConfig = [
                 subMenu: [],
             },
         ],
+        
+    },
+    {
+        key: 'subscriptions',
+        path: '/subscriptions',
+        title: 'Subscriptions',
+        translateKey: 'nav.subscriptions.subscriptionsview',
+        icon: 'rewards',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: [],
+        subMenu: [],
     },
 
     // {
