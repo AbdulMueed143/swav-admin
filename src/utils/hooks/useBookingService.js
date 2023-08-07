@@ -1,7 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-// import { setUser, initialState } from 'store/auth/userSlice'
-import { apiGetServices, apiAddService } from 'services/ServicesService'
-// import { onSignInSuccess, onSignOutSuccess, onSignInFailure, setToken, setSignedIn } from 'store/auth/sessionSlice'
+import { apiGetServices, apiAddService, apiAddBarber, apiGetBarbers } from 'services/BookingService'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
 import { values } from 'lodash'
@@ -13,6 +11,53 @@ function useBookingServices() {
     const query = useQuery()
 
     const { token, signedIn } = useSelector((state) => state.auth.session)
+
+
+    const getBarbers = async () => {
+        try {
+            const resp = await apiGetBarbers(token)
+
+            if(resp.status === 200) {
+                return resp.data;
+            }
+            else {
+                console.log(" failed")
+                return [];
+            }
+
+        } catch (errors) {
+            return []
+        }
+    }
+
+    const addBarbers = async (values) => {
+        try
+        {
+            console.log("Requeast to add a barbers")
+            console.log(values)
+
+            const resp = await apiAddBarber(token, values)
+            console.log("Aftr Barber Add Request")
+
+            console.log(resp)
+            if(resp.status === 200) {
+                return resp;
+            }
+            else {
+                return {
+                    status: -1,
+                    message: resp,
+                }    
+            }
+        } catch (errors) {
+            return {
+                status: -1,
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+
+    }
+
 
     const getServices = async () => {
         try {
@@ -35,13 +80,7 @@ function useBookingServices() {
     const addService = async (values) => {
         try
         {
-            console.log("Requeast to add a service")
-            console.log(values)
-
             const resp = await apiAddService(token, values)
-            console.log("Aftr req")
-
-            console.log(resp)
             if(resp.status === 200) {
                 return resp;
             }
@@ -63,7 +102,9 @@ function useBookingServices() {
     return {
         authenticated: token && signedIn,
         getServices,
+        getBarbers,
         addService,
+        addBarbers
     }
 }
 

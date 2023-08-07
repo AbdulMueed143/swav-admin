@@ -18,7 +18,7 @@ const Home = () => {
             </Loading>
 
             <div class="flex gap-4">
-                {/* <PackagesGrid /> */}
+                <PackagesGrid /> 
             </div>
         </div>
     </>

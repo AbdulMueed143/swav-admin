@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -11,7 +11,7 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import Select from 'components/ui/Select'
 
-
+import useBookingServices from 'utils/hooks/useBookingService'
 
 const validationSchema = Yup.object().shape({
     input: Yup.string()
@@ -30,16 +30,39 @@ const validationSchema = Yup.object().shape({
         .integer("Duration should be an integer"),
 })
 
-
-const servicesOptions = [
-    { value: 'HairCut', label: 'HairCut', color: '#00B8D9' },
-    { value: 'Beard', label: 'Beard', color: '#0052CC' },
-    { value: 'Straight razor shave', label: 'SRS', color: '#5243AA' },
-    { value: 'Waxing', label: 'Waxing', color: '#FF5630' },
-]
-
  
 export default function AddBarberModal({open, handleToClose}) {
+
+    const { getServices } = useBookingServices();
+    const [services, setServices] = useState([]); // Initial state as an empty array
+    const [selectedServices, setSelectedServices] = React.useState([]);
+    
+    // Define a function to fetch and update the services
+    const fetchServices = async () => {
+        const data = await getServices();
+        setServices(data);
+    };
+    
+    useEffect(() => {
+        // Call fetchServices on component mount
+        fetchServices();
+      }, []); // Empty dependency array means the effect will only run once
+      
+      // Map your services array to an array of options
+    const serviceMap = services.map(service => ({
+        value: service.name,
+        label: service.name,
+    }));
+
+
+    // const options = serviceMap.filter(
+    //     service => !serviceMap.find(option => option.value === serviceMap.value)
+    // );
+
+    // const handleChange = selectedOptions => {
+    //     setSelectedServices(selectedOptions || []);
+    // };
+
     return (
         <div stlye={{}}>
             <Dialog open={open} onClose={handleToClose}  fullWidth={true}
@@ -62,10 +85,6 @@ export default function AddBarberModal({open, handleToClose}) {
                     time: null,
                     singleCheckbox: false,
                     multipleCheckbox: [],
-                    radio: '',
-                    switcher: false,
-                    segment: [],
-                    upload: [],
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -106,6 +125,7 @@ export default function AddBarberModal({open, handleToClose}) {
                                   component={Input}
                               />
                           </FormItem>
+                        
 
                           <FormItem
                               asterisk
@@ -122,6 +142,27 @@ export default function AddBarberModal({open, handleToClose}) {
                           </FormItem>
 
                           <FormItem
+                              label="Services"
+                              invalid={errors.about && touched.about}
+                              errorMessage={errors.about}
+                          >
+                          {/* <Select
+                                isMulti
+                                placeholder="Please Select Services"
+                                options={serviceMap}
+                                // value={selectedServices}
+                                onChange={handleChange}
+                            /> */}
+
+            <Select
+                isMulti
+                placeholder="Please Select"
+                defaultValue={serviceMap}
+                options={serviceMap}
+            />
+                        </FormItem>
+
+                          <FormItem
                               label="About"
                               invalid={errors.about && touched.about}
                               errorMessage={errors.about}
@@ -134,18 +175,7 @@ export default function AddBarberModal({open, handleToClose}) {
                               />
                           </FormItem>
 
-                          <FormItem
-                              label="Services"
-                              invalid={errors.about && touched.about}
-                              errorMessage={errors.about}
-                          >
-                          <Select
-                            isMulti
-                            placeholder="Please Select Services"
-                            defaultValue={[]}
-                            options={servicesOptions}
-                        />
-                        </FormItem>
+                        
 
                           </FormContainer>
                     </Form>

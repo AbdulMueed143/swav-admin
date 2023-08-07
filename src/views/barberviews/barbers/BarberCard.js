@@ -1,6 +1,10 @@
 import {  Avatar, Card } from 'components/ui'
 
-const BarberCard = () => {
+const BarberCard = ({ barber }) => {
+
+    const { firstName, lastName, email, phoneNumber } = barber;
+
+
     const cardFooter = (
         <>
         <div className="flex items-center">
@@ -22,8 +26,8 @@ const BarberCard = () => {
 
             <span>
                 <h6 className="text-sm">Detials</h6>
-                <div className="text-xs">abdul@gmail.com</div>
-                <div className="text-xs">0239432344</div>
+                <div className="text-xs">{email}</div>
+                <div className="text-xs">{phoneNumber}</div>
 
             </span>
         </div>
@@ -53,10 +57,10 @@ const BarberCard = () => {
                 {/* <span className="text-emerald-600 font-semibold">
                     Cost 60 AUD
                 </span> */}
-                <h4 className="font-bold my-3">Abdul Mueed</h4>
+                <h4 className="font-bold my-3">{firstName} {lastName}</h4>
                 <p>
-Famouse for styles that have never been seen by humanity.                
-</p>
+                    Famouse for styles that have never been seen by humanity.                
+                </p>
             </Card>
         </div>
     )

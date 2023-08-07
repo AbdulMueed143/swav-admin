@@ -45,115 +45,116 @@ export default function AddServiceModal({open, handleToClose, handleServiceSave}
                 <DialogTitle>{"Add Service"}</DialogTitle>
                 <DialogContent>
 
-            <Formik
-                enableReinitialize
-                initialValues={{
-                    name: '',
-                    description: '',
-                    price: 0,
-                    averageTimeInMinutes: 0,
-                    properties : {}
-                }}
-                validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                    // handleServiceSave(values); // Call handleServiceSave with form values
-                    setSubmitting(false);
-                    
-                }}
-                innerRef={formIkRef}
+                <Formik
+                    enableReinitialize
+                    initialValues={{
+                        name: '',
+                        description: '',
+                        price: 0,
+                        averageTimeInMinutes: 0,
+                        properties : {}
+                    }}
+                    validationSchema={validationSchema}
+                    onSubmit={(values, { setSubmitting }) => {
+                        // handleServiceSave(values); // Call handleServiceSave with form values
+                        setSubmitting(false);
+                        
+                    }}
+                    innerRef={formIkRef}
 
-            >
+                >
 
-                {({ values, touched, errors, resetForm, submitForm }) => (
-                    <div>
-                      <Form>
-                        <FormContainer>
-                            <FormItem
-                                asterisk
-                                label="Service Name"
-                                invalid={errors.name && touched.name}
-                                errorMessage={errors.name}>
-                              <Field
-                                  type="text"
-                                  name="name"
-                                  placeholder="Service Name"
-                                  component={Input}
-                              />
-                          </FormItem>
-                          <FormItem
-                              label="Description"
-                              invalid={errors.description && touched.description}
-                              errorMessage={errors.description}>
-                              <Field
-                                  type="text"
-                                  name="description"
-                                  placeholder="Description"
-                                  component={Input}
-                              />
-                          </FormItem>
+                    {({ values, touched, errors, resetForm, submitForm }) => (
+                        <div>
+                            <Form>
+                                <FormContainer>
+                                    <FormItem
+                                        asterisk
+                                        label="Service Name"
+                                        invalid={errors.name && touched.name}
+                                        errorMessage={errors.name}>
+                                    <Field
+                                        type="text"
+                                        name="name"
+                                        placeholder="Service Name"
+                                        component={Input}
+                                    />
+                                </FormItem>
+                                <FormItem
+                                    label="Description"
+                                    invalid={errors.description && touched.description}
+                                    errorMessage={errors.description}>
+                                    <Field
+                                        type="text"
+                                        name="description"
+                                        placeholder="Description"
+                                        component={Input}
+                                    />
+                                </FormItem>
 
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingRight: '10px' }}>
-        <FormItem
-            asterisk
-            label="Price"
-            invalid={errors.price && touched.price}
-            errorMessage={errors.price}
-        >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Field
-                    type="number"
-                    name="price"
-                    placeholder="Price"
-                    component={Input}
-                    inputMode="numeric"
-                    min="0" // If you don't want negative values
-                    step="0.1" // If you want to allow cents
-                    style={{ flex: 1 }} // Make the input take as much space as possible
-                />
-                <span>$</span>
-            </div>
-        </FormItem>
-    </div>
-    <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingLeft: '10px' }}>
-        <FormItem
-            asterisk
-            label="Duration"
-            invalid={errors.averageTimeInMinutes && touched.averageTimeInMinutes}
-            errorMessage={errors.averageTimeInMinutes}
-        >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Field
-                    type="number"
-                    name="averageTimeInMinutes"
-                    placeholder="Duration in minutes"
-                    component={Input}
-                    step="5" // If you want to allow cents
-                    min="5" // Assuming the minimum duration is 1 minute
-                    style={{ flex: 1 }} // Make the input take as much space as possible
-                />
-                <span>Min</span>
-            </div>
-        </FormItem>
-    </div>
-</div>
-
-                        </FormContainer>
-                    </Form>
-
-                    <DialogActions>
-                    <Button onClick={handleToClose}
-                        color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={() => handleServiceSave(values)}
-                        color="primary">
-                        Save
-                    </Button>
-                </DialogActions>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingRight: '10px' }}>
+                <FormItem
+                    asterisk
+                    label="Price"
+                    invalid={errors.price && touched.price}
+                    errorMessage={errors.price}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Field
+                            type="number"
+                            name="price"
+                            placeholder="Price"
+                            component={Input}
+                            inputMode="numeric"
+                            min="0" // If you don't want negative values
+                            step="0.1" // If you want to allow cents
+                            style={{ flex: 1 }} // Make the input take as much space as possible
+                        />
+                        <span>$</span>
                     </div>
-                )}
-            </Formik>
+                </FormItem>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingLeft: '10px' }}>
+                <FormItem
+                    asterisk
+                    label="Duration"
+                    invalid={errors.averageTimeInMinutes && touched.averageTimeInMinutes}
+                    errorMessage={errors.averageTimeInMinutes}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Field
+                            type="number"
+                            name="averageTimeInMinutes"
+                            placeholder="Duration in minutes"
+                            component={Input}
+                            step="5" // If you want to allow cents
+                            min="5" // Assuming the minimum duration is 1 minute
+                            style={{ flex: 1 }} // Make the input take as much space as possible
+                        />
+                        <span>Min</span>
+                    </div>
+                </FormItem>
+            </div>
+        </div>
+
+                                </FormContainer>
+                            </Form>
+
+                            <DialogActions>
+                                <Button onClick={handleToClose}
+                                    color="primary">
+                                    Cancel
+                                </Button>
+                                <Button onClick={() => handleServiceSave(values)}
+                                    color="primary">
+                                    Save
+                                </Button>
+                            </DialogActions>
+                        </div>
+                    )}
+                </Formik>
+
                 </DialogContent>
                 
             </Dialog>

@@ -1,12 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BarberCard from './BarberCard';
 import ButtonWithIcon from '../../../components/ui/custom/barbers/ButtonWithIcon'
 import AddBarberModal from './dialogs/AddBarberModal';
+import useBookingServices from 'utils/hooks/useBookingService'
+
 
 const BarbersGrid = () => {
     // Initialize state for the search input
-    const [search, setSearch] = useState('');
     const [open, setOpen] = useState(false);
+
+    const { getBarbers, addBarbers } = useBookingServices();
+    const [barbers, setBarbers] = useState([]); // Initial state as an empty array
+    const [search, setSearch] = useState('a');
+
+    // Define a function to fetch and update the services
+    const fetchBarbers = async () => {
+        const data = await getBarbers();
+        setBarbers(data);
+    };
+    
+    useEffect(() => {
+        fetchBarbers();
+    }, []); // Empty dependency array means the effect will only run once
+
  
     const handleClickToOpen = () => {
         setOpen(true);
@@ -16,37 +32,29 @@ const BarbersGrid = () => {
         setOpen(false);
     };
 
-
-    // Mock data for your services
-    const services = [
-        { name: 'Barber 1' },
-        { name: 'Service 2' },
-        { name: 'Barber 3' },
-        { name: 'Service 4' },
-        { name: 'Service 5' },
-    ];
-
     // Filter the services based on the search input
-    const filteredServices = services.filter(service =>
-        service.name.toLowerCase().includes(search.toLowerCase())
+    const filteredBarbers = barbers.filter(barber => 
+        barber.firstName.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
-        <div>
-            <div className="flex justify-end gap-4 items-center">  {/* Add flex, justify-end, and items-center for alignment */}
-                <input 
-                    type="text" 
-                    value={search} 
-                    onChange={(e) => setSearch(e.target.value)} 
-                    placeholder="Search for a barber..."
-                    className="p-2 border rounded"
+
+        <div className="w-full"> {/* Ensures the container is full width */}
+            <div className="flex justify-end gap-4 items-center">
+            <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search for a barber..."
+                className="p-2 border rounded"
                 />
-                <ButtonWithIcon 
-                label="Add Barber"  onClick={handleClickToOpen} />
+            <ButtonWithIcon 
+                label="Add Barber"  onClick={handleClickToOpen} 
+            />
             </div>
             <div className="flex gap-4 flex-wrap mt-4"> 
-                {filteredServices.map((service, index) => (
-                    <BarberCard key={index} name={service.name} />
+                {filteredBarbers.map((barber, index) => (
+                    <BarberCard key={index} barber={barber} />
                 ))}
             </div>
 
