@@ -1,14 +1,10 @@
 import { Loading } from 'components/shared';
 import React from 'react';
-import CustomAccordion from '../components/according';
+import CustomAccordion from '../components/CustomAccordion';
 
 const AvailabilitiesView = () => {
-    const loading = false
     return <>
-        <Loading loading={loading}>
-            
             <CustomAccordion />
-        </Loading>
     </>
 }
 

@@ -35,16 +35,6 @@ const navigationConfig = [
                 subMenu: [],
             },
             {
-                key: 'calendar.scheduling',
-                path: '/scheduling',
-                title: 'Scheduling',
-                translateKey: 'nav.calendar.scheduling',
-                icon: '',
-                type: NAV_ITEM_TYPE_ITEM,
-                authority: [],
-                subMenu: [],
-            },
-            {
                 key: 'calendar.availability',
                 path: '/availability',
                 title: 'Availability',
