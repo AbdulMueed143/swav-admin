@@ -37,6 +37,28 @@ const BarbersGrid = () => {
         setOpen(false);
     };
 
+
+    const handleBarberSave = async (formValues, amenities) => {
+        // Handle the form submission here using formValues
+        formValues.properties = {}
+        formValues.amenities = amenities;
+        console.log(formValues);
+
+        //lets make call to server
+        const data = await addBarbers(formValues);
+        if(data.status === -1) {
+            //something went wrong ...
+        }
+        else {
+              // Call fetchServices to refresh the services
+            fetchBarbers();
+        }
+
+        setOpen(false);
+    };
+
+
+
     // Filter the services based on the search input
     const filteredBarbers = barbers.filter(barber => 
         barber.firstName.toLowerCase().includes(search.toLowerCase())
@@ -65,7 +87,7 @@ const BarbersGrid = () => {
                     </div>
                 </Loading>
 
-                <AddBarberModal open={open} handleToClose={handleToClose} />
+                <AddBarberModal open={open} handleToSave={handleBarberSave} handleToClose={handleToClose} />
             </div>
     );
 };

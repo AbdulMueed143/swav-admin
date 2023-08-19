@@ -36,7 +36,7 @@ export async function apiGetBarbers(token) {
 
 export async function apiAddBarber(token, data) {
     return ApiService.fetchData({
-        url: '/api/v1/shop/amenities',
+        url: '/api/v1/shop/add/barber',
         method: 'post',
         data,
         headers: {

@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import { FormItem, FormContainer } from 'components/ui'
 import Input from 'components/ui/Input'
 import { Field, Form, Formik } from 'formik'
+import { useFormikContext } from 'formik';
 import * as Yup from 'yup'
 import Select from 'components/ui/Select'
 
@@ -31,16 +32,19 @@ const validationSchema = Yup.object().shape({
 })
 
  
-export default function AddBarberModal({open, handleToClose}) {
+export default function AddBarberModal({open, handleToSave, handleToClose}) {
 
     const { getServices } = useBookingServices();
     const [services, setServices] = useState([]); // Initial state as an empty array
-    const [selectedServices, setSelectedServices] = React.useState([]);
+    const [selectedAmenities, setSelectedAmenities] = React.useState([]);
+    // const { setFieldValue } = useFormikContext();
+
     
     // Define a function to fetch and update the services
     const fetchServices = async () => {
         const data = await getServices();
         setServices(data);
+        setSelectedAmenities(data);
     };
     
     useEffect(() => {
@@ -53,15 +57,6 @@ export default function AddBarberModal({open, handleToClose}) {
         value: service.name,
         label: service.name,
     }));
-
-
-    // const options = serviceMap.filter(
-    //     service => !serviceMap.find(option => option.value === serviceMap.value)
-    // );
-
-    // const handleChange = selectedOptions => {
-    //     setSelectedServices(selectedOptions || []);
-    // };
 
     return (
         <div stlye={{}}>
@@ -78,120 +73,142 @@ export default function AddBarberModal({open, handleToClose}) {
             <Formik
                 enableReinitialize
                 initialValues={{
-                    input: '',
-                    select: '',
-                    multipleSelect: [],
-                    date: null,
-                    time: null,
-                    singleCheckbox: false,
-                    multipleCheckbox: [],
+                    firstName: '',
+                    lastName: '',
+                    phoneNumber: '',
+                    email: '',
+                    amenities: services,
+                    about: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                    console.log('values', values)
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2))
-                        setSubmitting(false)
-                    }, 400)
+                   
+                    setSubmitting(false);
+
                 }}
             >
-                {({ values, touched, errors, resetForm }) => (
-                      <Form>
-                      <FormContainer>
-                          <FormItem
-                              asterisk
-                              label="Name"
-                              invalid={errors.input && touched.input}
-                              errorMessage={errors.input}
-                          >
-                              <Field
-                                  type="text"
-                                  name="serviceName"
-                                  placeholder="Service Name"
-                                  component={Input}
-                              />
-                          </FormItem>
+                {({ values, touched, errors, resetForm}) => (
 
-                          <FormItem
-                              asterisk
-                              label="Email"
-                              invalid={errors.email && touched.email}
-                              errorMessage={errors.email}
-                          >
-                              <Field
-                                  type="text"
-                                  name="email"
-                                  placeholder="Email"
-                                  component={Input}
-                              />
-                          </FormItem>
-                        
+                    <div>
+                        <Form>
+                            <FormContainer>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <FormItem
+                                        
+                                        label="First Name"
+                                        invalid={errors.firstName && touched.firstName}
+                                        errorMessage={errors.firstName}
+                                    >
+                                    <Field
+                                    asterick
+                                        type="text"
+                                        autoComplete="off"
+                                        name="firstName"
+                                        placeholder="First Name"
+                                        component={Input}
 
-                          <FormItem
-                              asterisk
-                              label="Phone Number"
-                              invalid={errors.phoneNumber && touched.phoneNumber}
-                              errorMessage={errors.phoneNumber}
-                          >
-                              <Field
-                                  type="text"
-                                  name="phoneNumber"
-                                  placeholder="Phone Number"
-                                  component={Input}
-                              />
-                          </FormItem>
+                                    />
+                                </FormItem>
+                                <div style={{width:"10px"}}> </div>
+                                <FormItem
+                                required
+                                    label="Last Name"
+                                    invalid={errors.lastName && touched.lastName}
+                                    errorMessage={errors.lastName}
+                                >
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="lastName"
+                                        placeholder="Last Name"
+                                        component={Input}
+                                    />
+                                </FormItem>
 
-                          <FormItem
-                              label="Services"
-                              invalid={errors.about && touched.about}
-                              errorMessage={errors.about}
-                          >
-                          {/* <Select
-                                isMulti
-                                placeholder="Please Select Services"
-                                options={serviceMap}
-                                // value={selectedServices}
-                                onChange={handleChange}
-                            /> */}
+                                </div>
 
-            <Select
-                isMulti
-                placeholder="Please Select"
-                defaultValue={serviceMap}
-                options={serviceMap}
-            />
-                        </FormItem>
+                                <FormItem
+                                    asterisk
+                                    label="Email"
+                                    invalid={errors.email && touched.email}
+                                    errorMessage={errors.email}
+                                >
+                                    <Field
+                                        type="text"
+                                        name="email"
+                                        placeholder="Email"
+                                        component={Input}
+                                    />
+                                </FormItem>
 
-                          <FormItem
-                              label="About"
-                              invalid={errors.about && touched.about}
-                              errorMessage={errors.about}
-                          >
-                              <Field
-                                  type="text"
-                                  name="about"
-                                  placeholder="About Barber"
-                                  component={Input}
-                              />
-                          </FormItem>
+                                <FormItem
+                                    asterisk
+                                    label="Phone Number"
+                                    invalid={errors.phoneNumber && touched.phoneNumber}
+                                    errorMessage={errors.phoneNumber}
+                                >
+                                    <Field
+                                        type="text"
+                                        name="phoneNumber"
+                                        placeholder="Phone Number"
+                                        component={Input}
+                                    />
+                                </FormItem>
 
-                        
+                                <FormItem
+                                    label="Services"
+                                    invalid={errors.amenities && touched.amenities}
+                                    errorMessage={errors.amenities}
+                                >
+                               
+                                    <Select
+                                        isMulti
+                                        placeholder="Please Select"
+                                        defaultValue={serviceMap}
+                                        options={serviceMap}
+                                        onChange={(selectedOptions) => {
+                                            // Get selected amenities from services list using the selected names
+                                            const selectedAmenities = selectedOptions.map(option => {
+                                                return services.find(service => service.name === option.value);
+                                            });
 
-                          </FormContainer>
-                    </Form>
+                                            setSelectedAmenities(selectedAmenities);
+                                    
+                                        }}
+                                    />
+                                </FormItem>
+
+                                <FormItem
+                                    label="About"
+                                    invalid={errors.amenities && touched.about}
+                                    errorMessage={errors.about}
+                                >
+                                    <Field
+                                        type="text"
+                                        name="about"
+                                        placeholder="About Barber"
+                                        component={Input}
+                                    />
+                                </FormItem>
+
+                            </FormContainer>
+                        </Form>
+
+                        <DialogActions>
+                            <Button onClick={handleToClose} color="primary">
+                                Cancel
+                            </Button>
+                            <Button  onClick={() => handleToSave(values, selectedAmenities)} color="primary">
+                                Save
+                            </Button>
+
+                        </DialogActions>
+                    </div>
                 )}
             </Formik>
+
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleToClose}
-                        color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleToClose}
-                        color="primary">
-                        Save
-                    </Button>
-                </DialogActions>
+               
             </Dialog>
         </div>
     );

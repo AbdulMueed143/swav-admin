@@ -2,7 +2,7 @@ import {  Avatar, Card } from 'components/ui'
 
 const BarberCard = ({ barber }) => {
 
-    const { firstName, lastName, email, phoneNumber } = barber;
+    const { firstName, lastName, email, phoneNumber, amenities, about } = barber;
 
 
     const cardFooter = (
@@ -16,10 +16,19 @@ const BarberCard = ({ barber }) => {
                 src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
                 
             /> */}
-            <span>
+           <span>
                 <h6 className="text-sm">Services</h6>
-                <span className="text-xs">Hair cut, beard style</span>
+                <div className="text-xs overflow-hidden">
+                    {amenities && amenities.length > 0 ? (
+                        amenities.map((amenity, index) => (
+                            <span key={index}>{amenity.name}</span>
+                        ))
+                    ) : (
+                        <div>No services available</div>
+                    )}
+                </div>
             </span>
+
         </div>
 
         <div className="flex items-center">
@@ -36,15 +45,16 @@ const BarberCard = ({ barber }) => {
     )
 
     const cardHeader = (
-        <div className="rounded-tl-lg rounded-tr-lg overflow-hidden">
+        <div className="rounded-tl-lg rounded-tr-lg overflow-hidden"  style={{ height: '250px', width: '300px' }}>
             <img 
-            style={{width: '100%', objectFit: 'cover'}} 
-            src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="card header" />
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80" 
+                alt="card header" 
+            />
         </div>
-    )
-
+    );
     return (
-        <div className="max-w-xs style={{ maxHeight: '240px' }}">
+        <div className="max-w-xs" style={{ width: '300px', height: '500px' }}>
             <Card
                 clickable
                 className="hover:shadow-lg transition duration-150 ease-in-out dark:border dark:border-gray-600 dark:border-solid"
@@ -59,7 +69,7 @@ const BarberCard = ({ barber }) => {
                 </span> */}
                 <h4 className="font-bold my-3">{firstName} {lastName}</h4>
                 <p>
-                    Famouse for styles that have never been seen by humanity.                
+                    {about}             
                 </p>
             </Card>
         </div>
