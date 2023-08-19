@@ -21,6 +21,7 @@ import dayjs from 'dayjs';
 import { Button,  IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import { DatePicker } from 'components/ui';
+import AddBarberAvailabilityModal from '../dialogs/AddBarberAvailabilityModal';
 
 
   const useStyles = makeStyles((theme) =>
@@ -36,11 +37,21 @@ import { DatePicker } from 'components/ui';
 
 
 
-const CustomAccordion = () => {
+const CustomAccordion = ({barber}) => {
 
   const [holidays, setHolidays] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [isDatePickerOpen, setDatePickerOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleClickToOpen = () => {
+    console.log("Instructions to open")
+      setOpen(true);
+  };
+
+  const handleToClose = () => {
+      setOpen(false);
+  };
 
   const daysOfWeek = {'Holidays' : ['2nd August', '11th Sept'], 'Monday, 7th Aug' : ['8:30AM - 11:00 AM', 'Break', '12:00 AM - 5:00PM'], 'Tuesday, 8th Aug' : ['8:30AM - 11:00 AM'], 'Wednesday' : ['8:30AM - 11:00 AM'], 'Thursday' : ['8:30AM - 11:00 AM'], 'Friday' : ['8:30AM - 11:00 AM'], 'Saturday' : ['8:30AM - 11:00 AM'], 'Sunday' : ['Not Working']};
 
@@ -64,14 +75,14 @@ const CustomAccordion = () => {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography> <b>Abdul Mueed</b>(View and Update Barber Schedule)</Typography>
+          <Typography> <b> {barber.firstName} {barber.lastName}</b> (View and Update Barber Schedule)</Typography>
         </AccordionSummary>
 
         <AccordionDetails>
 
         <div className="grid grid-flow-row auto-rows-max gap-4 bg-zinc-50" >
             <div style={{ right: 20, position: 'absolute' }}>
-                <IconButton >
+                <IconButton  onClick={handleClickToOpen} >
                     <EditIcon />
                 </IconButton>
             </div>
@@ -109,6 +120,9 @@ const CustomAccordion = () => {
         </AccordionDetails>
       </Accordion>
       </Box> 
+
+      <AddBarberAvailabilityModal open={open} handleToSave={handleToClose} handleToClose={handleToClose} />
+      
     </div>
   );
 };
