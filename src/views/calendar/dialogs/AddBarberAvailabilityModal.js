@@ -3,16 +3,20 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import Button from "@material-ui/core/Button";
 
-import { FormItem, FormContainer } from 'components/ui'
-import Input from 'components/ui/Input'
-import { Field, Form, Formik, FieldArray } from 'formik'
+import { FormItem, FormContainer } from 'components/ui';
+import Input from 'components/ui/Input';
+import { Field, Form, Formik, FieldArray } from 'formik';
 import { useFormikContext } from 'formik';
-import * as Yup from 'yup'
-import Select from 'components/ui/Select'
+import * as Yup from 'yup';
 
-import useBookingServices from 'utils/hooks/useBookingService'
+import useBookingServices from "utils/hooks/useBookingService";
+import { DatePicker, Space } from 'antd';
+import { TimePicker } from 'antd';
+import ButtonWithIcon from "components/ui/custom/barbers/ButtonWithIcon";
+import { Button } from 'antd';
+
+const { RangePicker } = DatePicker;
 
 const validationSchema = Yup.object().shape({
 
@@ -60,16 +64,16 @@ export default function AddBarberAvailabilityModal({open, handleToSave, handleTo
                     enableReinitialize
                     initialValues={{
                     days:  { 
-                        monday: [],
-                        teusday: [],
-                        wednesday: [],
-                        thursday: [],
-                        friday: [],
-                        saturday: [],
-                        sunday: [],
+                        MONDAY: [],
+                        TUESDAY: [],
+                        WEDNESDAY: [],
+                        THURSDAY: [],
+                        FRIDAY: [],
+                        SATURDAY: [],
+                        SUNDAY: [],
                     },
                     holidays: [],
-                    overrideShifts: [],
+                    overrideShifts: {},
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting }) => {
@@ -89,21 +93,38 @@ export default function AddBarberAvailabilityModal({open, handleToSave, handleTo
                                     <FieldArray
                                         name={`days.${day}`}
                                         render={(arrayHelpers) => (
-                                        <div>
+                                            <div style={{padding: 5 + 'px'}}>
                                             {values.days[day].map((shift, index) => (
-                                            <div key={index}>
-                                                <Field name={`days.${day}.${index}.start`} placeholder="Start Time" />
-                                                <Field name={`days.${day}.${index}.end`} placeholder="End Time" />
-                                                <button type="button" onClick={() => arrayHelpers.remove(index)}>Remove Shift</button>
-                                            </div>
+                                                <div key={index} style={{padding: 5 + 'px'}}>
+                                                    <TimePicker.RangePicker 
+                                                    getPopupContainer={trigger => trigger.parentElement} 
+                                                    format="HH:mm" 
+                                                    onChange={(time, timeString) => {
+                                                        const updatedShift = { startTime: timeString[0], endTime: timeString[1] };
+                                                        const newDaysArray = [...values.days[day]]; // make a copy of the current array
+                                                        newDaysArray[index] = updatedShift; // update the specific time range in the array
+                                                        arrayHelpers.replace(index, updatedShift); // replace the current index with the new object
+                                                        // OR you can set it directly using Formik's setFieldValue
+                                                        // setFieldValue(`days.${day}`, newDaysArray);
+                                                      }} 
+                                                    />
+                          
+                                                    <Button type="primary" onClick={() => arrayHelpers.remove(index)} danger>
+                                                        Remove Shift
+                                                    </Button>
+
+                                                </div>
                                             ))}
-                                            <button type="button" onClick={() => arrayHelpers.push({ start: '', end: '' })}>Add Shift</button>
+                                            
+                                            <Button t onClick={() => arrayHelpers.push({ startTime: '', endTime: '' })} >
+                                                Add Shift
+                                            </Button>
+
                                         </div>
                                         )}
                                     />
                                     </div>
                                 ))}
-
                                     
                                 <div>
                                     <h4>Holidays</h4>
@@ -113,11 +134,27 @@ export default function AddBarberAvailabilityModal({open, handleToSave, handleTo
                                         <div>
                                         {values.holidays.map((date, index) => (
                                             <div key={index}>
-                                            <Field type="date" name={`holidays.${index}`} />
-                                            <button type="button" onClick={() => arrayHelpers.remove(index)}>Remove Date</button>
+                                            <RangePicker 
+                                            getPopupContainer={trigger => trigger.parentElement}  
+                                            name={`holidays.${index}`} 
+                                            onChange={(dates, dateStrings) => {
+                                                const updatedDate = { startDate: dateStrings[0], endDate: dateStrings[1] };
+                                                arrayHelpers.replace(index, updatedDate);
+                                                // Or alternatively,
+                                                // setFieldValue(`holidays.${index}`, updatedDate);
+                                              }}
+                                            />
+
+                                                <Button type="primary" onClick={() => arrayHelpers.remove(index)} danger>
+                                                    Remove Date
+                                                </Button>
                                             </div>
                                         ))}
-                                        <button type="button" onClick={() => arrayHelpers.push('')}>Add Date</button>
+
+                                            <Button  onClick={() => arrayHelpers.push('')}>
+                                                Add Date
+                                            </Button>
+
                                         </div>
                                     )}
                                     />
@@ -129,6 +166,7 @@ export default function AddBarberAvailabilityModal({open, handleToSave, handleTo
                                     <Button onClick={handleToClose} color="primary">
                                         Cancel
                                     </Button>
+                                    
                                     <Button  onClick={() => handleToSave(values, selectedAmenities)} color="primary">
                                         Save
                                     </Button>

@@ -13,9 +13,7 @@ import { ExpandMore } from '@material-ui/icons';
 import AvailableTimes from './Availabletimes';
 import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import Table from 'components/ui/Table'
-
-
-
+import useBookingServices from "utils/hooks/useBookingService";
 
 import dayjs from 'dayjs';
 import { Button,  IconButton } from '@material-ui/core';
@@ -37,8 +35,9 @@ import AddBarberAvailabilityModal from '../dialogs/AddBarberAvailabilityModal';
 
 
 
-const CustomAccordion = ({barber}) => {
+const CustomAccordion =  ({barber})  => {
 
+    const { addBarberAvailability } = useBookingServices();
   const [holidays, setHolidays] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [isDatePickerOpen, setDatePickerOpen] = useState(false);
@@ -53,6 +52,22 @@ const CustomAccordion = ({barber}) => {
       setOpen(false);
   };
 
+  const handleToSave = async (values, selectedAmenities) => {
+    console.log("Values");
+    console.log(values);
+
+    //lets make call to server
+    const data = await addBarberAvailability(values, barber);
+    if(data.status === -1) {
+        //something went wrong ...
+    }
+    else {
+          // Call fetchServices to refresh the services
+    }
+
+    setOpen(false);
+};
+
   const daysOfWeek = {'Holidays' : ['2nd August', '11th Sept'], 'Monday, 7th Aug' : ['8:30AM - 11:00 AM', 'Break', '12:00 AM - 5:00PM'], 'Tuesday, 8th Aug' : ['8:30AM - 11:00 AM'], 'Wednesday' : ['8:30AM - 11:00 AM'], 'Thursday' : ['8:30AM - 11:00 AM'], 'Friday' : ['8:30AM - 11:00 AM'], 'Saturday' : ['8:30AM - 11:00 AM'], 'Sunday' : ['Not Working']};
 
   const handleDateChange = (date) => {
@@ -63,7 +78,7 @@ const CustomAccordion = ({barber}) => {
 
   const classes = useStyles();
 
-  const maxRows = Math.max(...Object.values(daysOfWeek).map(times => times.length));
+   const maxRows = Math.max(...Object.values(daysOfWeek).map(times => times.length));
 
 
   return (
@@ -99,12 +114,10 @@ const CustomAccordion = ({barber}) => {
                               </Tr>
                           </THead>
                           <TBody>
-                              {/* Create a row for each time range */}
                               {Array.from({ length: maxRows }).map((_, rowIndex) => (
                                   <Tr key={rowIndex}>
                                       {Object.keys(daysOfWeek).map(day => (
                                           <Td key={day} style={{ fontSize: '11px' }}>
-                                              {/* If the current day has a time range for this row, display it */}
                                               {daysOfWeek[day][rowIndex] || ''}
                                           </Td>
                                       ))}
@@ -115,13 +128,12 @@ const CustomAccordion = ({barber}) => {
                   </div>
               </div>
             </div>
-
           </div>
         </AccordionDetails>
       </Accordion>
       </Box> 
 
-      <AddBarberAvailabilityModal open={open} handleToSave={handleToClose} handleToClose={handleToClose} />
+       <AddBarberAvailabilityModal open={open} handleToSave={handleToSave} handleToClose={handleToClose} />
       
     </div>
   );

@@ -11,19 +11,22 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 const validationSchema = Yup.object().shape({
-    input: Yup.string()
+    name: Yup.string()
         .min(3, 'Too Short!')
         .max(20, 'Too Long!')
-        .required('Please input user name!'),
+        .required('Please input user name 3 to 20 charachters.'),
+    description: Yup.string()
+        .max(255, 'Too Long!')
+        .required('Description should be max 255 charachters.'),
     price: Yup
         .number()
         .required("Price is required")
-        .positive("Price should be a positive number")
+        .positive("Price should be greater than 0")
         .integer("Price should be an integer"),
     averageTimeInMinutes: Yup
         .number()
         .required("Duration is required")
-        .positive("Duration should be a positive number")
+        .positive("Duration should be a greater than 0")
         .integer("Duration should be an integer"),
 })
 
@@ -57,11 +60,11 @@ export default function AddServiceModal({open, handleToClose, handleServiceSave}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting }) => {
                         // handleServiceSave(values); // Call handleServiceSave with form values
+                        //lets validate false
                         setSubmitting(false);
                         
                     }}
                     innerRef={formIkRef}
-
                 >
 
                     {({ values, touched, errors, resetForm, submitForm }) => (

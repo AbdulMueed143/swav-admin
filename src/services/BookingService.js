@@ -46,3 +46,14 @@ export async function apiAddBarber(token, data) {
 }
 
 
+export async function apiAddBarberAvailability(token, data) {
+    return ApiService.fetchData({
+        url: '/api/v1/availabilities',
+        method: 'post',
+        data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
