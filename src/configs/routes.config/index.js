@@ -19,7 +19,7 @@ export const protectedRoutes = [
     {
         key: 'calendar.availability',
         path: '/availability',
-        component: React.lazy(() => import('views/calendar/availability/AvailabilityView')),
+        component: React.lazy(() => import('views/calendar/availability/updatedAvailabilityView')),
         authority: [],
     },
     {

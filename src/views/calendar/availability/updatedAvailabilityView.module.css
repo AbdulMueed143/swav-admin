@@ -1,0 +1,165 @@
+
+
+.loader{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    justify-content: center;
+}
+
+.loader {
+    width: 44.8px;
+    height: 44.8px;
+    color: #4F46E5;
+    position: relative;
+    background: radial-gradient(11.2px,currentColor 94%,#0000);
+  }
+  
+  .loader:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(10.08px at bottom right,#0000 94%,currentColor) top    left,
+            radial-gradient(10.08px at bottom left ,#0000 94%,currentColor) top    right,
+            radial-gradient(10.08px at top    right,#0000 94%,currentColor) bottom left,
+            radial-gradient(10.08px at top    left ,#0000 94%,currentColor) bottom right;
+    background-size: 22.4px 22.4px;
+    background-repeat: no-repeat;
+    animation: loader 1.5s infinite cubic-bezier(0.3,1,0,1);
+  }
+
+  @keyframes loader {
+    33% {
+      inset: -11.2px;
+      transform: rotate(0deg);
+    }
+  
+    66% {
+      inset: -11.2px;
+      transform: rotate(90deg);
+    }
+  
+    100% {
+      inset: 0;
+      transform: rotate(90deg);
+    }
+  }
+
+  /* Updated CSS */
+  .table {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .cell {
+    flex: 0.45 1;
+    padding: 8px;
+    padding-inline: 0;
+  }
+  .cell:not(.barberHeading){
+    text-align: center;
+  }
+  
+  .header {
+    font-weight: bold;
+    background-color: #f0f0f0;
+    margin: 0 0 20px;
+    color: rgb(63 64 67);
+    padding: 10px;
+    font-size: 15px;
+  }
+  .barberName{
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .barberHeading{
+    flex-grow: 0.9;
+    position: relative;
+    left: 10px;
+  }
+  .fs12{
+    font-size: 14px;
+    line-height: 18px;
+    padding-inline: 0;
+    display: flex;
+    align-items: center;
+    word-spacing: -2px;
+  }
+  .editBtn{
+    font-size: 13px;
+    color: rgb(22 22 207);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6363e8;
+    color: #fff;
+    border-radius: 10px;
+    padding: 6px 12px 6px 6px;
+  }
+  .editBtn:hover{
+    text-decoration: underline;
+  }
+  .editBtn svg{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin: 0 10px;
+  }
+  .rowShadow{
+    border-radius: 6px;
+    background-color: rgb(240, 240, 240);
+    background-color: #fff;
+    margin: 0 0 15px;
+    color: #000;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    padding: 10px;
+    transition: background-color 0.3s ease;
+  }
+  .rowShadow:hover{
+    cursor: pointer;
+    background-color: rgba(240, 240, 240, 0.6);
+  }
+  .rowShadow img{
+    transition: all 0.3s linear;
+  }
+  .rowShadow:hover img{
+    transform: scale(1.2);
+  }
+  .availableDate{
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 28px;
+    margin: 0 0 30px;
+    color: #000;
+  }
+  .imgWrap{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 0.9;
+}
+.holiday{
+  background-color: rgba(248, 215, 218, 0.8);
+  justify-content: center;
+  border-radius: 14px;
+}
+.notHoliday{
+  background-color: rgb(228 225 225);
+  justify-content: center;
+  border-radius: 14px;
+  transition: all 0.3s ease;
+}
+.notHoliday:hover{
+  transform: scale(1.09);
+}

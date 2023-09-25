@@ -24,7 +24,7 @@ const PageContainer = (props) => {
     } = props
 
     return (
-        <div className="h-full flex flex-auto flex-col justify-between">
+        <div className="h-full flex flex-auto flex-col justify-between grey-bg">
             <main className="h-full">
                 <div
                     className={classNames(

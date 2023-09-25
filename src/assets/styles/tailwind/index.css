@@ -70,7 +70,6 @@
     height: auto;
     margin-bottom: 20px; /* Space between the logo and the form, adjust as needed */
   }
-
-  
-  
-  
+  .grey-bg{
+    background-color: rgba(240, 240, 240, 0.5);
+  }
