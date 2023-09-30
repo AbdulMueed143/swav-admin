@@ -10,7 +10,8 @@ const DATA = [
           "day": "Monday",
           "date": "2023-09-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
@@ -39,13 +40,15 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-09-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
           "date": "2023-09-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
@@ -68,7 +71,8 @@ const DATA = [
           "day": "Monday",
           "date": "2023-09-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
@@ -97,13 +101,15 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-09-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
           "date": "2023-09-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
@@ -126,7 +132,8 @@ const DATA = [
           "day": "Monday",
           "date": "2023-09-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
@@ -155,13 +162,15 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-09-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
           "date": "2023-09-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
@@ -184,7 +193,8 @@ const DATA = [
           "day": "Monday",
           "date": "2023-09-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
@@ -213,13 +223,15 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-09-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
           "date": "2023-09-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
@@ -242,7 +254,8 @@ const DATA = [
           "day": "Monday",
           "date": "2023-09-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
@@ -271,13 +284,15 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-09-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
           "date": "2023-09-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "]
+          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [

@@ -54,7 +54,7 @@
   }
   
   .row {
-    display: flex;
+    /* display: flex; */
     flex-direction: row;
     gap: 15px;
     align-items: center;
@@ -123,7 +123,7 @@
     color: #000;
     font-weight: 500;
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 10px 10px 10px 15px;
     transition: background-color 0.3s ease;
   }
   .rowShadow:hover{
@@ -155,11 +155,21 @@
   border-radius: 14px;
 }
 .notHoliday{
-  background-color: rgb(228 225 225);
+  /* background-color: rgb(228 225 225); */
   justify-content: center;
-  border-radius: 14px;
+  /* border-radius: 14px; */
   transition: all 0.3s ease;
+  padding: 0;
 }
 .notHoliday:hover{
   transform: scale(1.09);
+}
+.itemWrap{
+  background-color: rgb(228 225 225);
+  border-radius: 14px;
+  padding: 4px 5px;
+  display: inline-block;
+}
+.itemWrap:not(:last-child){
+  margin: 0 0 5px;
 }

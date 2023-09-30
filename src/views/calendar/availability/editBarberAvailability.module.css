@@ -1,0 +1,199 @@
+.row {
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .cell {
+    flex: 0.45 1;
+    padding: 8px;
+    padding-inline: 0;
+    text-align: center;
+  }
+  .header {
+    font-weight: bold;
+    background-color: #f0f0f0;
+    margin: 0 0 20px;
+    color: rgb(63 64 67);
+    padding: 10px;
+    font-size: 15px;
+  }
+  .holiday{
+    background-color: rgba(248, 215, 218, 0.8);
+    justify-content: center;
+    border-radius: 14px;
+  }
+  .notHoliday{
+    /* background-color: rgb(228 225 225); */
+    justify-content: center;
+    border-radius: 14px;
+    transition: all 0.3s ease;
+  }
+  /* .notHoliday:hover{
+    transform: scale(1.09);
+  } */
+  .fs12{
+    font-size: 14px;
+    line-height: 18px;
+    padding-inline: 0;
+    display: flex;
+    align-items: center;
+    word-spacing: -2px;
+    font-weight: 500;
+    color: #000;
+  }
+  .addBtn{
+    font-size: 13px;
+    color: rgb(22 22 207);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6363e8;
+    color: #fff;
+    border-radius: 6px;
+    padding: 6px 12px 6px;
+  }
+  .addBtn:hover{
+    background-color: #3a3abc;
+  }
+  .editBtn:hover{
+    text-decoration: underline;
+  }
+  .editBtn svg{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin: 0 10px;
+  }
+  .addShiftBtn{
+    position: absolute;
+    bottom: -60px;
+  }
+  .editWrapper{
+
+  }
+  .calendarView{
+    width: 70%
+  }
+  .addShift{
+    width: 30%;
+  }
+  .calendarWrapper{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+  }
+  .addHoliday{
+    flex: 0 0 60%;
+  }
+  .holidayList{
+    background-color: #fff;
+    width: 60%;
+    margin: 30px auto 0;
+    padding: 15px;
+    border-radius: 10px;
+  }
+  .holidayList li:not(:last-child){
+    border-bottom: 1px solid #ccc;
+    margin: 0 0 7px;
+    padding-bottom: 4px;
+    font-weight: 500;
+  }
+  .barberCalendar{
+    margin: 140px 0 0;
+  }
+  .barberCalendar h2{
+    text-align: right;
+    margin: 0 0 30px;
+  }
+  .barberWrapper{
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 30px;
+  }
+  .itemWrap{
+    background-color: rgb(228 225 225);
+    border-radius: 14px;
+    padding: 4px 5px;
+    display: inline-block;
+  }
+  .itemWrap:not(:last-child){
+    margin: 0 0 5px;
+  }
+  .addShiftBtnState{
+    padding: 6px 12px;
+    font-size: 12px;
+    text-transform: none;
+    border-radius: 6px;
+    font-weight: 600;
+    background-color: rgb(99, 99, 232);
+  }
+  .addShiftBtnState:hover{
+    background-color: #3a3abc;
+  }
+  .addShiftPopUp{
+    position: fixed;
+    z-index: 1300;
+    inset: 0px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(204, 204, 204, 0.2);
+    -webkit-tap-highlight-color: transparent;
+    opacity: 1;
+    transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+  .addShiftPopUpWrapper{
+    display: flex;
+    max-height: calc(100% - 64px);
+    flex-direction: column;
+    max-width: 600px;
+    margin: 32px;
+    position: relative;
+    overflow-y: auto;
+    border-radius: 4px;
+    background-color: #fff;
+    color: rgba(0, 0, 0, 0.87);
+    padding: 50px;
+  }
+  .closeBtn{
+    position: absolute;
+    font-size: 16px;
+    font-weight: 700;
+    top: 20px;
+    right: 20px;
+  }
+  .addShiftBtnPopUp{
+    padding: 6px 12px;
+    font-size: 12px;
+    text-transform: none;
+    border-radius: 6px;
+    font-weight: 600;
+    background-color: rgb(99, 99, 232);
+    color: #fff;
+    margin: 10px 0 0;
+  }
+  .addShiftBtnPopUp:hover{
+    background-color: #3a3abc;
+  }
+  .holidayList li{
+    position: relative;
+  }
+  .deleteIcon svg{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0 20px;
+    position: absolute;
+    right: -10px;
+    cursor: pointer;
+  }

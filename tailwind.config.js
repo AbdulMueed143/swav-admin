@@ -72,6 +72,9 @@ module.exports = {
                     },
                 },
             }),
+            fontFamily: {
+                cursive: ['cursive', 'sans']
+            }
         },
     },
     plugins: [
