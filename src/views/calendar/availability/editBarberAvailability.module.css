@@ -164,6 +164,8 @@
     background-color: #fff;
     color: rgba(0, 0, 0, 0.87);
     padding: 50px;
+    min-width: 300px;
+    gap: 30px;
   }
   .closeBtn{
     position: absolute;
@@ -196,4 +198,7 @@
     position: absolute;
     right: -10px;
     cursor: pointer;
+  }
+  .deleteIcon:hover svg{
+    fill: #d51b1b; 
   }

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Data from './barberAvailabilityData';
 import styles from './updatedAvailabilityView.module.css';
-import EditBarberAvailability from './editBarberAvailability';
 import { Link } from 'react-router-dom';
 
 const UpdatedAvailabilityView = (props) => {
     const [loader, setLoader] = useState(true);
-    const [availabilityDates, setAvailabilityDates] = useState([]);
     const [editBarberId, setEditBarberId] = useState(null);
 
     useEffect(() => {
@@ -18,17 +16,6 @@ const UpdatedAvailabilityView = (props) => {
             clearTimeout(timeoutId);
         }
     }, []);
-
-    const editHandler = (barberId) => {
-        setEditBarberId(barberId);
-    }
-    const closeEditComponent = () => {
-        setEditBarberId(null);
-    };
-
-    const saveAvailability = (barberId, newDate) => {
-        console.log(`Saving new date ${newDate} for barber with ID ${barberId}`);
-    };
 
     const loaderClass = loader ? styles.loader : '';
 

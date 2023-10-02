@@ -4,31 +4,9 @@ import Data from './barberAvailabilityData';
 import styles from './editBarberAvailability.module.css';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-// import { CalendarView, Loading } from 'components/shared';
-// import { Card } from 'components/ui';
 import { CalendarView } from "components/shared";
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-
-function Popup({ open, handleClose }) {
-    return (
-        <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Popup Title</DialogTitle>
-            <DialogContent>
-                <p>This is the content of the popup.</p>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                    Close
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
-}
+import CustomTimePicker from "./CustomTimePicker";
+import classNames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -56,6 +34,17 @@ const EditBarberAvailability = (props) => {
     const currentData = Data[barberId - 1];
 
     const [openPopup, setOpenPopup] = useState(false);
+    const [startTime, setStartTime] = useState('09:00'); // Initial start time
+    const [endTime, setEndTime] = useState('17:00'); // Initial end time
+
+    const handleStartTimeChange = (newTime) => {
+        setStartTime(newTime);
+    };
+
+    const handleEndTimeChange = (newTime) => {
+        setEndTime(newTime);
+    };
+
 
     const handleClosePopup = () => {
         setOpenPopup(false);
@@ -82,7 +71,7 @@ const EditBarberAvailability = (props) => {
         console.log('Save Shift...');
     }
 
-    const calendarRef = useRef(null);
+    const weekdayNameHeaderClasses = classNames('flex', 'flex-row', styles.row , styles.header);
 
     return (
         <div>
@@ -96,7 +85,7 @@ const EditBarberAvailability = (props) => {
             </div>
             <div className={`${styles.editWrapper} flex gap-10`}>
                 <div className={`${styles.calendarView}`}>
-                    <div className={`flex flex-row ${styles.row} ${styles.header}`}>
+                    <div className={weekdayNameHeaderClasses}>
                         <div className={styles.cell}>Monday</div>
                         <div className={styles.cell}>Tuesday</div>
                         <div className={styles.cell}>Wednesday</div>
@@ -132,12 +121,8 @@ const EditBarberAvailability = (props) => {
                                                     openPopup && (
                                                         <div className={styles.addShiftPopUp}>
                                                             <div className={styles.addShiftPopUpWrapper}>
-                                                                <TextField
-                                                                    id="filled-secondary"
-                                                                    label="Add Shift"
-                                                                    variant="filled"
-                                                                    color="primary"
-                                                                />
+                                                                <CustomTimePicker value={startTime} onChange={handleStartTimeChange} labelText="Select Start Time" />
+                                                                <CustomTimePicker value={endTime} onChange={handleEndTimeChange} labelText="Select End Time" />
                                                                 <button className={styles.addShiftBtnPopUp} onClick={() => saveShiftPopup()}>Save</button>
                                                                 <button className={styles.closeBtn} onClick={() => handleClosePopup()}>X</button>
                                                             </div>
@@ -153,7 +138,7 @@ const EditBarberAvailability = (props) => {
                     }
                     <div className={styles.barberCalendar}>
                         <h2 className="">Override</h2>
-                        <CalendarView calendarRef={calendarRef} />
+                        <CalendarView data={Data} openAddShiftPopup={changeShiftHandler}/>
                     </div>
                 </div>
                 {/* Add Holiday Component */}
