@@ -104,65 +104,136 @@ export const eventColors = {
 }
 
 const CalendarView = (props) => {
-    const { wrapperClass, ...rest } = props
+    const { wrapperClass, DATA, ...rest } = props;
 
-    return (
-        <div className={classNames('calendar', wrapperClass)}>
-            <FullCalendar
-                initialView="dayGridMonth"
-                headerToolbar={{
-                    left: 'title',
-                    center: '',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay prev,next',
-                }}
-                eventContent={(arg) => {
-                    const { extendedProps } = arg.event
-                    const { isEnd, isStart } = arg
-                    return (
-                        <div
-                            className={classNames(
-                                'custom-calendar-event',
-                                extendedProps.eventColor
-                                    ? eventColors[extendedProps.eventColor]?.bg
-                                    : '',
-                                extendedProps.eventColor
-                                    ? eventColors[extendedProps.eventColor]
-                                          ?.text
-                                    : '',
-                                isEnd &&
+    const handleDateClick = (e) => {
+        console.log('Date Called...', e);
+        props.openAddShiftPopup();
+    }
+
+    if (DATA) {
+        console.log('DATA Present');
+        const onlineEvents = DATA?.availability.filter(activeUser =>
+            activeUser.status === "active")?.map((avail) => ({
+                title: DATA.name,
+                start: avail.date,
+                end: avail.date,
+                timeSlot: avail.timeSlot,
+                type: "online",
+            }))
+
+        const offlineEvents = DATA?.availability.filter(user =>
+            user.status === "offline")?.map((avail) => ({
+                title: "Holiday",
+                start: avail.date,
+                end: avail.date,
+                type: "offline",
+            }))
+
+        const holidayEvents = DATA?.holidays.map(user => ({
+            title: "Holiday",
+            start: user,
+            end: user,
+            type: "holiday",
+        }));
+
+        const events = [...onlineEvents, ...offlineEvents, ...holidayEvents];
+
+        return (
+            <div className={classNames('calendar', wrapperClass)}>
+                <FullCalendar
+                    initialView="dayGridMonth"
+                    headerToolbar={{
+                        left: 'title',
+                        center: '',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay prev,next',
+                    }}
+                    eventContent={(arg) => {
+                        const { extendedProps } = arg.event;
+                        return (
+                            <div className={classNames('custom-calendar-event', props.calendarClass)}>
+                                {extendedProps.type === 'online' && (
+                                    <>
+                                        {extendedProps.timeSlot.map((slot, index) => (
+                                            <div key={index} className="font-semibold ml-1 rtl:mr-1 text-black" dangerouslySetInnerHTML={{ __html: slot + '<br/>' }}
+                                                style={{ backgroundColor: '#aee7ae', padding: '5px 7px', borderRadius: '10px', margin: '0 0 5px' }} />
+                                        ))}
+                                    </>
+                                )}
+                                {(extendedProps.type === 'offline' || extendedProps.type === 'holiday') && (
+                                    <div className="font-semibold ml-1 rtl:mr-1 text-black" style={{ backgroundColor: 'rgba(248, 215, 218, 0.8)', padding: '7px 15px', borderRadius: '10px' }}>Holiday</div>
+                                )}
+                            </div>
+                        )
+                    }}
+                    events={events}
+                    dateClick={handleDateClick}
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    {...rest}
+                    // editable={true}
+                    selectable= {true}
+                />
+            </div>
+        )
+    } else {
+        return (
+            <div className={classNames('calendar', wrapperClass)}>
+                <FullCalendar
+                    initialView="dayGridMonth"
+                    headerToolbar={{
+                        left: 'title',
+                        center: '',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay prev,next',
+                    }}
+                    eventContent={(arg) => {
+                        const { extendedProps } = arg.event
+                        const { isEnd, isStart } = arg
+                        return (
+                            <div
+                                className={classNames(
+                                    'custom-calendar-event',
+                                    extendedProps.eventColor
+                                        ? eventColors[extendedProps.eventColor]?.bg
+                                        : '',
+                                    extendedProps.eventColor
+                                        ? eventColors[extendedProps.eventColor]
+                                            ?.text
+                                        : '',
+                                    isEnd &&
                                     !isStart &&
                                     '!rounded-tl-none !rounded-bl-none !rtl:rounded-tr-none !rtl:rounded-br-none',
-                                !isEnd &&
+                                    !isEnd &&
                                     isStart &&
                                     '!rounded-tr-none !rounded-br-none !rtl:rounded-tl-none !rtl:rounded-bl-none'
-                            )}
-                        >
-                            {!(isEnd && !isStart) && (
-                                <Badge
-                                    className={classNames(
-                                        'mr-1 rtl:ml-1',
-                                        extendedProps.eventColor
-                                            ? eventColors[
-                                                  extendedProps.eventColor
-                                              ].dot
-                                            : ''
-                                    )}
-                                />
-                            )}
-                            {!(isEnd && !isStart) && (
-                                <span>{arg.timeText}</span>
-                            )}
-                            <span className="font-semibold ml-1 rtl:mr-1">
-                                {arg.event.title}
-                            </span>
-                        </div>
-                    )
-                }}
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                {...rest}
-            />
-        </div>
-    )
+                                )}
+                            >
+                                {!(isEnd && !isStart) && (
+                                    <Badge
+                                        className={classNames(
+                                            'mr-1 rtl:ml-1',
+                                            extendedProps.eventColor
+                                                ? eventColors[
+                                                    extendedProps.eventColor
+                                                ].dot
+                                                : ''
+                                        )}
+                                    />
+                                )}
+                                {!(isEnd && !isStart) && (
+                                    <span>{arg.timeText}</span>
+                                )}
+                                <span className="font-semibold ml-1 rtl:mr-1">
+                                    {arg.event.title}
+                                </span>
+                            </div>
+                        )
+                    }}
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    {...rest}
+                />
+            </div>
+        )
+    }
 }
 
 export default CalendarView

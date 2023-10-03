@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import { CalendarView } from "components/shared";
 import CustomTimePicker from "./CustomTimePicker";
 import classNames from "classnames";
+import { useNavigate  } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -18,14 +19,13 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(1),
         width: 200,
     },
-    green: {
-        color: '#32a84c',
+    removeBottomBorder: {
+        '& .MuiInput-underline:before': {
+            borderBottom: 'none',
+            content: '',
+            display: 'none'
+        }
     },
-    d: {
-        padding: '6px 12px',
-        fontSize: '13px',
-        textTransform: 'none'
-    }
 }));
 
 const EditBarberAvailability = (props) => {
@@ -36,6 +36,9 @@ const EditBarberAvailability = (props) => {
     const [openPopup, setOpenPopup] = useState(false);
     const [startTime, setStartTime] = useState('09:00'); // Initial start time
     const [endTime, setEndTime] = useState('17:00'); // Initial end time
+    const [chooseHolidayDate, setChooseHolidayDate] = useState([]); // Initial end time
+
+    let navigate = useNavigate ();
 
     const handleStartTimeChange = (newTime) => {
         setStartTime(newTime);
@@ -57,13 +60,50 @@ const EditBarberAvailability = (props) => {
     }
 
     const today = new Date().toISOString().split('T')[0];
+    let holidayDate;
+    let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    let selectedMonth;
+    let selectedDay;
+    let selectedYear;
 
     const pickDateHandler = (date) => {
-        console.log(date.target.value);
+        // debugger
+        holidayDate = date.target.value;
+        selectedDay = holidayDate.split('-')[2];
+        selectedMonth = months[holidayDate.split('-')[1] - 1];
+        selectedYear = holidayDate.split('-')[0];
+
+        console.log('selectedDay: ', selectedDay);
+        console.log('selectedMonth: ', selectedMonth);
+        console.log('selectedYear: ', selectedYear);
+
+        const newSelectedDate = {
+            selectedDay: selectedDay,
+            selectedMonth: selectedMonth,
+            selectedYear: selectedYear
+        }
+        // Check if the date is already present in the chooseHolidayDate array
+        const isDateAlreadySelected = chooseHolidayDate.some((dateItem) => {
+            return (
+                dateItem.selectedDay === selectedDay &&
+                dateItem.selectedMonth === selectedMonth &&
+                dateItem.selectedYear === selectedYear
+            );
+        });
+
+        if (!isDateAlreadySelected) {
+            setChooseHolidayDate((prevSelectedDates) => [
+                ...prevSelectedDates,
+                newSelectedDate
+            ]);
+        } else {
+            // Date is already selected, you can show an error message or handle it accordingly
+            console.log('Date is already selected.');
+        }
+        console.log('chooseHolidayDate:: ', chooseHolidayDate);
     }
 
     const addHolidayHandler = () => {
-        // e.preventDefault();
         console.log('Holiday Added...');
     }
 
@@ -71,10 +111,31 @@ const EditBarberAvailability = (props) => {
         console.log('Save Shift...');
     }
 
-    const weekdayNameHeaderClasses = classNames('flex', 'flex-row', styles.row , styles.header);
+    const saveHolidaysHandler = () => {
+        console.log('saveHolidaysHandler:')
+    }
+
+    const deleteChoosenHolidayDate = (indexValue) => {
+        console.log('deleteChoosenHolidayDate: ', indexValue);
+        // Create a copy of the current chooseHolidayDate array
+        const updatedChooseHolidayDate = [...chooseHolidayDate];
+
+        // Remove the element at the specified index
+        updatedChooseHolidayDate.splice(indexValue, 1);
+
+        // Update the state with the modified array
+        setChooseHolidayDate(updatedChooseHolidayDate);
+    }
+
+    const goBack = () => {
+        navigate('/availability');
+    }
+
+    const weekdayNameHeaderClasses = classNames('flex', 'flex-row', styles.row, styles.header);
 
     return (
         <div>
+            <button className={styles.backBtn} onClick={() => goBack()}> &lt; Back</button>
             <div className={styles.barberWrapper}>
                 <h1 className="">{currentData?.name}</h1>
                 <img
@@ -138,7 +199,7 @@ const EditBarberAvailability = (props) => {
                     }
                     <div className={styles.barberCalendar}>
                         <h2 className="">Override</h2>
-                        <CalendarView data={Data} openAddShiftPopup={changeShiftHandler}/>
+                        <CalendarView DATA={Data[barberId - 1]} openAddShiftPopup={changeShiftHandler} calendarClass={styles.breakTimeSlots} />
                     </div>
                 </div>
                 {/* Add Holiday Component */}
@@ -149,7 +210,7 @@ const EditBarberAvailability = (props) => {
                                 id="date"
                                 label="Choose Holiday Date"
                                 type="date"
-                                className={`${classes.textField} ${classes.green}`}
+                                className={`${classes.textField} ${classes.removeBottomBorder}`}
                                 InputLabelProps={{
                                     shrink: true,
                                     fontWeight: 800,
@@ -172,14 +233,34 @@ const EditBarberAvailability = (props) => {
                         </form>
                         <button className={`${styles.addBtn} ${styles.addHoliday}`} onClick={() => addHolidayHandler()}>+ Add Holiday</button>
                     </div>
-                    <div className={`${styles.holidayList}`}>
-                        <ul>
-                            <li><span className={styles.leaveDate}>2nd October</span><span className={styles.deleteIcon}><DeleteIcon /></span></li>
-                            <li><span className={styles.leaveDate}>3rd October</span><span className={styles.deleteIcon}><DeleteIcon /></span></li>
-                            <li><span className={styles.leaveDate}>4th October</span><span className={styles.deleteIcon}><DeleteIcon /></span></li>
-                            <li><span className={styles.leaveDate}>5th October</span><span className={styles.deleteIcon}><DeleteIcon /></span></li>
-                        </ul>
-                    </div>
+                    {
+                        !!chooseHolidayDate.length && (
+                            <div className={`${styles.saveBtnWrapper}`}>
+                                <div className={`${styles.holidayList}`}>
+                                    <ul>
+                                        {
+                                            chooseHolidayDate.map((date, index) => (
+                                                <li key={index}>
+                                                    <span className={styles.leaveDate}>
+                                                        {date.selectedDay} {date.selectedMonth} {date.selectedYear}
+                                                    </span>
+                                                    <span className={styles.deleteIcon} onClick={() => deleteChoosenHolidayDate(index)}>
+                                                        <DeleteIcon />
+                                                    </span>
+                                                </li>
+                                            ))
+                                        }
+                                    </ul>
+                                </div>
+
+                            </div>
+                        )
+                    }
+                    {
+                        !!chooseHolidayDate.length && (
+                            <button className={styles.saveBtn} onClick={() => saveHolidaysHandler()}> Save</button>
+                        )
+                    }
                 </div>
             </div>
         </div >

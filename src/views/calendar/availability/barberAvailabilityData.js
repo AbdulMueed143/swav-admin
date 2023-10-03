@@ -8,21 +8,34 @@ const DATA = [
       "availability": [
         {
           "day": "Monday",
-          "date": "2023-09-18",
+          "date": "2023-10-01",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:05  - 13:00 ", "18:00  - 22:00 "],
+          "staticTimeSlot": ["09:05  - 13:00 ", "18:00  - 20:00 "],
         },
         {
           "day": "Tuesday",
-          "date": "2023-09-19",
+          "date": "2023-10-02",
           "status": "offline",
-          "timeSlot": ["Holiday"]
+          // "timeSlot": ["Holiday"]
+        },
+        {
+          "day": "Tuesday",
+          "date": "2023-10-04",
+          "status": "active",
+          "timeSlot": ["19:05  - 20:00 ", "21:00  - 22:00 "],
+          "staticTimeSlot": ["09:05  - 13:00 ", "18:00  - 20:00 "],
+        },
+        {
+          "day": "Tuesday",
+          "date": "2023-10-03",
+          "status": "offline",
+          // "timeSlot": ["Holiday"]
         }
       ],
       "holidays": [
-        "2023-09-25",
-        "2023-09-28"
+        "2023-10-25",
+        "2023-10-28"
       ],
       "price": 50,
       "experienceInYears": 5,
@@ -38,22 +51,22 @@ const DATA = [
       "availability": [
         {
           "day": "Wednesday",
-          "date": "2023-09-20",
+          "date": "2023-10-04",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
-          "date": "2023-09-21",
+          "date": "2023-10-05",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
-        "2023-09-26",
-        "2023-09-29"
+        "2023-10-26",
+        "2023-10-29"
       ],
       "price": 60,
       "experienceInYears": 7,
@@ -68,22 +81,22 @@ const DATA = [
       "phoneNumber": "+1 555-555-5555",
       "availability": [
         {
-          "day": "Monday",
-          "date": "2023-09-18",
+          "day": "Wednesday",
+          "date": "2023-10-18",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
-          "date": "2023-09-19",
+          "date": "2023-10-19",
           "status": "offline",
           "timeSlot": ["Holiday"]
         }
       ],
       "holidays": [
-        "2023-09-25",
-        "2023-09-28"
+        "2023-10-25",
+        "2023-10-28"
       ],
       "price": 45,
       "experienceInYears": 4,
@@ -99,22 +112,22 @@ const DATA = [
       "availability": [
         {
           "day": "Wednesday",
-          "date": "2023-09-20",
+          "date": "2023-10-20",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
-          "date": "2023-09-21",
+          "date": "2023-10-21",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
-        "2023-09-26",
-        "2023-09-29"
+        "2023-10-26",
+        "2023-10-29"
       ],
       "price": 55,
       "experienceInYears": 6,
@@ -130,21 +143,21 @@ const DATA = [
       "availability": [
         {
           "day": "Monday",
-          "date": "2023-09-18",
+          "date": "2023-10-18",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
-          "date": "2023-09-19",
+          "date": "2023-10-19",
           "status": "offline",
           "timeSlot": ["Holiday"]
         }
       ],
       "holidays": [
-        "2023-09-25",
-        "2023-09-28"
+        "2023-10-25",
+        "2023-10-28"
       ],
       "price": 40,
       "experienceInYears": 3,
@@ -160,22 +173,22 @@ const DATA = [
       "availability": [
         {
           "day": "Wednesday",
-          "date": "2023-09-20",
+          "date": "2023-10-20",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
-          "date": "2023-09-21",
+          "date": "2023-10-21",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
-        "2023-09-26",
-        "2023-09-29"
+        "2023-10-26",
+        "2023-10-29"
       ],
       "price": 70,
       "experienceInYears": 8,
@@ -191,21 +204,21 @@ const DATA = [
       "availability": [
         {
           "day": "Monday",
-          "date": "2023-09-18",
+          "date": "2023-10-18",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
-          "date": "2023-09-19",
+          "date": "2023-10-19",
           "status": "offline",
           "timeSlot": ["Holiday"]
         }
       ],
       "holidays": [
-        "2023-09-25",
-        "2023-09-28"
+        "2023-10-25",
+        "2023-10-28"
       ],
       "price": 55,
       "experienceInYears": 6,
@@ -221,22 +234,22 @@ const DATA = [
       "availability": [
         {
           "day": "Wednesday",
-          "date": "2023-09-20",
+          "date": "2023-10-20",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
-          "date": "2023-09-21",
+          "date": "2023-10-21",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
-        "2023-09-26",
-        "2023-09-29"
+        "2023-10-26",
+        "2023-10-29"
       ],
       "price": 65,
       "experienceInYears": 7,
@@ -252,21 +265,21 @@ const DATA = [
       "availability": [
         {
           "day": "Monday",
-          "date": "2023-09-18",
+          "date": "2023-10-18",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Tuesday",
-          "date": "2023-09-19",
+          "date": "2023-10-19",
           "status": "offline",
           "timeSlot": ["Holiday"]
         }
       ],
       "holidays": [
-        "2023-09-25",
-        "2023-09-28"
+        "2023-10-25",
+        "2023-10-28"
       ],
       "price": 55,
       "experienceInYears": 6,
@@ -282,22 +295,22 @@ const DATA = [
       "availability": [
         {
           "day": "Wednesday",
-          "date": "2023-09-20",
+          "date": "2023-10-20",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
         {
           "day": "Thursday",
-          "date": "2023-09-21",
+          "date": "2023-10-21",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         }
       ],
       "holidays": [
-        "2023-09-26",
-        "2023-09-29"
+        "2023-10-26",
+        "2023-10-29"
       ],
       "price": 60,
       "experienceInYears": 5,
