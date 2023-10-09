@@ -23,8 +23,8 @@ const DATA = [
           "day": "Tuesday",
           "date": "2023-10-04",
           "status": "active",
-          "timeSlot": ["19:05  - 20:00 ", "21:00  - 22:00 "],
-          "staticTimeSlot": ["09:05  - 13:00 ", "18:00  - 20:00 "],
+          "timeSlot": ["19:11  - 20:00 ", "21:00  - 22:50 "],
+          "staticTimeSlot": ["09:15  - 13:05 ", "18:10  - 20:20 "],
         },
         {
           "day": "Tuesday",
@@ -61,7 +61,14 @@ const DATA = [
           "date": "2023-10-05",
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:10 "],
+        },
+        {
+          "day": "Friday",
+          "date": "2023-10-06",
+          "status": "active",
+          "timeSlot": ["09:00  - 13:50 ", "20:40  -22:00 "],
+          "staticTimeSlot": ["09:00  - 13:15 ", "18:30  - 22:12 "],
         }
       ],
       "holidays": [

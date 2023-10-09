@@ -41,6 +41,8 @@
     word-spacing: -2px;
     font-weight: 500;
     color: #000;
+    flex-wrap: wrap;
+    gap: 5px;
   }
   .addBtn{
     font-size: 13px;
@@ -84,14 +86,14 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 40px;
+    gap: 20px;
   }
   .addHoliday{
     flex: 0 0 60%;
   }
   .holidayList{
     background-color: #fff;
-    width: 60%;
+    width: 65%;
     margin: 30px auto 0;
     padding: 15px;
     border-radius: 10px;
@@ -117,15 +119,27 @@
     flex-direction: row-reverse;
     justify-content: flex-end;
     gap: 30px;
+    position: relative;
   }
   .itemWrap{
     background-color: rgb(228 225 225);
     border-radius: 14px;
     padding: 4px 5px;
     display: inline-block;
+    font-size: 12px;
   }
-  .itemWrap:not(:last-child){
+  /* .itemWrap:not(:last-child){
     margin: 0 0 5px;
+  } */
+  .deleteShift{
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0 0 0 5px;
+    color: rgb(175, 15, 15);
+  }
+  .saveData{
+    position: absolute;
+    right: 2%;
   }
   .addShiftBtnState{
     padding: 6px 12px;
@@ -150,7 +164,7 @@
     position: fixed;
     align-items: center;
     justify-content: center;
-    background-color: rgba(204, 204, 204, 0.2);
+    background-color: rgba(242, 239, 239, 0.9);
     -webkit-tap-highlight-color: transparent;
     opacity: 1;
     transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -190,6 +204,12 @@
   .addShiftBtnPopUp:hover{
     background-color: #3a3abc;
   }
+  .addShiftBtnPopUp:disabled,
+  .saveData:disabled{
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+  }
   .holidayList li{
     position: relative;
   }
@@ -225,7 +245,7 @@
     border-radius: 6px;
     padding: 6px 12px 6px;
     position: absolute;
-    top: 45%;
+    bottom: 27%;
     left: 50%;
     transform: translateX(-50%);
     width: 60%;
@@ -233,8 +253,10 @@
   .saveBtn:hover{
     background-color: #3a3abc;
   }
-  .removeBottomBorder{
+  .removeBottomBorder,
+  .removeBottomBorder div:after{
     content: '';
+    display: none;
   }
   .backBtn{
     font-size: 16px;
@@ -251,3 +273,24 @@
   .backBtn:hover{
     background-color: #e3e0e0;
   }
+  .calendarCss{
+    /* background-color: green; */
+  }
+  /* Add custom styles to past days */
+.calendarCss td.fc-day-past{
+  background-color: pink;
+  color: darkgray;
+}
+
+/* Add custom styles to future days */
+.calendarCss .fc-day-future {
+  background-color: red;
+  color: navy;
+}
+/* Add your custom styles for the <td> elements */
+.calendarCss .fc-daygrid-table td {
+  /* Your CSS styles here */
+  background-color: yellow;
+  color: blue;
+  /* Add any other styles you want */
+}
