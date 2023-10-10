@@ -52,6 +52,7 @@
     "react-apexcharts": "^1.4.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-custom-scrollbars-2": "^4.5.0",
+    "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-google-autocomplete": "^2.7.3",
     "react-highlight-words": "^0.18.0",
