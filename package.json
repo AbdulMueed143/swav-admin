@@ -95,7 +95,6 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "format": "prettier --write ."
   },
-  "proxy": "http://127.0.0.1:8080",
   "browserslist": {
     "production": [
       ">0.2%",

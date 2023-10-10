@@ -71,11 +71,11 @@ const CustomAccordion =  ({barber})  => {
   const daysOfWeek = barber && barber.barberAvailability && barber.barberAvailability.days ? barber.barberAvailability.days : [];
   // const daysOfWeek = {'Holidays' : ['2nd August', '11th Sept'], 'Monday, 7th Aug' : ['8:30AM - 11:00 AM', 'Break', '12:00 AM - 5:00PM'], 'Tuesday, 8th Aug' : ['8:30AM - 11:00 AM'], 'Wednesday' : ['8:30AM - 11:00 AM'], 'Thursday' : ['8:30AM - 11:00 AM'], 'Friday' : ['8:30AM - 11:00 AM'], 'Saturday' : ['8:30AM - 11:00 AM'], 'Sunday' : ['Not Working']};
 
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  //   setHolidays([...holidays, date]);
-  //   setDatePickerOpen(false);
-  // };
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setHolidays([...holidays, date]);
+    setDatePickerOpen(false);
+  };
 
   const classes = useStyles();
    const maxRows = Math.max(...Object.values(daysOfWeek).map(times => times.length));
