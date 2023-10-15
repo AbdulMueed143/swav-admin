@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { Badge } from 'components/ui'
 // import FullCalendar from '@fullcalendar/react'
@@ -10,7 +10,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
+import DeleteIcon from '@material-ui/icons/Delete';
 
 // import '@fullcalendar/common/main.css'
 // import '@fullcalendar/daygrid/main.css'
@@ -106,57 +106,78 @@ export const eventColors = {
 const CalendarView = (props) => {
     const { wrapperClass, DATA, ...rest } = props;
 
+    const [availabilityData, setAvailabilityData] = useState(DATA);
+
     const handleDateClick = (e) => {
-        console.log('Date Called...', e);
-        props.openAddShiftPopup();
+        props.addDataToCalendarViewOnClick(e.dateStr);
     }
 
-    if (DATA) {
-        console.log('DATA Present');
-        const onlineEvents = DATA?.availability.filter(activeUser =>
-            activeUser.status === "active")?.map((avail) => ({
-                title: DATA.name,
-                start: avail.date,
-                end: avail.date,
-                timeSlot: avail.timeSlot,
-                type: "online",
-            }))
+    useEffect(() => {
+        setAvailabilityData(DATA);
+    }, [DATA]);
 
-        const offlineEvents = DATA?.availability.filter(user =>
-            user.status === "offline")?.map((avail) => ({
-                title: "Holiday",
-                start: avail.date,
-                end: avail.date,
-                type: "offline",
-            }))
+    if (availabilityData) {
+        const onlineEvents = availabilityData?.availability.filter(activeUser => activeUser.status === "active")?.map((avail) => ({
+            title: availabilityData.name,
+            start: avail.date,
+            end: avail.date,
+            timeSlot: avail.timeSlot,
+            day: avail.day,
+            type: "online"
+        }))
 
-        const holidayEvents = DATA?.holidays.map(user => ({
+        const offlineEvents = availabilityData?.availability.filter(user => user.status === "offline")?.map((avail) => ({
+            title: "Holiday",
+            start: avail.date,
+            end: avail.date,
+            type: "offline",
+        }))
+
+
+        const holidayEvents = availabilityData?.holidays.map(user => ({
             title: "Holiday",
             start: user,
             end: user,
             type: "holiday",
         }));
 
-        const events = [...onlineEvents, ...offlineEvents, ...holidayEvents];
+        const AllEvents = [...onlineEvents, ...offlineEvents, ...holidayEvents];
+
+        const handleDelete = (day, index) => {
+            const normalizeData = availabilityData.availability.map(item => {
+                if (item.day === day) {
+                    item.timeSlot = item.timeSlot.filter((_, i) => i !== index);
+                    if(item.timeSlot.length === 0){
+                        item.status = 'offline';
+                    }
+                }
+                return item;
+            })
+            setAvailabilityData({ ...availabilityData, availability: normalizeData });
+        };
 
         return (
-            <div className={classNames('calendar', wrapperClass)}>
+            <div className={classNames('calendar', wrapperClass)} id="calendar">
                 <FullCalendar
+                    eventMinWidth={160}
                     initialView="dayGridMonth"
                     headerToolbar={{
                         left: 'title',
                         center: '',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay prev,next',
+                        right: 'dayGridMonth,prev,next',
                     }}
                     eventContent={(arg) => {
                         const { extendedProps } = arg.event;
                         return (
-                            <div className={classNames('custom-calendar-event', props.calendarClass)}>
+                            <div className={classNames('custom-calendar-event', props.calendarClass, 'gap-y-1')}>
                                 {extendedProps.type === 'online' && (
                                     <>
                                         {extendedProps.timeSlot.map((slot, index) => (
-                                            <div key={index} className="font-semibold ml-1 rtl:mr-1 text-black" dangerouslySetInnerHTML={{ __html: slot + '<br/>' }}
-                                                style={{ backgroundColor: '#aee7ae', padding: '5px 7px', borderRadius: '10px', margin: '0 0 5px' }} />
+                                            <div className='flex gap-x-1'>
+                                                <div key={index} className="font-semibold ml-1 rtl:mr-1 text-black" dangerouslySetInnerHTML={{ __html: slot + '<br/>' }}
+                                                    style={{ backgroundColor: '#aee7ae', padding: '5px 7px', borderRadius: '10px', fontSize: '10.9px' }} />
+                                                <button className='text-xs m-0 text-red-700' onClick={() => handleDelete(extendedProps.day, index)}><DeleteIcon fontSize="small" /></button>
+                                            </div>
                                         ))}
                                     </>
                                 )}
@@ -166,12 +187,12 @@ const CalendarView = (props) => {
                             </div>
                         )
                     }}
-                    events={events}
+                    events={AllEvents}
                     dateClick={handleDateClick}
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     {...rest}
-                    // editable={true}
-                    selectable= {true}
+                    // selectable= {true}
+                    eventClassNames='myclassname'
                 />
             </div>
         )
