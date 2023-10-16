@@ -274,7 +274,7 @@ const EditBarberAvailability = (props) => {
                     {
                         showHolidayDates && (
                             <div className={`${styles.saveBtnWrapper}`}>
-                                <p className={`${styles.holidayListText} font-medium`}>List of Holiday Choosen</p>
+                                <p className={`${styles.holidayListText} font-medium text-black`}>List of Holiday Choosen</p>
                                 <div className={`${styles.holidayList}`}>
                                     <ul>
                                         {
@@ -296,7 +296,7 @@ const EditBarberAvailability = (props) => {
                     }
                     {
                         showHolidayDates && (
-                            <button className={styles.saveBtn} onClick={() => saveHolidaysHandler()}> Save</button>
+                            <button className={styles.saveBtn} onClick={() => saveHolidaysHandler()}> Save Holiday</button>
                         )
                     }
                 </div>

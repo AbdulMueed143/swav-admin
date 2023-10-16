@@ -10,8 +10,6 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import DeleteIcon from '@material-ui/icons/Delete';
-
 // import '@fullcalendar/common/main.css'
 // import '@fullcalendar/daygrid/main.css'
 // import '@fullcalendar/timegrid/main.css'
@@ -107,6 +105,9 @@ const CalendarView = (props) => {
     const { wrapperClass, DATA, ...rest } = props;
 
     const [availabilityData, setAvailabilityData] = useState(DATA);
+    const [showAllShiftData, setShowAllShiftData] = useState(false);
+    const [displayShowMoreBtn, setDisplayShowMoreBtn] = useState(true);
+    const [showAllShiftDataList, setShowAllShiftDataList] = useState([]);
 
     const handleDateClick = (e) => {
         props.addDataToCalendarViewOnClick(e.dateStr);
@@ -123,38 +124,57 @@ const CalendarView = (props) => {
             end: avail.date,
             timeSlot: avail.timeSlot,
             day: avail.day,
-            type: "online"
+            type: "online",
+            date: avail.date,
         }))
+
+        // console.log('onlineEvents: ', onlineEvents);
 
         const offlineEvents = availabilityData?.availability.filter(user => user.status === "offline")?.map((avail) => ({
             title: "Holiday",
             start: avail.date,
             end: avail.date,
             type: "offline",
+            date: avail.date
         }))
-
 
         const holidayEvents = availabilityData?.holidays.map(user => ({
             title: "Holiday",
             start: user,
             end: user,
             type: "holiday",
+            date: user
         }));
 
         const AllEvents = [...onlineEvents, ...offlineEvents, ...holidayEvents];
 
         const handleDelete = (day, index) => {
+            debugger
             const normalizeData = availabilityData.availability.map(item => {
                 if (item.day === day) {
                     item.timeSlot = item.timeSlot.filter((_, i) => i !== index);
-                    if(item.timeSlot.length === 0){
+                    if (item.timeSlot.length === 0) {
                         item.status = 'offline';
                     }
                 }
                 return item;
             })
             setAvailabilityData({ ...availabilityData, availability: normalizeData });
+            // setShowAllShiftDataList({ ...availabilityData, availability: normalizeData });
         };
+
+        const handleShowMore = (timeSlot, day) => {
+            debugger
+            // console.log('Handle show more...TIMESLOT ', timeSlot);
+            // console.log('extendedProps.day ', day);
+            setShowAllShiftData(true);
+            setShowAllShiftDataList(timeSlot);
+            setDisplayShowMoreBtn(false);
+        }
+
+        const handleClosePopup = () => {
+            setShowAllShiftData(false);
+        }
 
         return (
             <div className={classNames('calendar', wrapperClass)} id="calendar">
@@ -168,19 +188,75 @@ const CalendarView = (props) => {
                     }}
                     eventContent={(arg) => {
                         const { extendedProps } = arg.event;
+                        // console.log('arg:: ', arg);
+                        const maxDisplayCount = 2; // Maximum number of e`lements to display
+                        const { timeSlot } = extendedProps;
                         return (
                             <div className={classNames('custom-calendar-event', props.calendarClass, 'gap-y-1')}>
                                 {extendedProps.type === 'online' && (
                                     <>
-                                        {extendedProps.timeSlot.map((slot, index) => (
+                                        {/* {extendedProps.timeSlot.map((slot, index) => (
                                             <div className='flex gap-x-1'>
-                                                <div key={index} className="font-semibold ml-1 rtl:mr-1 text-black" dangerouslySetInnerHTML={{ __html: slot + '<br/>' }}
-                                                    style={{ backgroundColor: '#aee7ae', padding: '5px 7px', borderRadius: '10px', fontSize: '10.9px' }} />
-                                                <button className='text-xs m-0 text-red-700' onClick={() => handleDelete(extendedProps.day, index)}><DeleteIcon fontSize="small" /></button>
+                                                <div key={index} className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, index)} />
+                                            </div>
+                                        ))} */}
+                                        {timeSlot.slice(0, maxDisplayCount).map((slot, index) => (
+                                            <div className='flex gap-x-1' key={index}>
+                                                <div className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, index)} />
                                             </div>
                                         ))}
+                                        {
+                                            !displayShowMoreBtn && (
+                                                timeSlot.slice(maxDisplayCount, timeSlot.length).map((slot, index) => (
+                                                    <div className='flex gap-x-1' key={index}>
+                                                        <div className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, (index+1))} />
+                                                    </div>
+                                                ))
+                                            )
+                                        }
+                                        {displayShowMoreBtn && (timeSlot.length > maxDisplayCount) && (
+                                            <div className='flex gap-x-1 showList'>
+                                                <div className={classNames("font-semibold ml-1 rtl:mr-1 text-black")} onClick={(e) => handleShowMore(timeSlot,e)}>
+                                                    +{timeSlot.length - maxDisplayCount} More
+                                                </div>
+                                            </div>
+                                        )}
+                                        {/* {
+                                            showAllShiftData && (
+                                                <div className="showShiftPopUp">
+                                                    <div className="showShiftPopUpWrapper">
+                                                        <p className="availableShifts">Available Shifts</p>
+                                                        {
+                                                            showAllShiftDataList.map((slot, index) => (
+                                                                <div className='flex gap-x-1'>
+                                                                    <div key={index} className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, index)} />
+                                                                </div>
+                                                            ))
+                                                        }
+                                                        <button className="closeBtn" onClick={() => handleClosePopup()}>X</button>
+                                                    </div>
+                                                </div>
+                                            )
+                                        } */}
                                     </>
                                 )}
+                                {/* {
+                                    showAllShiftData && (
+                                        <div className="showShiftPopUp">
+                                            <div className="showShiftPopUpWrapper">
+                                                <p className="availableShifts">Available Shifts</p>
+                                                {
+                                                    showAllShiftDataList.map((slot, index) => (
+                                                        <div className='flex gap-x-1'>
+                                                            <div key={index} className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, index)} />
+                                                        </div>
+                                                    ))
+                                                }
+                                                <button className="closeBtn" onClick={() => handleClosePopup()}>X</button>
+                                            </div>
+                                        </div>
+                                    )
+                                } */}
                                 {(extendedProps.type === 'offline' || extendedProps.type === 'holiday') && (
                                     <div className="font-semibold ml-1 rtl:mr-1 text-black" style={{ backgroundColor: 'rgba(248, 215, 218, 0.8)', padding: '7px 15px', borderRadius: '10px' }}>Holiday</div>
                                 )}
@@ -192,7 +268,8 @@ const CalendarView = (props) => {
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     {...rest}
                     // selectable= {true}
-                    eventClassNames='myclassname'
+                    dayCellClassNames={`dayCellHover ${showAllShiftData ? 'currentPopUP' : ''}`}
+                    eventClassNames='eventClassName'
                 />
             </div>
         )
