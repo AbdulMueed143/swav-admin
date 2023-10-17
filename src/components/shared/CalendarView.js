@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { Badge } from 'components/ui'
 // import FullCalendar from '@fullcalendar/react'
@@ -10,8 +10,6 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
-
 // import '@fullcalendar/common/main.css'
 // import '@fullcalendar/daygrid/main.css'
 // import '@fullcalendar/timegrid/main.css'
@@ -106,72 +104,172 @@ export const eventColors = {
 const CalendarView = (props) => {
     const { wrapperClass, DATA, ...rest } = props;
 
+    const [availabilityData, setAvailabilityData] = useState(DATA);
+    const [showAllShiftData, setShowAllShiftData] = useState(false);
+    const [displayShowMoreBtn, setDisplayShowMoreBtn] = useState(true);
+    const [showAllShiftDataList, setShowAllShiftDataList] = useState([]);
+
     const handleDateClick = (e) => {
-        console.log('Date Called...', e);
-        props.openAddShiftPopup();
+        props.addDataToCalendarViewOnClick(e.dateStr);
     }
 
-    if (DATA) {
-        console.log('DATA Present');
-        const onlineEvents = DATA?.availability.filter(activeUser =>
-            activeUser.status === "active")?.map((avail) => ({
-                title: DATA.name,
-                start: avail.date,
-                end: avail.date,
-                timeSlot: avail.timeSlot,
-                type: "online",
-            }))
+    useEffect(() => {
+        setAvailabilityData(DATA);
+    }, [DATA]);
 
-        const offlineEvents = DATA?.availability.filter(user =>
-            user.status === "offline")?.map((avail) => ({
-                title: "Holiday",
-                start: avail.date,
-                end: avail.date,
-                type: "offline",
-            }))
+    if (availabilityData) {
+        const onlineEvents = availabilityData?.availability.filter(activeUser => activeUser.status === "active")?.map((avail) => ({
+            title: availabilityData.name,
+            start: avail.date,
+            end: avail.date,
+            timeSlot: avail.timeSlot,
+            day: avail.day,
+            type: "online",
+            date: avail.date,
+        }))
 
-        const holidayEvents = DATA?.holidays.map(user => ({
+        // console.log('onlineEvents: ', onlineEvents);
+
+        const offlineEvents = availabilityData?.availability.filter(user => user.status === "offline")?.map((avail) => ({
+            title: "Holiday",
+            start: avail.date,
+            end: avail.date,
+            type: "offline",
+            date: avail.date
+        }))
+
+        const holidayEvents = availabilityData?.holidays.map(user => ({
             title: "Holiday",
             start: user,
             end: user,
             type: "holiday",
+            date: user
         }));
 
-        const events = [...onlineEvents, ...offlineEvents, ...holidayEvents];
+        const AllEvents = [...onlineEvents, ...offlineEvents, ...holidayEvents];
+
+        const handleDelete = (day, index) => {
+            debugger
+            const normalizeData = availabilityData.availability.map(item => {
+                if (item.day === day) {
+                    item.timeSlot = item.timeSlot.filter((_, i) => i !== index);
+                    if (item.timeSlot.length === 0) {
+                        item.status = 'offline';
+                    }
+                }
+                return item;
+            })
+            setAvailabilityData({ ...availabilityData, availability: normalizeData });
+            // setShowAllShiftDataList({ ...availabilityData, availability: normalizeData });
+        };
+
+        const handleShowMore = (timeSlot, day) => {
+            debugger
+            // console.log('Handle show more...TIMESLOT ', timeSlot);
+            // console.log('extendedProps.day ', day);
+            setShowAllShiftData(true);
+            setShowAllShiftDataList(timeSlot);
+            setDisplayShowMoreBtn(false);
+        }
+
+        const handleClosePopup = () => {
+            setShowAllShiftData(false);
+        }
 
         return (
-            <div className={classNames('calendar', wrapperClass)}>
+            <div className={classNames('calendar', wrapperClass)} id="calendar">
                 <FullCalendar
+                    eventMinWidth={160}
                     initialView="dayGridMonth"
                     headerToolbar={{
                         left: 'title',
                         center: '',
-                        right: 'dayGridMonth,timeGridWeek,timeGridDay prev,next',
+                        right: 'dayGridMonth,prev,next',
                     }}
                     eventContent={(arg) => {
                         const { extendedProps } = arg.event;
+                        // console.log('arg:: ', arg);
+                        const maxDisplayCount = 2; // Maximum number of e`lements to display
+                        const { timeSlot } = extendedProps;
                         return (
-                            <div className={classNames('custom-calendar-event', props.calendarClass)}>
+                            <div className={classNames('custom-calendar-event', props.calendarClass, 'gap-y-1')}>
                                 {extendedProps.type === 'online' && (
                                     <>
-                                        {extendedProps.timeSlot.map((slot, index) => (
-                                            <div key={index} className="font-semibold ml-1 rtl:mr-1 text-black" dangerouslySetInnerHTML={{ __html: slot + '<br/>' }}
-                                                style={{ backgroundColor: '#aee7ae', padding: '5px 7px', borderRadius: '10px', margin: '0 0 5px' }} />
+                                        {/* {extendedProps.timeSlot.map((slot, index) => (
+                                            <div className='flex gap-x-1'>
+                                                <div key={index} className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, index)} />
+                                            </div>
+                                        ))} */}
+                                        {timeSlot.slice(0, maxDisplayCount).map((slot, index) => (
+                                            <div className='flex gap-x-1' key={index}>
+                                                <div className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, index)} />
+                                            </div>
                                         ))}
+                                        {
+                                            !displayShowMoreBtn && (
+                                                timeSlot.slice(maxDisplayCount, timeSlot.length).map((slot, index) => (
+                                                    <div className='flex gap-x-1' key={index}>
+                                                        <div className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, (index+1))} />
+                                                    </div>
+                                                ))
+                                            )
+                                        }
+                                        {displayShowMoreBtn && (timeSlot.length > maxDisplayCount) && (
+                                            <div className='flex gap-x-1 showList'>
+                                                <div className={classNames("font-semibold ml-1 rtl:mr-1 text-black")} onClick={(e) => handleShowMore(timeSlot,e)}>
+                                                    +{timeSlot.length - maxDisplayCount} More
+                                                </div>
+                                            </div>
+                                        )}
+                                        {/* {
+                                            showAllShiftData && (
+                                                <div className="showShiftPopUp">
+                                                    <div className="showShiftPopUpWrapper">
+                                                        <p className="availableShifts">Available Shifts</p>
+                                                        {
+                                                            showAllShiftDataList.map((slot, index) => (
+                                                                <div className='flex gap-x-1'>
+                                                                    <div key={index} className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, index)} />
+                                                                </div>
+                                                            ))
+                                                        }
+                                                        <button className="closeBtn" onClick={() => handleClosePopup()}>X</button>
+                                                    </div>
+                                                </div>
+                                            )
+                                        } */}
                                     </>
                                 )}
+                                {/* {
+                                    showAllShiftData && (
+                                        <div className="showShiftPopUp">
+                                            <div className="showShiftPopUpWrapper">
+                                                <p className="availableShifts">Available Shifts</p>
+                                                {
+                                                    showAllShiftDataList.map((slot, index) => (
+                                                        <div className='flex gap-x-1'>
+                                                            <div key={index} className={classNames("font-semibold ml-1 rtl:mr-1 text-black deleteHover")} dangerouslySetInnerHTML={{ __html: slot + '<br/>' }} onClick={() => handleDelete(extendedProps.day, index)} />
+                                                        </div>
+                                                    ))
+                                                }
+                                                <button className="closeBtn" onClick={() => handleClosePopup()}>X</button>
+                                            </div>
+                                        </div>
+                                    )
+                                } */}
                                 {(extendedProps.type === 'offline' || extendedProps.type === 'holiday') && (
                                     <div className="font-semibold ml-1 rtl:mr-1 text-black" style={{ backgroundColor: 'rgba(248, 215, 218, 0.8)', padding: '7px 15px', borderRadius: '10px' }}>Holiday</div>
                                 )}
                             </div>
                         )
                     }}
-                    events={events}
+                    events={AllEvents}
                     dateClick={handleDateClick}
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     {...rest}
-                    // editable={true}
-                    selectable= {true}
+                    // selectable= {true}
+                    dayCellClassNames={`dayCellHover ${showAllShiftData ? 'currentPopUP' : ''}`}
+                    eventClassNames='eventClassName'
                 />
             </div>
         )

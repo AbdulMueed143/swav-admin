@@ -7,31 +7,63 @@ const DATA = [
       "phoneNumber": "+1 123-456-7890",
       "availability": [
         {
-          "day": "Monday",
+          "day": "Sunday",
           "date": "2023-10-01",
           "status": "active",
-          "timeSlot": ["09:05  - 13:00 ", "18:00  - 22:00 "],
-          "staticTimeSlot": ["09:05  - 13:00 ", "18:00  - 20:00 "],
+          "timeSlot": ["09:05 - 13:00 ", "18:00 - 22:00 "],
+          "holiday": false
         },
         {
-          "day": "Tuesday",
+          "day": "Monday",
           "date": "2023-10-02",
           "status": "offline",
-          // "timeSlot": ["Holiday"]
-        },
-        {
-          "day": "Tuesday",
-          "date": "2023-10-04",
-          "status": "active",
-          "timeSlot": ["19:11  - 20:00 ", "21:00  - 22:50 "],
-          "staticTimeSlot": ["09:15  - 13:05 ", "18:10  - 20:20 "],
+          "timeSlot": [],
+          "holiday": true
         },
         {
           "day": "Tuesday",
           "date": "2023-10-03",
+          "status": "active",
+          "timeSlot": ["19:11 - 20:00 ", "21:00 - 22:50 "],
+          "holiday": false
+        },
+        {
+          "day": "Wednesday",
+          "date": "2023-10-04",
           "status": "offline",
-          // "timeSlot": ["Holiday"]
+          "timeSlot": [],
+          "holiday": true
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-25",
@@ -50,26 +82,63 @@ const DATA = [
       "phoneNumber": "+1 987-654-3210",
       "availability": [
         {
+          "day": "Tuesday",
+          "date": "2023-10-03",
+          "status": "active",
+          "timeSlot": ["09:00  - 13:00 ", "20:00 - 22:00 ", "21:00 - 23:00 "],
+          "holiday": false
+        },
+        {
           "day": "Wednesday",
           "date": "2023-10-04",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 ", "21:00 - 23:00 "],
+          "holiday": false
         },
         {
           "day": "Thursday",
           "date": "2023-10-05",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:10 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Friday",
           "date": "2023-10-06",
           "status": "active",
-          "timeSlot": ["09:00  - 13:50 ", "20:40  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:15 ", "18:30  - 22:12 "],
+          "timeSlot": ["09:00 - 13:50 ", "20:40 - 22:00 "],
+          "holiday": false
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-26",
@@ -88,18 +157,84 @@ const DATA = [
       "phoneNumber": "+1 555-555-5555",
       "availability": [
         {
-          "day": "Wednesday",
+          "day": "Monday",
           "date": "2023-10-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Tuesday",
           "date": "2023-10-19",
           "status": "offline",
-          "timeSlot": ["Holiday"]
+          "timeSlot": [],
+          "holiday": true
+        },
+        {
+          "day": "Wednesday",
+          "date": "2023-10-20",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
+        },
+        {
+          "day": "Thursday",
+          "date": "2023-10-21",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
+        },
+        {
+          "day": "Friday",
+          "date": "2023-10-22",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
+        },
+        {
+          "day": "Saturday",
+          "date": "2023-10-23",
+          "status": "active",
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
+        },
+        {
+          "day": "Sunday",
+          "date": "2023-10-24",
+          "status": "active",
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-25",
@@ -121,16 +256,46 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-10-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Thursday",
           "date": "2023-10-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-26",
@@ -152,15 +317,46 @@ const DATA = [
           "day": "Monday",
           "date": "2023-10-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Tuesday",
           "date": "2023-10-19",
           "status": "offline",
-          "timeSlot": ["Holiday"]
+          "timeSlot": [],
+          "holiday": true
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-25",
@@ -182,16 +378,46 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-10-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Thursday",
           "date": "2023-10-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-26",
@@ -213,15 +439,46 @@ const DATA = [
           "day": "Monday",
           "date": "2023-10-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Tuesday",
           "date": "2023-10-19",
           "status": "offline",
-          "timeSlot": ["Holiday"]
+          "timeSlot": [],
+          "holiday": true
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-25",
@@ -243,16 +500,46 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-10-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00  - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Thursday",
           "date": "2023-10-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00  - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-26",
@@ -274,15 +561,46 @@ const DATA = [
           "day": "Monday",
           "date": "2023-10-18",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00  - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Tuesday",
           "date": "2023-10-19",
           "status": "offline",
-          "timeSlot": ["Holiday"]
+          "timeSlot": [],
+          "holiday": true
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-25",
@@ -304,16 +622,46 @@ const DATA = [
           "day": "Wednesday",
           "date": "2023-10-20",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00  - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         },
         {
           "day": "Thursday",
           "date": "2023-10-21",
           "status": "active",
-          "timeSlot": ["09:00  - 13:00 ", "20:00  -22:00 "],
-          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+          "timeSlot": ["09:00  - 13:00 ", "20:00 - 22:00 "],
+          "holiday": false
         }
+      ],
+      "staticAvailability": [
+        {
+          "day": "Monday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Tuesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Wednesday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Thursday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Friday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
+        {
+          "day": "Saturday",
+          "staticTimeSlot": [],
+        },
+        {
+          "day": "Sunday",
+          "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
+        },
       ],
       "holidays": [
         "2023-10-26",

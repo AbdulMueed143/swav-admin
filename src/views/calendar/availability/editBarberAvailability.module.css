@@ -94,17 +94,40 @@
   .holidayList{
     background-color: #fff;
     width: 65%;
-    margin: 30px auto 0;
+    margin: 15px auto 0;
     padding: 15px;
     border-radius: 10px;
     max-height: 200px;
     overflow-y: auto;
   }
+
+.holidayList ul::-webkit-scrollbar-thumb,
+.holidayList::-webkit-scrollbar-thumb{
+  background: #55667c;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  box-shadow: inset 2px 2px 2px rgba(86,90,93,.25),inset -2px -2px 2px rgba(106,143,199,.25);
+}
+.holidayList ul::-webkit-scrollbar-track,
+.holidayList::-webkit-scrollbar-track{
+  border-radius: 0;
+  box-shadow: inset 0 0 5px #002d6b;
+}
+.holidayList::-webkit-scrollbar{
+  height: 8px;
+  width: 6px;
+}
   .holidayList li:not(:last-child){
     border-bottom: 1px solid #ccc;
     margin: 0 0 7px;
     padding-bottom: 4px;
     font-weight: 500;
+  }
+  .holidayListText{
+    text-align: center;
+    margin: 30px 0 0;
   }
   .barberCalendar{
     margin: 140px 0 0;
@@ -126,7 +149,7 @@
     border-radius: 14px;
     padding: 4px 5px;
     display: inline-block;
-    font-size: 12px;
+    font-size: 11.5px;
   }
   /* .itemWrap:not(:last-child){
     margin: 0 0 5px;
@@ -274,7 +297,7 @@
     background-color: #e3e0e0;
   }
   .calendarCss{
-    /* background-color: green; */
+    width: 104%;
   }
   /* Add custom styles to past days */
 .calendarCss td.fc-day-past{
