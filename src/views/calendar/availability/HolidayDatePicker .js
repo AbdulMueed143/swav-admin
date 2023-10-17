@@ -71,6 +71,7 @@ const HolidayDatePicker = (props) => {
 
         console.log('Holiday Date Picker:: ', returnArray)
         props.pickDateHandler(returnArray)
+        props.checkIsSaveDisabled(false);
     }
 
     return (

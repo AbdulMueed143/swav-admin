@@ -87,6 +87,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    position: relative;
   }
   .addHoliday{
     flex: 0 0 60%;
@@ -256,6 +257,7 @@
   }
   .saveBtnWrapper{
     position: relative;
+    margin-top: 80px;
   }
   .saveBtn{
     font-size: 13px;
@@ -268,10 +270,15 @@
     border-radius: 6px;
     padding: 6px 12px 6px;
     position: absolute;
-    bottom: 27%;
+    bottom: -50px;
     left: 50%;
     transform: translateX(-50%);
     width: 60%;
+  }
+  .saveBtn:disabled{
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
   }
   .saveBtn:hover{
     background-color: #3a3abc;
