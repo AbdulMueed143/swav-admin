@@ -36,13 +36,15 @@ const EditBarberAvailability = (props) => {
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
     const [chooseHolidayDate, setChooseHolidayDate] = useState([]);
+    const [choosenSelectedLeaveDate, setChoosenSelectedLeaveDate] = useState([]);
     const [showHolidayDates, setShowHolidayDates] = useState(false);
     const [showAddHolidayCTA, setShowAddHolidayCTA] = useState(false);
+    const [showSelectedHolidayList, setShowSelectedHolidayList] = useState(false);
     const [selectedDay, setSelectedDay] = useState('');
     const [isDateRangeSelected, setIsDateRangeSelected] = useState(false);
     const [staticTimeSlotClick, setStaticTimeSlotClick] = useState(false);
     const [removeSelectedDateRange, setRemoveSelectedDateRange] = useState(false);
-
+    const [isSaveDisabled, setIsSaveDisabled] = useState(false);
 
     let navigate = useNavigate();
 
@@ -63,22 +65,23 @@ const EditBarberAvailability = (props) => {
     let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     const pickSelectedDateHandler = (selectedLeaveDate) => {
-        if (selectedLeaveDate.length) {
-            setShowAddHolidayCTA(true);
-        }
+        // if (selectedLeaveDate.length) {
+        //     setShowAddHolidayCTA(true);
+        // }
 
-        selectedLeaveDate.map(currentDate => {
-            const isDateAlreadySelected = chooseHolidayDate.some((dateItem) => {
-                return (
-                    JSON.stringify(dateItem) === JSON.stringify(currentDate)
-                )
-            })
-            if (!isDateAlreadySelected) {
-                setChooseHolidayDate(selectedLeaveDate);
-            } else {
-                // console.log('Date is already selected:: ', currentDate);
-            }
-        })
+        setChoosenSelectedLeaveDate(selectedLeaveDate);
+        // selectedLeaveDate.map(currentDate => {
+        //     const isDateAlreadySelected = chooseHolidayDate.some((dateItem) => {
+        //         return (
+        //             JSON.stringify(dateItem) === JSON.stringify(currentDate)
+        //         )
+        //     })
+        //     if (!isDateAlreadySelected) {
+        //         setChooseHolidayDate(selectedLeaveDate);
+        //     } else {
+        //         console.log('Date is already selected:: ', currentDate);
+        //     }
+        // })
     }
 
     const showHolidayList = (value) => {
@@ -87,7 +90,23 @@ const EditBarberAvailability = (props) => {
 
     const saveHolidaysHandler = () => {
         setShowHolidayDates(true);
-        console.log('saveHolidaysHandler:')
+        setShowSelectedHolidayList(true);
+        setRemoveSelectedDateRange(true);
+        setIsSaveDisabled(true);
+
+        choosenSelectedLeaveDate.map(currentDate => {
+            const isDateAlreadySelected = chooseHolidayDate.some((dateItem) => {
+                return (
+                    JSON.stringify(dateItem) === JSON.stringify(currentDate)
+                )
+            })
+            if (!isDateAlreadySelected) {
+                setChooseHolidayDate(prevDates => [...prevDates, currentDate]);
+            } else {
+                console.log('Date is already selected:: ', currentDate);
+            }
+        })
+        // console.log('chooseHolidayDate: ', chooseHolidayDate);
     }
 
     const deleteChoosenHolidayDate = (indexValue) => {
@@ -103,8 +122,12 @@ const EditBarberAvailability = (props) => {
     }
 
     const updateRemoveSelectedDateRange = (value) => {
+        console.log('updateRemoveSelectedDateRange called...');
         setRemoveSelectedDateRange(value);
     };
+    const checkIsSaveDisabled = (value) => {
+        setIsSaveDisabled(value);
+    }
 
     const goBack = () => {
         navigate('/availability');
@@ -137,15 +160,15 @@ const EditBarberAvailability = (props) => {
             const currentObject = staticTimeSlots.availability;
             if (!staticTimeSlotClick) { // Assume clicked on Calendar view
                 const checkIfDateIsPresentInAvailableTimeSlot = currentObject.some(item => item.date === day);
-                if(checkIfDateIsPresentInAvailableTimeSlot){
+                if (checkIfDateIsPresentInAvailableTimeSlot) {
                     const index = currentObject.findIndex(item => item.date === day);
-                    if(currentObject[index].status !== 'offline'){
+                    if (currentObject[index].status !== 'offline') {
                         currentObject[index].timeSlot.push(startTime + " - " + endTime);
                     } else {
                         currentObject[index].status = 'active';
                         currentObject[index].timeSlot.push(startTime + " - " + endTime);
                     }
-                setStaticTimeSlots({ ...currentData, availability: currentObject });
+                    setStaticTimeSlots({ ...currentData, availability: currentObject });
                 } else {
                     const newObject = {
                         "day": weekdays[new Date(day).getDay()],
@@ -160,9 +183,9 @@ const EditBarberAvailability = (props) => {
                 // setStaticTimeSlots({ ...currentData, availability: currentObject });
             } else {
                 const normalizeData = staticTimeSlots.staticAvailability.map(item => {
-                        if (item.day === day) {
-                            item.staticTimeSlot.push(startTime + " - " + endTime);
-                        }
+                    if (item.day === day) {
+                        item.staticTimeSlot.push(startTime + " - " + endTime);
+                    }
                     return item;
                 })
                 setStaticTimeSlots({ ...currentData, availability: normalizeData });
@@ -201,7 +224,7 @@ const EditBarberAvailability = (props) => {
             </div>
         )
     }
-
+    console.log('chooseHolidayDate:: ', chooseHolidayDate);
     const weekdayNameHeaderClasses = classNames('flex', 'flex-row', styles.row, styles.header);
     return (
         <div>
@@ -268,40 +291,46 @@ const EditBarberAvailability = (props) => {
                 <div className={`${styles.addShift}`}>
                     <div className={`${styles.calendarWrapper}`}>
                         <p className="text-black">Choose Holiday Date</p>
-                        <HolidayDatePicker pickDateHandler={pickSelectedDateHandler} showHolidayList={showHolidayList} isDateRangeSelected={removeSelectedDateRange}  updateRemoveSelectedDateRange={updateRemoveSelectedDateRange}/>
+                        <HolidayDatePicker
+                            pickDateHandler={pickSelectedDateHandler}
+                            showHolidayList={showHolidayList}
+                            isDateRangeSelected={removeSelectedDateRange}
+                            updateRemoveSelectedDateRange={updateRemoveSelectedDateRange}
+                            checkIsSaveDisabled={checkIsSaveDisabled}
+                        />
                         {/* {showAddHolidayCTA && <button className={`${styles.addBtn} ${styles.addHoliday}`} onClick={() => addHolidayHandler()}>+ Add Holiday</button>} */}
+                        {
+                            showHolidayDates && (
+                                <button className={styles.saveBtn} disabled={isSaveDisabled} onClick={() => saveHolidaysHandler()}> Save Holiday</button>
+                            )
+                        }
                     </div>
                     {
-                        showHolidayDates && (
+                        showHolidayDates && showSelectedHolidayList && (
                             <div className={`${styles.saveBtnWrapper}`}>
                                 <p className={`${styles.holidayListText} font-medium text-black`}>List of Holiday Choosen</p>
                                 <div className={`${styles.holidayList}`}>
                                     <ul>
                                         {
                                             chooseHolidayDate.map((date, index) => (
-                                                <li key={index}>
-                                                    <span className={styles.leaveDate}>
-                                                        {date}
-                                                    </span>
-                                                    <span className={styles.deleteIcon} onClick={() => deleteChoosenHolidayDate(index)}>
-                                                        <DeleteIconManual />
-                                                    </span>
-                                                </li>
-                                            ))
+                                                    <li key={index}>
+                                                        <span className={styles.leaveDate}>
+                                                            {date}
+                                                        </span>
+                                                        <span className={styles.deleteIcon} onClick={() => deleteChoosenHolidayDate(index)}>
+                                                            <DeleteIconManual />
+                                                        </span>
+                                                    </li>
+                                                ))
                                         }
                                     </ul>
                                 </div>
                             </div>
                         )
                     }
-                    {
-                        showHolidayDates && (
-                            <button className={styles.saveBtn} onClick={() => saveHolidaysHandler()}> Save Holiday</button>
-                        )
-                    }
                 </div>
 
-                
+
             </div>
         </div >
     )
