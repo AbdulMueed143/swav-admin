@@ -4,7 +4,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import AppointmentTimeline from './timeline/AppointmentTimeline'
 import { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, Box } from '@material-ui/core';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import BaseMatrixCard from './basematrix/BaseMatrixCard'
 
 const Home = () => {

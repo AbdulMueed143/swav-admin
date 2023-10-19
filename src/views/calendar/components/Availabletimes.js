@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, TextField, Button, IconButton } from '@material-ui/core';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'; // add this import
-import HighlightOffIcon from '@material-ui/icons/HighlightOff'; // add this import
+import { Card, CardContent, Typography, TextField, Button, IconButton } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'; // add this import
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'; // add this import
 import { DatePicker } from 'components/ui';
 import TimeInput from 'components/ui/TimeInput'
 import dayjs from 'dayjs'

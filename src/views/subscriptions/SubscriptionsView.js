@@ -1,7 +1,7 @@
 import { ActionLink, CalendarView, Loading } from 'components/shared'
 import { Calendar } from 'components/ui'
 import React from 'react'
-import { Card, CardContent, Typography, Box } from '@material-ui/core';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import SubscriptionGrid from './SubscriptionGrid';
 
 const Home = () => {
