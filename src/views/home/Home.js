@@ -45,7 +45,7 @@ const Home = () => {
                 <>
                 <div className="flex gap-4 flex-wrap mt-4"> 
                     {services.map((matrix, index) => (
-                        <div  style={{ width: 300 }}>
+                        <div key={index} style={{ width: 300 }}>
                         <BaseMatrixCard label={matrix.label} value={matrix.value} description={matrix.description}></BaseMatrixCard>
                         </div>
                     ))}
