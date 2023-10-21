@@ -11,7 +11,7 @@ import { FormItem, FormContainer } from 'components/ui'
 import Input from 'components/ui/Input'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete } from '@mui/lab';
 
 const validationSchema = Yup.object().shape({
     // input: Yup.string()
