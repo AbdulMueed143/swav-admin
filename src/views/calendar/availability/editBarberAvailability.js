@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import Data from './barberAvailabilityData';
 import styles from './editBarberAvailability.module.css';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import { CalendarView } from "components/shared";
 import CustomTimePicker from "./CustomTimePicker";
 import classNames from "classnames";

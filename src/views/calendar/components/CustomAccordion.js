@@ -6,18 +6,18 @@ import {
     AccordionDetails,
     Typography,
     Card,
-  } from "@material-ui/core";
+  } from " @mui/material";
 
-  import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { ExpandMore } from '@material-ui/icons';
+  import { createStyles, makeStyles } from "@mui/styles";
+import { ExpandMore } from '@mui/icons-material';
 import AvailableTimes from './Availabletimes';
 import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import Table from 'components/ui/Table'
 import useBookingServices from "utils/hooks/useBookingService";
 
 import dayjs from 'dayjs';
-import { Button,  IconButton } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { Button,  IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import { DatePicker } from 'components/ui';
 import AddBarberAvailabilityModal from '../dialogs/AddBarberAvailabilityModal';
 

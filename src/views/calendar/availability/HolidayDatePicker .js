@@ -36,7 +36,6 @@ const HolidayDatePicker = (props) => {
         }
         
         function getDatesInArray(selectedDateRange) {
-            // debugger
             const startDate = selectedDateRange.startDate
             const endDate = selectedDateRange.endDate
             const datesInRange = []

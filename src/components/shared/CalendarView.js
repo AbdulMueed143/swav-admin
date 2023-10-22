@@ -138,18 +138,18 @@ const CalendarView = (props) => {
             date: avail.date
         }))
 
-        const holidayEvents = availabilityData?.holidays.map(user => ({
-            title: "Holiday",
-            start: user,
-            end: user,
-            type: "holiday",
-            date: user
-        }));
+        // const holidayEvents = availabilityData?.holidays.map(user => ({
+        //     title: "Holiday",
+        //     start: user,
+        //     end: user,
+        //     type: "holiday",
+        //     date: user
+        // }));
 
-        const AllEvents = [...onlineEvents, ...offlineEvents, ...holidayEvents];
+        // const AllEvents = [...onlineEvents, ...offlineEvents, ...holidayEvents];
+        const AllEvents = [...onlineEvents, ...offlineEvents];
 
         const handleDelete = (day, index) => {
-            debugger
             const normalizeData = availabilityData.availability.map(item => {
                 if (item.day === day) {
                     item.timeSlot = item.timeSlot.filter((_, i) => i !== index);
@@ -164,7 +164,7 @@ const CalendarView = (props) => {
         };
 
         const handleShowMore = (timeSlot, day) => {
-            debugger
+            
             // console.log('Handle show more...TIMESLOT ', timeSlot);
             // console.log('extendedProps.day ', day);
             setShowAllShiftData(true);

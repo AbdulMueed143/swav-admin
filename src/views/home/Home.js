@@ -4,7 +4,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import AppointmentTimeline from './timeline/AppointmentTimeline'
 import { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, Box } from '@material-ui/core';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import BaseMatrixCard from './basematrix/BaseMatrixCard'
 
 const Home = () => {
@@ -45,7 +45,7 @@ const Home = () => {
                 <>
                 <div className="flex gap-4 flex-wrap mt-4"> 
                     {services.map((matrix, index) => (
-                        <div  style={{ width: 300 }}>
+                        <div key={index} style={{ width: 300 }}>
                         <BaseMatrixCard label={matrix.label} value={matrix.value} description={matrix.description}></BaseMatrixCard>
                         </div>
                     ))}

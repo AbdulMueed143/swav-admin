@@ -65,10 +65,10 @@ const DATA = [
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-25",
-        "2023-10-28"
-      ],
+      // "holidays": [
+      //   "2023-10-25",
+      //   "2023-10-28"
+      // ],
       "price": 50,
       "experienceInYears": 5,
       "area": "Downtown",
@@ -108,6 +108,13 @@ const DATA = [
           "status": "active",
           "timeSlot": ["09:00 - 13:50 ", "20:40 - 22:00 "],
           "holiday": false
+        },
+        {
+          "day": "Saturday",
+          "date": "2023-10-07",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
         }
       ],
       "staticAvailability": [
@@ -140,10 +147,10 @@ const DATA = [
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-26",
-        "2023-10-29"
-      ],
+      // "holidays": [
+      //   "2023-10-26",
+      //   "2023-10-29"
+      // ],
       "price": 60,
       "experienceInYears": 7,
       "area": "Suburb",
@@ -236,10 +243,10 @@ const DATA = [
           "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-25",
-        "2023-10-28"
-      ],
+      // "holidays": [
+      //   "2023-10-25",
+      //   "2023-10-28"
+      // ],
       "price": 45,
       "experienceInYears": 4,
       "area": "City Center",
@@ -265,6 +272,20 @@ const DATA = [
           "status": "active",
           "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
           "holiday": false
+        },
+        {
+          "day": "Friday",
+          "date": "2023-10-22",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
+        },
+        {
+          "day": "Saturday",
+          "date": "2023-10-23",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
         }
       ],
       "staticAvailability": [
@@ -297,10 +318,10 @@ const DATA = [
           "staticTimeSlot": ["09:00 - 13:00 ", "18:00 - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-26",
-        "2023-10-29"
-      ],
+      // "holidays": [
+      //   "2023-10-26",
+      //   "2023-10-29"
+      // ],
       "price": 55,
       "experienceInYears": 6,
       "area": "Downtown",
@@ -358,10 +379,10 @@ const DATA = [
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-25",
-        "2023-10-28"
-      ],
+      // "holidays": [
+      //   "2023-10-25",
+      //   "2023-10-28"
+      // ],
       "price": 40,
       "experienceInYears": 3,
       "area": "Midtown",
@@ -387,6 +408,20 @@ const DATA = [
           "status": "active",
           "timeSlot": ["09:00 - 13:00 ", "20:00 - 22:00 "],
           "holiday": false
+        },
+        {
+          "day": "Friday",
+          "date": "2023-10-22",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
+        },
+        {
+          "day": "Saturday",
+          "date": "2023-10-23",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
         }
       ],
       "staticAvailability": [
@@ -419,10 +454,10 @@ const DATA = [
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-26",
-        "2023-10-29"
-      ],
+      // "holidays": [
+      //   "2023-10-26",
+      //   "2023-10-29"
+      // ],
       "price": 70,
       "experienceInYears": 8,
       "area": "Tech Hub",
@@ -481,8 +516,8 @@ const DATA = [
         },
       ],
       "holidays": [
-        "2023-10-25",
-        "2023-10-28"
+        // "2023-10-25",
+        // "2023-10-28"
       ],
       "price": 55,
       "experienceInYears": 6,
@@ -509,6 +544,13 @@ const DATA = [
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00 - 22:00 "],
           "holiday": false
+        },
+        {
+          "day": "Friday",
+          "date": "2023-10-22",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
         }
       ],
       "staticAvailability": [
@@ -541,10 +583,10 @@ const DATA = [
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-26",
-        "2023-10-29"
-      ],
+      // "holidays": [
+      //   "2023-10-26",
+      //   "2023-10-29"
+      // ],
       "price": 65,
       "experienceInYears": 7,
       "area": "Downtown",
@@ -602,10 +644,10 @@ const DATA = [
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-25",
-        "2023-10-28"
-      ],
+      // "holidays": [
+      //   "2023-10-25",
+      //   "2023-10-28"
+      // ],
       "price": 55,
       "experienceInYears": 6,
       "area": "City Center",
@@ -631,6 +673,13 @@ const DATA = [
           "status": "active",
           "timeSlot": ["09:00  - 13:00 ", "20:00 - 22:00 "],
           "holiday": false
+        },
+        {
+          "day": "Friday",
+          "date": "2023-10-22",
+          "status": "offline",
+          "timeSlot": [],
+          "holiday": true
         }
       ],
       "staticAvailability": [
@@ -663,10 +712,10 @@ const DATA = [
           "staticTimeSlot": ["09:00  - 13:00 ", "18:00  - 22:00 "],
         },
       ],
-      "holidays": [
-        "2023-10-26",
-        "2023-10-29"
-      ],
+      // "holidays": [
+      //   "2023-10-26",
+      //   "2023-10-29"
+      // ],
       "price": 60,
       "experienceInYears": 5,
       "area": "Suburb",
