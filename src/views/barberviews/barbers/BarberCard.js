@@ -1,48 +1,54 @@
 import {  Avatar, Card } from 'components/ui'
+import Button  from 'components/ui/Buttons/Button';
 
-const BarberCard = ({ barber }) => {
+const BarberCard = ({ barber, onDeleteClick }) => {
 
-    const { firstName, lastName, email, phoneNumber, amenities, about } = barber;
-
+    const { id, firstName, lastName, email, phoneNumber, amenities, about } = barber;
 
     const cardFooter = (
-        <>
-        <div className="flex items-center">
-
-            {/* <Avatar
+        <div cclassName="flex flex-col items-start">
+           <div className="flex items-center mb-2">
+            <Avatar
                 size={30}
                 className="mr-2"
                 shape="circle"
                 src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-                
-            /> */}
-           <span>
+            />
+            <span className='truncate'>
                 <h6 className="text-sm">Services</h6>
-                <div className="text-xs overflow-hidden">
+                <div className="text-xs overflow-hidden ">
                     {amenities && amenities.length > 0 ? (
                         amenities.map((amenity, index) => (
-                            <span key={index}>{amenity.name}</span>
+                            <span  key={index}>{amenity.name}</span>
                         ))
                     ) : (
-                        <div>No services available</div>
+                        <div >No services available</div>
                     )}
                 </div>
             </span>
-
         </div>
 
-        <div className="flex items-center">
+        <div className="flex items-center mb-2">
 
-            <span>
-                <h6 className="text-sm">Detials</h6>
-                <div className="text-xs">{email}</div>
-                <div className="text-xs">{phoneNumber}</div>
+<span>
+    <h6 className="text-sm">Detials</h6>
+    <div className="text-xs">{email}</div>
+    <div className="text-xs">{phoneNumber}</div>
 
-            </span>
+</span>
+</div>
+
+            <div className="flex">
+                <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick(id)}>
+                    Delete 
+                </Button>
+               
+            </div>
         </div>
-
-        </>
     )
+
+
+
 
     const cardHeader = (
         <div className="rounded-tl-lg rounded-tr-lg overflow-hidden"  style={{ height: '250px', width: '300px' }}>
@@ -68,7 +74,7 @@ const BarberCard = ({ barber }) => {
                     Cost 60 AUD
                 </span> */}
                 <h4 className="font-bold my-3">{firstName} {lastName}</h4>
-                <p>
+                <p className="truncate">
                     {about}             
                 </p>
             </Card>

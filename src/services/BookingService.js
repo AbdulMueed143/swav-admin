@@ -22,6 +22,30 @@ export async function apiAddService(token, data) {
     })
 }
 
+export async function apiDeleteService(token, data) {
+    return ApiService.fetchData({
+        url: '/api/v1/shop/amenities',
+        method: 'delete',
+        data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+
+
+export async function apiUpdateService(token, data) {
+    return ApiService.fetchData({
+        url: '/api/v1/shop/amenities',
+        method: 'put',
+        data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 
 export async function apiGetBarbers(token) {
     return ApiService.fetchData({
@@ -38,6 +62,17 @@ export async function apiAddBarber(token, data) {
     return ApiService.fetchData({
         url: '/api/v1/shop/add/barber',
         method: 'post',
+        data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export async function apiDeleteBarber(token, data) {
+    return ApiService.fetchData({
+        url: '/api/v1/shop/delete/barber',
+        method: 'delete',
         data,
         headers: {
             Authorization: `Bearer ${token}`

@@ -1,12 +1,15 @@
-import {  Avatar, Card } from 'components/ui'
+import { hide } from '@popperjs/core';
+import {  Avatar, Card } from 'components/ui';
+import Button  from 'components/ui/Buttons/Button';
 
-const ServiceCard = ({ service }) => {
+const ServiceCard = ({ service, onUpdateClick, onDeleteClick }) => {
 
-    const { name, description, price, averageTimeInMinutes } = service;
+    const { id, name, description, price, averageTimeInMinutes } = service;
 
 
     const cardFooter = (
-        <div className="flex items-center">
+        <div cclassName="flex flex-col items-start">
+           <div className="flex items-center mb-2">
             <Avatar
                 size={30}
                 className="mr-2"
@@ -18,6 +21,16 @@ const ServiceCard = ({ service }) => {
                 <span className="text-xs">Takes approx {averageTimeInMinutes} Mint</span>
             </span>
         </div>
+
+            <div className="flex">
+                <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick(id)}>
+                    Delete 
+                </Button>
+                <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => onUpdateClick(service)}>
+                    Update
+                </Button>
+            </div>
+        </div>
     )
 
     return (
@@ -25,17 +38,14 @@ const ServiceCard = ({ service }) => {
             <Card
                 clickable
                 className="hover:shadow-lg transition duration-150 ease-in-out dark:border dark:border-gray-600 dark:border-solid"
-                // header={cardHeader}
                 footer={cardFooter}
-                // headerClass="p-0"
                 footerBorder={false}
-                // headerBorder={false}
             >
                 <span className="text-emerald-600 font-semibold">
                     Price {price} AUD
                 </span>
                 <h4 className="font-bold my-3">{name}</h4>
-                <p>
+                <p className="truncate">
                    {description}
                 </p>
             </Card>

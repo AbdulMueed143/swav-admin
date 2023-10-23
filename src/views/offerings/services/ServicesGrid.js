@@ -5,14 +5,81 @@ import { Dialog } from 'components/ui';
 import AddServiceModal from './dialog/AddServiceModal';
 import useBookingServices from 'utils/hooks/useBookingService'
 import { Loading } from 'components/shared';
-
+import Button  from 'components/ui/Buttons/Button';
+import UpdateServiceModal from './dialog/UpdateServiceModal';
 
 
 const ServicesGrid = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const { getServices, addService } = useBookingServices();
+
+    //Handling Update Model
+    const [selectedUpdatableBarber, setSelectedUpdatableBarber] = useState(null);
+    const [openUpdateModal, setIsUpdateModalOpen] = useState(false);
+    const handleClickToOpenUpdateModal = (updateBarber) => {
+        setSelectedUpdatableBarber(updateBarber);
+        setIsUpdateModalOpen(true);
+    };
+
+    const handleClickToCloseUpdateModal = () => {
+        setIsUpdateModalOpen(false);
+        setSelectedUpdatableBarber(null);
+    };
+
+
+    const handleClickToSaveUpdateModal = async (values)  => {
+        // Handle the form submission here using formValues
+
+        console.log(values);
+        //lets make call to server
+        const data = await updateService(values);
+        if(data.status === -1) {
+            //something went wrong ...
+        }
+        else {
+            // Call fetchServices to refresh the services
+            fetchServices();
+        }
+
+        setOpen(false);
+        handleClickToCloseUpdateModal();
+    }
+ 
+
+    //======= End of handling Update Modal
+
+
+    //Dilaog for deleting the item
+    const [deleteDialogIsOpen, setIsDeleteDialogOpen] = useState(false)
+    const [selectedId, setSelectedId] = useState(null);
+
+    const handleDeleteClick = (id) => {
+        setSelectedId(id);
+        setIsDeleteDialogOpen(true);
+    }
+
+    const onDeleteDialogClose =() => {
+        setSelectedId(null);
+        setIsDeleteDialogOpen(false);
+    }
+
+    const onDeleteDialogOk = async () => {
+        setIsDeleteDialogOpen(false);
+        const data = await deleteService(selectedId);
+        if(data.status === -1) {
+            //something went wrong ...
+        }
+        else {
+              // Call fetchServices to refresh the services
+            fetchServices();
+        }
+    }
+
+    //Dialog for updating the item
+
+
+    const { getServices, addService, deleteService, updateService } = useBookingServices();
     const [services, setServices] = useState([]); // Initial state as an empty array
     const [search, setSearch] = useState('');
 
@@ -32,7 +99,7 @@ const ServicesGrid = () => {
     const handleClickToOpen = () => {
         setOpen(true);
     };
- 
+
     const handleServiceSave = async (formValues) => {
         // Handle the form submission here using formValues
         formValues.properties = {}
@@ -75,14 +142,41 @@ const ServicesGrid = () => {
                 onClick={handleClickToOpen}
             />
             </div>
+
+            <Dialog
+                isOpen={deleteDialogIsOpen}
+                onClose={onDeleteDialogClose}
+                onRequestClose={onDeleteDialogClose}
+            >
+                <h5 className="mb-4">Deleting Service</h5>
+                <p>
+                    Are you sure you want to delete this service?
+                </p>
+                <div className="text-right mt-6">
+                    <Button
+                        className="ltr:mr-2 rtl:ml-2"
+                        variant="plain"
+                        onClick={onDeleteDialogClose}
+                    >
+                        Cancel
+                    </Button>
+                    <Button variant="solid" onClick={onDeleteDialogOk}>
+                        Okay
+                    </Button>
+                </div>
+            </Dialog>
+
             <Loading loading={loading} >
                 <div className="flex gap-4 flex-wrap mt-4"> 
                     {filteredServices.map((service, index) => (
-                        <ServiceCard key={index} service={service} />
+                        <ServiceCard key={index} service={service} onDeleteClick={handleDeleteClick} onUpdateClick={handleClickToOpenUpdateModal} />
                     ))} 
                 </div>
             </Loading>
+
             <AddServiceModal open={open} handleToClose={handleToClose} handleServiceSave={handleServiceSave} />
+            <UpdateServiceModal updateBarberData={selectedUpdatableBarber} open={openUpdateModal} 
+                handleToClose={handleClickToCloseUpdateModal} handleServiceUpdate={handleClickToSaveUpdateModal}  />
 
         </div>
     );

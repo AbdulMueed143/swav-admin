@@ -5,6 +5,9 @@ import ButtonWithIcon from '../../../components/ui/custom/barbers/ButtonWithIcon
 import AddBarberModal from './dialogs/AddBarberModal';
 import useBookingServices from 'utils/hooks/useBookingService'
 import { Loading } from 'components/shared';
+import Button  from 'components/ui/Buttons/Button';
+import { Dialog } from 'components/ui';
+
 
 
 const BarbersGrid = () => {
@@ -12,9 +15,42 @@ const BarbersGrid = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const { getBarbers, addBarbers } = useBookingServices();
+    const { getBarbers, addBarbers, deleteBarber } = useBookingServices();
     const [barbers, setBarbers] = useState([]); // Initial state as an empty array
     const [search, setSearch] = useState('');
+
+    //Handling the delete click ...
+    const [deleteDialogIsOpen, setIsDeleteDialogOpen] = useState(false)
+    const [selectedId, setSelectedId] = useState(null);
+
+    const handleDeleteClick = (id) => {
+        setSelectedId(id);
+        setIsDeleteDialogOpen(true);
+    }
+
+    const onDeleteDialogClose =() => {
+        setSelectedId(null);
+        setIsDeleteDialogOpen(false);
+    }
+
+    const onDeleteDialogOk = async () => {
+        setIsDeleteDialogOpen(false);
+        setLoading(true);
+
+        const data = await deleteBarber(selectedId);
+        if(data.status === -1) {
+            //something went wrong ...
+            setLoading(false);
+
+        }
+        else {
+              // Call fetchServices to refresh the services
+              fetchBarbers();
+        }
+
+    }
+
+    //End of handling the delete click ...
 
     // Define a function to fetch and update the services
     const fetchBarbers = async () => {
@@ -79,10 +115,33 @@ const BarbersGrid = () => {
                 />
                 </div>
 
+                <Dialog
+                    isOpen={deleteDialogIsOpen}
+                    onClose={onDeleteDialogClose}
+                    onRequestClose={onDeleteDialogClose}
+                >
+                    <h5 className="mb-4">Deleting Barber</h5>
+                    <p>
+                        Are you sure you want to delete this Barber, if barber has appointments they will be cancelled?
+                    </p>
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            variant="plain"
+                            onClick={onDeleteDialogClose}
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="solid" onClick={onDeleteDialogOk}>
+                            Okay
+                        </Button>
+                    </div>
+                </Dialog>
+
                 <Loading loading={loading} >
                     <div className="flex gap-4 flex-wrap mt-4"> 
                         {filteredBarbers.map((barber, index) => (
-                            <BarberCard key={index} barber={barber} />
+                            <BarberCard key={index} barber={barber} onDeleteClick={handleDeleteClick} />
                         ))}
                     </div>
                 </Loading>
