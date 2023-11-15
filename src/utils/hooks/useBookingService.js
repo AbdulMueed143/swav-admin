@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { apiGetServices, apiAddService, apiDeleteService, apiUpdateService, 
-    apiAddBarber, apiGetBarbers, apiDeleteBarber, apiAddBarberAvailability } from 'services/BookingService'
+    apiAddBarber, apiGetBarbers, apiDisableBarber, apiAddBarberAvailability } from 'services/BookingService'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
 import { values } from 'lodash'
@@ -52,10 +52,10 @@ function useBookingServices() {
 
     }
 
-    const deleteBarber = async (selectedId) => {
+    const disableBarber = async (selectedId, checked) => {
         try
         {
-            const resp = await apiDeleteBarber(token, {"id" : selectedId})
+            const resp = await apiDisableBarber(token, selectedId, checked ? "ACTIVE" : "DISABLED");
             if(resp.status === 200) {
                 return resp;
             }
@@ -202,7 +202,7 @@ function useBookingServices() {
         addService,
         addBarbers,
         deleteService,
-        deleteBarber,
+        disableBarber,
         updateService,
         addBarberAvailability
     }

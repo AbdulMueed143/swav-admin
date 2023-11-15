@@ -1,9 +1,11 @@
 import {  Avatar, Card } from 'components/ui'
 import Button  from 'components/ui/Buttons/Button';
+import Switcher from 'components/ui/Switcher';
 
-const BarberCard = ({ barber, onDeleteClick }) => {
 
-    const { id, firstName, lastName, email, phoneNumber, amenities, about } = barber;
+const BarberCard = ({ barber, onStatusSwitcherToggle }) => {
+
+    const { id, firstName, lastName, email, phoneNumber, amenities, about, status } = barber;
 
     const cardFooter = (
         <div cclassName="flex flex-col items-start">
@@ -39,10 +41,13 @@ const BarberCard = ({ barber, onDeleteClick }) => {
 </div>
 
             <div className="flex">
-                <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick(id)}>
-                    Delete 
-                </Button>
-               
+
+                <Switcher  className="mr-2 mb-2" 
+                            defaultChecked={status !== "DISABLED"} 
+                            onChange={(checked) => onStatusSwitcherToggle(checked, id)} 
+ />
+
+                
             </div>
         </div>
     )

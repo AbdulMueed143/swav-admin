@@ -144,9 +144,16 @@ const SignUpForm = (props) => {
              <div style={{ flex: 6, overflowY: 'auto', padding: '2px'  }}>
                 <Formik
                     initialValues={{
-                        name: '',
-                        password: '',
-                        confirmPassword: '',
+                        businessName: '',
+                        shopName: '',
+                        ownerFirstName: firstname,
+                        ownerLastName: lastname,
+                        ownerEmail: email,
+                        ownerPhoneNumber: phoneNumber,
+                        ownerPassword: password,
+                        address: currentAddress,
+                        properties: extraProperties,
+                        ownerConfirmPassword: '',
                         googleAddress: '',
                         phoneNumber: '',
                         email: '',
@@ -170,14 +177,14 @@ const SignUpForm = (props) => {
                                     <FormItem
                                             
                                             label="First Name"
-                                            invalid={errors.firstname && touched.firstname}
-                                            errorMessage={errors.firstname}
+                                            invalid={errors.ownerFirstName && touched.ownerFirstName}
+                                            errorMessage={errors.ownerFirstName}
                                         >
                                         <Field
                                         asterick
                                             type="text"
                                             autoComplete="off"
-                                            name="firstname"
+                                            name="ownerFirstName"
                                             placeholder="First Name"
                                             component={Input}
                                     
@@ -187,13 +194,13 @@ const SignUpForm = (props) => {
                                     <FormItem
                                     required
                                         label="Last Name"
-                                        invalid={errors.lastname && touched.lastname}
-                                        errorMessage={errors.lastname}
+                                        invalid={errors.ownerLastName && touched.ownerLastName}
+                                        errorMessage={errors.ownerLastName}
                                     >
                                         <Field
                                             type="text"
                                             autoComplete="off"
-                                            name="lastname"
+                                            name="ownerLastName"
                                             placeholder="Last Name"
                                             component={Input}
                                         />
@@ -323,12 +330,12 @@ const SignUpForm = (props) => {
 
                                 <FormItem
                                     label="Phone Number"
-                                    invalid={errors.phoneNumber && touched.phoneNumber}
-                                    errorMessage={errors.phoneNumber}>
+                                    invalid={errors.ownerPhoneNumber && touched.ownerPhoneNumber}
+                                    errorMessage={errors.ownerPhoneNumber}>
                                     <Field
                                         type="text"
                                         autoComplete="off"
-                                        name="phoneNumber"
+                                        name="ownerPhoneNumber"
                                         placeholder="Phone Number"
                                         component={Input}
                                     />

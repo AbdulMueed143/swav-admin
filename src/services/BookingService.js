@@ -2,7 +2,7 @@ import ApiService from './ApiService'
 
 export async function apiGetServices(token) {
     return ApiService.fetchData({
-        url: '/api/v1/shop/services',
+        url: '//barber-auth-service.api/v1/shop/services',
         method: 'get',
         headers: {
             Authorization: `Bearer ${token}`
@@ -69,11 +69,10 @@ export async function apiAddBarber(token, data) {
     })
 }
 
-export async function apiDeleteBarber(token, data) {
+export async function apiDisableBarber(token, barberId, status) {
     return ApiService.fetchData({
-        url: '/api/v1/shop/delete/barber',
-        method: 'delete',
-        data,
+        url: `/api/v1/shop/barber/${barberId}/${status}`,
+        method: 'patch',
         headers: {
             Authorization: `Bearer ${token}`
         }

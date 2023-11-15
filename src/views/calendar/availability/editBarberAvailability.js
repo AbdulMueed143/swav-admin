@@ -154,185 +154,188 @@ const EditBarberAvailability = (props) => {
 
     const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
-    //This fn is to add the shift => staticAvailability.staticTimeSlot and availability.timeSlot both
-    const saveShiftPopup = (day) => {
-        if (startTime && endTime) {
-            const currentObject = staticTimeSlots.availability;
-            if (!staticTimeSlotClick) { // Assume clicked on Calendar view
-                const checkIfDateIsPresentInAvailableTimeSlot = currentObject.some(item => item.date === day);
-                if (checkIfDateIsPresentInAvailableTimeSlot) {
-                    const index = currentObject.findIndex(item => item.date === day);
-                    if (currentObject[index].status !== 'offline') {
-                        currentObject[index].timeSlot.push(startTime + " - " + endTime);
-                    } else {
-                        currentObject[index].status = 'active';
-                        currentObject[index].timeSlot.push(startTime + " - " + endTime);
-                    }
-                    setStaticTimeSlots({ ...currentData, availability: currentObject });
-                } else {
-                    const newObject = {
-                        "day": weekdays[new Date(day).getDay()],
-                        "date": day,
-                        "status": "active",
-                        "timeSlot": [startTime + " - " + endTime],
-                        "holiday": false
-                    };
-                    currentObject.push(newObject);
-                    setStaticTimeSlots({ ...currentData, availability: currentObject });
-                }
-                // setStaticTimeSlots({ ...currentData, availability: currentObject });
-            } else {
-                const normalizeData = staticTimeSlots.staticAvailability.map(item => {
-                    if (item.day === day) {
-                        item.staticTimeSlot.push(startTime + " - " + endTime);
-                    }
-                    return item;
-                })
-                setStaticTimeSlots({ ...currentData, availability: normalizeData });
-            }
-        } else {
-            alert('Choose the date to Add the Shift ')
-        }
-        handleClosePopup();
-    }
+    // //This fn is to add the shift => staticAvailability.staticTimeSlot and availability.timeSlot both
+    // const saveShiftPopup = (day) => {
+    //     if (startTime && endTime) {
+    //         const currentObject = staticTimeSlots.availability;
+    //         if (!staticTimeSlotClick) { // Assume clicked on Calendar view
+    //             const checkIfDateIsPresentInAvailableTimeSlot = currentObject.some(item => item.date === day);
+    //             if (checkIfDateIsPresentInAvailableTimeSlot) {
+    //                 const index = currentObject.findIndex(item => item.date === day);
+    //                 if (currentObject[index].status !== 'offline') {
+    //                     currentObject[index].timeSlot.push(startTime + " - " + endTime);
+    //                 } else {
+    //                     currentObject[index].status = 'active';
+    //                     currentObject[index].timeSlot.push(startTime + " - " + endTime);
+    //                 }
+    //                 setStaticTimeSlots({ ...currentData, availability: currentObject });
+    //             } else {
+    //                 const newObject = {
+    //                     "day": weekdays[new Date(day).getDay()],
+    //                     "date": day,
+    //                     "status": "active",
+    //                     "timeSlot": [startTime + " - " + endTime],
+    //                     "holiday": false
+    //                 };
+    //                 currentObject.push(newObject);
+    //                 setStaticTimeSlots({ ...currentData, availability: currentObject });
+    //             }
+    //             // setStaticTimeSlots({ ...currentData, availability: currentObject });
+    //         } else {
+    //             const normalizeData = staticTimeSlots.staticAvailability.map(item => {
+    //                 if (item.day === day) {
+    //                     item.staticTimeSlot.push(startTime + " - " + endTime);
+    //                 }
+    //                 return item;
+    //             })
+    //             setStaticTimeSlots({ ...currentData, availability: normalizeData });
+    //         }
+    //     } else {
+    //         alert('Choose the date to Add the Shift ')
+    //     }
+    //     handleClosePopup();
+    // }
 
-    //This fn is to set the Static Time Slot using [+Add Shift] Button
-    const changeShiftHandler = (day) => {
-        setOpenPopup(true);
-        setSelectedDay(day);
-        setStaticTimeSlotClick(true);
-    }
+    // //This fn is to set the Static Time Slot using [+Add Shift] Button
+    // const changeShiftHandler = (day) => {
+    //     setOpenPopup(true);
+    //     setSelectedDay(day);
+    //     setStaticTimeSlotClick(true);
+    // }
 
-    //This fn is to set the Time Slot using onClick events on Calendar View
-    const addDataToCalendarViewOnClick = (date) => {
-        setOpenPopup(true); // To Open the PopUp To Add Time Slot
-        setSelectedDay(date);
-        // setStartTimeAtCalendar(true);
-        setStaticTimeSlotClick(false);
-    }
+    // //This fn is to set the Time Slot using onClick events on Calendar View
+    // const addDataToCalendarViewOnClick = (date) => {
+    //     setOpenPopup(true); // To Open the PopUp To Add Time Slot
+    //     setSelectedDay(date);
+    //     // setStartTimeAtCalendar(true);
+    //     setStaticTimeSlotClick(false);
+    // }
 
-    const addShiftPopUpDOM = (day) => {
-        return (
-            <div className={styles.addShiftPopUp}>
-                <div className={styles.addShiftPopUpWrapper}>
-                    <p className="font-semibold">Choose Shift</p>
-                    <CustomTimePicker value={startTime} onChange={handleStartTimeChange} labelText="Select Start Time" />
-                    <CustomTimePicker value={endTime} onChange={handleEndTimeChange} labelText="Select End Time" />
-                    <button className={styles.addShiftBtnPopUp} onClick={() => saveShiftPopup(day)} disabled={!(startTime && endTime)}>Save</button>
-                    <button className={styles.closeBtn} onClick={() => handleClosePopup()}>X</button>
-                </div>
-            </div>
-        )
-    }
-    console.log('chooseHolidayDate:: ', chooseHolidayDate);
-    const weekdayNameHeaderClasses = classNames('flex', 'flex-row', styles.row, styles.header);
+    // const addShiftPopUpDOM = (day) => {
+    //     return (
+    //         <div className={styles.addShiftPopUp}>
+    //             <div className={styles.addShiftPopUpWrapper}>
+    //                 <p className="font-semibold">Choose Shift</p>
+    //                 <CustomTimePicker value={startTime} onChange={handleStartTimeChange} labelText="Select Start Time" />
+    //                 <CustomTimePicker value={endTime} onChange={handleEndTimeChange} labelText="Select End Time" />
+    //                 <button className={styles.addShiftBtnPopUp} onClick={() => saveShiftPopup(day)} disabled={!(startTime && endTime)}>Save</button>
+    //                 <button className={styles.closeBtn} onClick={() => handleClosePopup()}>X</button>
+    //             </div>
+    //         </div>
+    //     )
+    // }
+    // console.log('chooseHolidayDate:: ', chooseHolidayDate);
+    // const weekdayNameHeaderClasses = classNames('flex', 'flex-row', styles.row, styles.header);
+
+
     return (
-        <div>
-            <button className={styles.backBtn} onClick={() => goBack()}> &lt; Back</button>
-            <div className={styles.barberWrapper}>
-                <h1 className="">{currentData?.name}</h1>
-                <img
-                    src={currentData?.userpic}
-                    className="w-20 h-20 rounded-full my-6"
-                    alt="Barber"
-                />
-                <button className={`${styles.saveData} ${styles.addBtn}`} onClick={() => saveData()} variant="outlined" disabled>save Data</button>
-            </div>
-            <div className={`${styles.editWrapper} flex gap-10`}>
-                <div className={`${styles.calendarView}`}>
-                    <div className={weekdayNameHeaderClasses}>
-                        <div className={styles.cell}>Monday</div>
-                        <div className={styles.cell}>Tuesday</div>
-                        <div className={styles.cell}>Wednesday</div>
-                        <div className={styles.cell}>Thursday</div>
-                        <div className={styles.cell}>Friday</div>
-                        <div className={styles.cell}>Saturday</div>
-                        <div className={styles.cell}>Sunday</div>
-                    </div>
-                    {/* Show Static Time Slots */}
-                    {
-                        staticTimeSlots && (
-                            <div className={`flex flex-row ${styles.row} relative`} key={staticTimeSlots.id}>
-                                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, i) => {
-                                    const availability = staticTimeSlots.staticAvailability.find((slot) => slot.day === day);
-                                    return (
-                                        <div className={`${styles.cell} ${styles.fs12} ${(availability.staticTimeSlot.length === 0) ? styles.holiday : styles.notHoliday}`} key={i}>
-                                            {availability ? (
-                                                availability.staticTimeSlot.length > 0 ? (
-                                                    availability.staticTimeSlot.map((item, index) => {
-                                                        return (
-                                                            <div><span className={styles.itemWrap}>{item}</span><button className={styles.deleteShift} onClick={() => handleDelete(day, index)} key={index}>X</button></div>
-                                                        )
-                                                    })
-                                                ) : (
-                                                    'Holiday'
-                                                )
-                                            ) : ('Holiday'
-                                            )}
-                                            <div className={styles.addShiftBtn}>
-                                                <button className={styles.addBtn} onClick={() => changeShiftHandler(day)}>+ Add Shift</button>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                                {
-                                    openPopup && addShiftPopUpDOM(selectedDay)
-                                }
-                            </div>
-                        )
-                    }
-                    <div className={styles.barberCalendar}>
-                        <h2 className="">Override</h2>
-                        <CalendarView DATA={staticTimeSlots} addDataToCalendarViewOnClick={addDataToCalendarViewOnClick} calendarClass={styles.breakTimeSlots} wrapperClass={styles.calendarCss} />
-                    </div>
-                </div>
+        <div></div>
+        // <div>
+        //     <button className={styles.backBtn} onClick={() => goBack()}> &lt; Back</button>
+        //     <div className={styles.barberWrapper}>
+        //         <h1 className="">{currentData?.name}</h1>
+        //         <img
+        //             src={currentData?.userpic}
+        //             className="w-20 h-20 rounded-full my-6"
+        //             alt="Barber"
+        //         />
+        //         <button className={`${styles.saveData} ${styles.addBtn}`} onClick={() => saveData()} variant="outlined" disabled>save Data</button>
+        //     </div>
+        //     <div className={`${styles.editWrapper} flex gap-10`}>
+        //         <div className={`${styles.calendarView}`}>
+        //             <div className={weekdayNameHeaderClasses}>
+        //                 <div className={styles.cell}>Monday</div>
+        //                 <div className={styles.cell}>Tuesday</div>
+        //                 <div className={styles.cell}>Wednesday</div>
+        //                 <div className={styles.cell}>Thursday</div>
+        //                 <div className={styles.cell}>Friday</div>
+        //                 <div className={styles.cell}>Saturday</div>
+        //                 <div className={styles.cell}>Sunday</div>
+        //             </div>
+        //             {/* Show Static Time Slots */}
+        //             {
+        //                 staticTimeSlots && (
+        //                     <div className={`flex flex-row ${styles.row} relative`} key={staticTimeSlots.id}>
+        //                         {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, i) => {
+        //                             const availability = staticTimeSlots.staticAvailability.find((slot) => slot.day === day);
+        //                             return (
+        //                                 <div className={`${styles.cell} ${styles.fs12} ${(availability.staticTimeSlot.length === 0) ? styles.holiday : styles.notHoliday}`} key={i}>
+        //                                     {availability ? (
+        //                                         availability.staticTimeSlot.length > 0 ? (
+        //                                             availability.staticTimeSlot.map((item, index) => {
+        //                                                 return (
+        //                                                     <div><span className={styles.itemWrap}>{item}</span><button className={styles.deleteShift} onClick={() => handleDelete(day, index)} key={index}>X</button></div>
+        //                                                 )
+        //                                             })
+        //                                         ) : (
+        //                                             'Holiday'
+        //                                         )
+        //                                     ) : ('Holiday'
+        //                                     )}
+        //                                     <div className={styles.addShiftBtn}>
+        //                                         <button className={styles.addBtn} onClick={() => changeShiftHandler(day)}>+ Add Shift</button>
+        //                                     </div>
+        //                                 </div>
+        //                             );
+        //                         })}
+        //                         {
+        //                             openPopup && addShiftPopUpDOM(selectedDay)
+        //                         }
+        //                     </div>
+        //                 )
+        //             }
+        //             <div className={styles.barberCalendar}>
+        //                 <h2 className="">Override</h2>
+        //                 <CalendarView DATA={staticTimeSlots} addDataToCalendarViewOnClick={addDataToCalendarViewOnClick} calendarClass={styles.breakTimeSlots} wrapperClass={styles.calendarCss} />
+        //             </div>
+        //         </div>
 
-                {/* Add Holiday Component */}
-                <div className={`${styles.addShift}`}>
-                    <div className={`${styles.calendarWrapper}`}>
-                        <p className="text-black">Choose Holiday Date</p>
-                        <HolidayDatePicker
-                            pickDateHandler={pickSelectedDateHandler}
-                            showHolidayList={showHolidayList}
-                            isDateRangeSelected={removeSelectedDateRange}
-                            updateRemoveSelectedDateRange={updateRemoveSelectedDateRange}
-                            checkIsSaveDisabled={checkIsSaveDisabled}
-                        />
-                        {/* {showAddHolidayCTA && <button className={`${styles.addBtn} ${styles.addHoliday}`} onClick={() => addHolidayHandler()}>+ Add Holiday</button>} */}
-                        {
-                            showHolidayDates && (
-                                <button className={styles.saveBtn} disabled={isSaveDisabled} onClick={() => saveHolidaysHandler()}> Save Holiday</button>
-                            )
-                        }
-                    </div>
-                    {
-                        showHolidayDates && showSelectedHolidayList && (
-                            <div className={`${styles.saveBtnWrapper}`}>
-                                <p className={`${styles.holidayListText} font-medium text-black`}>List of Holiday Choosen</p>
-                                <div className={`${styles.holidayList}`}>
-                                    <ul>
-                                        {
-                                            chooseHolidayDate.map((date, index) => (
-                                                    <li key={index}>
-                                                        <span className={styles.leaveDate}>
-                                                            {date}
-                                                        </span>
-                                                        <span className={styles.deleteIcon} onClick={() => deleteChoosenHolidayDate(index)}>
-                                                            <DeleteIconManual />
-                                                        </span>
-                                                    </li>
-                                                ))
-                                        }
-                                    </ul>
-                                </div>
-                            </div>
-                        )
-                    }
-                </div>
+        //         {/* Add Holiday Component */}
+        //         <div className={`${styles.addShift}`}>
+        //             <div className={`${styles.calendarWrapper}`}>
+        //                 <p className="text-black">Choose Holiday Date</p>
+        //                 <HolidayDatePicker
+        //                     pickDateHandler={pickSelectedDateHandler}
+        //                     showHolidayList={showHolidayList}
+        //                     isDateRangeSelected={removeSelectedDateRange}
+        //                     updateRemoveSelectedDateRange={updateRemoveSelectedDateRange}
+        //                     checkIsSaveDisabled={checkIsSaveDisabled}
+        //                 />
+        //                 {/* {showAddHolidayCTA && <button className={`${styles.addBtn} ${styles.addHoliday}`} onClick={() => addHolidayHandler()}>+ Add Holiday</button>} */}
+        //                 {
+        //                     showHolidayDates && (
+        //                         <button className={styles.saveBtn} disabled={isSaveDisabled} onClick={() => saveHolidaysHandler()}> Save Holiday</button>
+        //                     )
+        //                 }
+        //             </div>
+        //             {
+        //                 showHolidayDates && showSelectedHolidayList && (
+        //                     <div className={`${styles.saveBtnWrapper}`}>
+        //                         <p className={`${styles.holidayListText} font-medium text-black`}>List of Holiday Choosen</p>
+        //                         <div className={`${styles.holidayList}`}>
+        //                             <ul>
+        //                                 {
+        //                                     chooseHolidayDate.map((date, index) => (
+        //                                             <li key={index}>
+        //                                                 <span className={styles.leaveDate}>
+        //                                                     {date}
+        //                                                 </span>
+        //                                                 <span className={styles.deleteIcon} onClick={() => deleteChoosenHolidayDate(index)}>
+        //                                                     <DeleteIconManual />
+        //                                                 </span>
+        //                                             </li>
+        //                                         ))
+        //                                 }
+        //                             </ul>
+        //                         </div>
+        //                     </div>
+        //                 )
+        //             }
+        //         </div>
 
 
-            </div>
-        </div >
+        //     </div>
+        // </div >
     )
 }
 

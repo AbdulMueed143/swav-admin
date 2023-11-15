@@ -9,35 +9,38 @@ import Button  from 'components/ui/Buttons/Button';
 import { Dialog } from 'components/ui';
 
 
-
 const BarbersGrid = () => {
     // Initialize state for the search input
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const { getBarbers, addBarbers, deleteBarber } = useBookingServices();
+    const { getBarbers, addBarbers, disableBarber } = useBookingServices();
     const [barbers, setBarbers] = useState([]); // Initial state as an empty array
     const [search, setSearch] = useState('');
 
-    //Handling the delete click ...
-    const [deleteDialogIsOpen, setIsDeleteDialogOpen] = useState(false)
+    //Handling the Disable click ...
+    const [disableDialogIsOpen, setIsDisableDialogOpen] = useState(false)
     const [selectedId, setSelectedId] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState(null);
 
-    const handleDeleteClick = (id) => {
+
+    const onStatusSwitcherToggle = (checked, id) => {
         setSelectedId(id);
-        setIsDeleteDialogOpen(true);
+        setSelectedStatus(checked);
+        setIsDisableDialogOpen(true);
     }
 
-    const onDeleteDialogClose =() => {
+    const onDisableDialogClose =() => {
         setSelectedId(null);
-        setIsDeleteDialogOpen(false);
+        setSelectedStatus(null);
+        setIsDisableDialogOpen(false);
     }
 
-    const onDeleteDialogOk = async () => {
-        setIsDeleteDialogOpen(false);
+    const onDisableDialogOk = async () => {
+        setIsDisableDialogOpen(false);
         setLoading(true);
 
-        const data = await deleteBarber(selectedId);
+        const data = await disableBarber(selectedId, selectedStatus);
         if(data.status === -1) {
             //something went wrong ...
             setLoading(false);
@@ -116,23 +119,23 @@ const BarbersGrid = () => {
                 </div>
 
                 <Dialog
-                    isOpen={deleteDialogIsOpen}
-                    onClose={onDeleteDialogClose}
-                    onRequestClose={onDeleteDialogClose}
+                    isOpen={disableDialogIsOpen}
+                    onClose={onDisableDialogClose}
+                    onRequestClose={onDisableDialogClose}
                 >
-                    <h5 className="mb-4">Deleting Barber</h5>
+                    <h5 className="mb-4">{selectedStatus ? "Enable" : "Disable"} Barber</h5>
                     <p>
-                        Are you sure you want to delete this Barber, if barber has appointments they will be cancelled?
+                        Are you sure you want to {selectedStatus ? "Enable" : "Disable"} this Barber?
                     </p>
                     <div className="text-right mt-6">
                         <Button
                             className="ltr:mr-2 rtl:ml-2"
                             variant="plain"
-                            onClick={onDeleteDialogClose}
+                            onClick={onDisableDialogClose}
                         >
                             Cancel
                         </Button>
-                        <Button variant="solid" onClick={onDeleteDialogOk}>
+                        <Button variant="solid" onClick={onDisableDialogOk}>
                             Okay
                         </Button>
                     </div>
@@ -141,7 +144,7 @@ const BarbersGrid = () => {
                 <Loading loading={loading} >
                     <div className="flex gap-4 flex-wrap mt-4"> 
                         {filteredBarbers.map((barber, index) => (
-                            <BarberCard key={index} barber={barber} onDeleteClick={handleDeleteClick} />
+                            <BarberCard key={index} barber={barber} onStatusSwitcherToggle={onStatusSwitcherToggle} />
                         ))}
                     </div>
                 </Loading>
