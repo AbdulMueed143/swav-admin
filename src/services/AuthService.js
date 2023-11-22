@@ -2,23 +2,26 @@ import ApiService from './ApiService'
 
 export async function apiSignIn(data) {
     return ApiService.fetchData({
-        url: '/barber-auth-service/api/v1/auth/authenticate',
+        url: '/barber-service/api/v1/barber/authenticate',
         method: 'post',
         data,
     })
 }
 
-export async function apiSignOut(data) {
+export async function apiSignOut(token) {
+    // var authToken = `Bearer ${token}`;
+    // var data = '';
+
     return ApiService.fetchData({
-        url: '/barber-auth-service/api/v1/auth/logout',
+        url: '/barber-service/api/v1/barber/logout',
         method: 'post',
-        data,
+       
     })
 }
 
 export async function apiForgotPassword(data) {
     return ApiService.fetchData({
-        url: '/barber-auth-service/api/v1/auth/forgot-password',
+        url: '/barber-service/api/v1/auth/forgot-password',
         method: 'post',
         data,
     })
@@ -26,7 +29,7 @@ export async function apiForgotPassword(data) {
 
 export async function apiResetPassword(data) {
     return ApiService.fetchData({
-        url: '/barber-auth-service/reset-password',
+        url: '/barber-service/reset-password',
         method: 'post',
         data,
     })

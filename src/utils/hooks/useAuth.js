@@ -18,7 +18,6 @@ function useAuth() {
 
     const signIn = async (values) => {
         try {
-            console.log("Requesting")
 
             const resp = await apiSignIn(values)
             console.log(resp)
@@ -117,7 +116,7 @@ function useAuth() {
     }
 
     const signOut = async () => {
-        await apiSignOut()
+        await apiSignOut(token.payload)
         handleSignOut()
     }
 

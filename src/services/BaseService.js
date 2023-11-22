@@ -26,10 +26,10 @@ BaseService.interceptors.request.use(
             accessToken = auth.session.token
         }
 
-        if (accessToken) {
+        if (accessToken.payload) {
             config.headers[
                 REQUEST_HEADER_AUTH_KEY
-            ] = `${TOKEN_TYPE}${accessToken}`
+            ] = `${TOKEN_TYPE}${accessToken.payload}`
         }
 
         return config

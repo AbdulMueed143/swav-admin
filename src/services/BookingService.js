@@ -2,7 +2,7 @@ import ApiService from './ApiService'
 
 export async function apiGetServices(token) {
     return ApiService.fetchData({
-        url: '//barber-auth-service.api/v1/shop/services',
+        url: '/barber-service/api/v1/shop/amenities',
         method: 'get',
         headers: {
             Authorization: `Bearer ${token}`
@@ -13,7 +13,7 @@ export async function apiGetServices(token) {
 
 export async function apiAddService(token, data) {
     return ApiService.fetchData({
-        url: '/api/v1/shop/amenities',
+        url: '/barber-service/api/v1/shop/amenity',
         method: 'post',
         data,
         headers: {
@@ -23,10 +23,13 @@ export async function apiAddService(token, data) {
 }
 
 export async function apiDeleteService(token, data) {
+    console.log("Log data object");
+    console.log(data.id);
+
+    //Gotta add the id we want to delete ... 
     return ApiService.fetchData({
-        url: '/api/v1/shop/amenities',
+        url: '/barber-service/api/v1/shop/amenity/id/' + data.id,
         method: 'delete',
-        data,
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -36,8 +39,10 @@ export async function apiDeleteService(token, data) {
 
 
 export async function apiUpdateService(token, data) {
+
+    console.log(data);
     return ApiService.fetchData({
-        url: '/api/v1/shop/amenities',
+        url: '/barber-service/api/v1/shop/amenity/id/' + data.id,
         method: 'put',
         data,
         headers: {
