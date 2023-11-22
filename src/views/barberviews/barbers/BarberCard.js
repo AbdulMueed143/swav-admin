@@ -5,7 +5,7 @@ import Switcher from 'components/ui/Switcher';
 
 const BarberCard = ({ barber, onStatusSwitcherToggle }) => {
 
-    const { id, firstName, lastName, email, phoneNumber, amenities, about, status } = barber;
+    const { barberId, firstName, lastName, email, phoneNumber, amenities, about, status } = barber;
 
     const cardFooter = (
         <div cclassName="flex flex-col items-start">
@@ -44,7 +44,7 @@ const BarberCard = ({ barber, onStatusSwitcherToggle }) => {
 
                 <Switcher  className="mr-2 mb-2" 
                             defaultChecked={status !== "DISABLED"} 
-                            onChange={(checked) => onStatusSwitcherToggle(checked, id)} 
+                            onChange={(checked) => onStatusSwitcherToggle(checked, barberId)} 
  />
 
                 

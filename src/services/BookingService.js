@@ -50,11 +50,13 @@ export async function apiUpdateService(token, data) {
         }
     })
 }
+//End of Services
 
 
+//Barbers
 export async function apiGetBarbers(token) {
     return ApiService.fetchData({
-        url: '/api/v1/shop/barbers',
+        url: '/barber-service/api/v1/shop/barbers',
         method: 'get',
         headers: {
             Authorization: `Bearer ${token}`
@@ -65,7 +67,7 @@ export async function apiGetBarbers(token) {
 
 export async function apiAddBarber(token, data) {
     return ApiService.fetchData({
-        url: '/api/v1/shop/add/barber',
+        url: '/barber-service/api/v1/shop/barber',
         method: 'post',
         data,
         headers: {
@@ -76,7 +78,7 @@ export async function apiAddBarber(token, data) {
 
 export async function apiDisableBarber(token, barberId, status) {
     return ApiService.fetchData({
-        url: `/api/v1/shop/barber/${barberId}/${status}`,
+        url: `/barber-service/api/v1/shop/barber/disable/${barberId}/${status}`,
         method: 'patch',
         headers: {
             Authorization: `Bearer ${token}`
