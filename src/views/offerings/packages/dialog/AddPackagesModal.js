@@ -40,19 +40,28 @@ export default function AddPackageModal({open, handleToClose}) {
       
     const [selectedServices, setSelectedServices] = useState([]);
     
-    const [discount, setDiscount] = useState(0);
     const [totalTime, setTotalTime] = useState(0);
     const [totalCost, setTotalCost] = useState(0);
+    const [discountedCost, setDiscountedCost] = useState(0);
 
-    // useEffect(() => {
-    //     setTotalTime(selectedServices.reduce((total, service) => total + service.time, 0));
-    //     setTotalCost(selectedServices.reduce((total, service) => total + service.cost, 0));
-    //     return (values) => {
-    //         const discountPercentage = values.discount / 100;
-    //         const discountAmount = totalCost * discountPercentage;
-    //         setDiscount(totalCost - discountAmount);
-    //     }
-    // }, [selectedServices]);
+
+    useEffect(() => {
+
+        if(selectedServices) {
+            setTotalTime(selectedServices.reduce((total, service) => total + service.time, 0));
+            setTotalCost(selectedServices.reduce((total, service) => total + service.cost, 0));
+            setDiscountedCost(totalCost);
+        }
+
+    }, [selectedServices]);
+
+    const handleChange = (values) => {
+        if(values.discount > 0 && values.discount < 100) {
+            const discount = totalCost * (values.discount/100);
+            setDiscountedCost(totalCost - discount); 
+        }    
+    };
+
 
     return (
         <div stlye={{}}>
@@ -71,10 +80,9 @@ export default function AddPackageModal({open, handleToClose}) {
                 <Formik
                     enableReinitialize
                     initialValues={{
+                        discount : '',
                         packageName: '',
-                        description: '',
-                        price: 0,
-                        averageTimeInMinutes: 0,
+                        packageDescription: '',
                         properties : {}
                     }}
                     validationSchema={validationSchema}
@@ -86,7 +94,7 @@ export default function AddPackageModal({open, handleToClose}) {
 
                 >
 
-                    {({ values, touched, errors, resetForm, submitForm }) => (
+                    {({ values, touched, errors, resetForm, submitForm}) => (
                         <div>
                             <Form>
                                 <FormContainer>
@@ -106,27 +114,19 @@ export default function AddPackageModal({open, handleToClose}) {
                                     </FormItem>
 
                                     <FormItem
-                                            asterisk
-                                            label="Discount Percentage (%)" 
-                                            invalid={errors.discount && touched.discount}
-                                            errorMessage={errors.discount}
-                                        >
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Field
-                                                type="number"
-                                                name="discount"
-                                                placeholder="Discount"
-                                                component={Input}
-                                                inputMode="numeric"
-                                                min="0"
-                                                max="100"
-                                                step="1.0"
-                                                style={{ flex: 1 }}
-                                            />
-                                            <span>%</span>
-                                            </div>
-                                        </FormItem>
-
+                                        asterisk
+                                        label="Pacakge Description"
+                                        invalid={errors.packageDescription && touched.packageDescription}
+                                        errorMessage={errors.packageDescription}
+                                    >
+                                        <Field
+                                            type="text"
+                                            name="packageDescription"
+                                            placeholder="Package Description"
+                                            component={Input}
+                                        />
+                                    </FormItem>
+                                    
                                     <Autocomplete
                                             multiple
                                             id="select-services"
@@ -141,52 +141,46 @@ export default function AddPackageModal({open, handleToClose}) {
                                             )}
                                         /> 
 
+                            <FormItem
+                            asterisk
+                                label="Discount Percentage (%)"
+                                invalid={errors.discount && touched.discount}
+                                errorMessage={errors.discount}
+                                >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <Field
+                                    type="number"
+                                    name="discount"
+                                    placeholder="Discount"
+                                    component={Input}
+                                    inputMode="numeric"
+                                    min="0"
+                                    max="100"
+                                    style={{ flex: 1 }}
+                                    />
+                                    <span>%</span>
+                                    <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => handleChange(values)}>
+                                        Add Discount
+                                    </Button>
+                                </div>
+                            </FormItem>
+
+
 
 
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingRight: '10px' }}>
-                                                <FormItem
-                                                    asterisk
-                                                    label="Price"
-                                                    invalid={errors.price && touched.price}
-                                                    errorMessage={errors.price}
-                                                >
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Field
-                                                            type="number"
-                                                            name="price"
-                                                            placeholder="Price"
-                                                            component={Input}
-                                                            inputMode="numeric"
-                                                            min="0" // If you don't want negative values
-                                                            step="0.1" // If you want to allow cents
-                                                            style={{ flex: 1 }} // Make the input take as much space as possible
-                                                        />
-                                                        <span>$</span>
-                                                    </div>
-                                                </FormItem>
-                                            </div>
-                                            <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingLeft: '10px' }}>
-                                                <FormItem
-                                                    asterisk
-                                                    label="Duration"
-                                                    invalid={errors.averageTimeInMinutes && touched.averageTimeInMinutes}
-                                                    errorMessage={errors.averageTimeInMinutes}
-                                                >
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Field
-                                                            type="number"
-                                                            name="averageTimeInMinutes"
-                                                            placeholder="Duration in minutes"
-                                                            component={Input}
-                                                            step="5" // If you want to allow cents
-                                                            min="5" // Assuming the minimum duration is 1 minute
-                                                            style={{ flex: 1 }} // Make the input take as much space as possible
-                                                        />
-                                                        <span>Min</span>
-                                                    </div>
-                                                </FormItem>
-                                            </div>
+                                        
+
+                                        <span>
+                                        <h6 className="text-sm">Total</h6>
+                                            <span className="text-xs"> <p>{totalCost} AUD, {totalTime} Mint</p></span>
+                                        </span>
+
+                                        <span>
+                                        <h6 className="text-sm">Discounted Cost</h6>
+                                            <span className="text-xs">{discountedCost} AUD</span>
+                                        </span>
+                            
                                         </div>
 
                                 </FormContainer>
@@ -206,101 +200,6 @@ export default function AddPackageModal({open, handleToClose}) {
                     )}
                 </Formik>
 
-
-                    {/* <Formik
-                        enableReinitialize
-                        initialValues={{
-                            input: '',
-                            multipleSelect: [],
-                            multipleCheckbox: [],
-                            discount: 0,
-                            packageName: "Package"
-                        }}
-                        validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting }) => {
-                            
-                        }}
-                        >
-                            
-                            {({ values, errors, touched }) => {
-
-                            <div>
-
-                                <Form>
-                                    <FormContainer>
-                                 
-
-                                    <Autocomplete
-                                            multiple
-                                            id="select-services"
-                                            options={services}
-                                            getOptionLabel={(option) => `${option.title}, ${option.cost} AUD, ${option.time} Mint`}
-                                            value={selectedServices}
-                                            onChange={(event, newValue) => {
-                                                setSelectedServices(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} variant="outlined" label="Services" placeholder="Services" />
-                                            )}
-                                        />
-
-                                        <FormItem
-                                            asterisk
-                                            label="Discount Percentage (%)" 
-                                            invalid={errors.discount && touched.discount}
-                                            errorMessage={errors.discount}
-                                        >
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <Field
-                                                type="number"
-                                                name="discount"
-                                                placeholder="Discount"
-                                                component={Input}
-                                                inputMode="numeric"
-                                                min="0"
-                                                max="100"
-                                                step="1.0"
-                                                style={{ flex: 1 }}
-                                            />
-                                            <span>%</span>
-                                            </div>
-                                        </FormItem>
-
-                                        <div>
-                                            <Grid container justifyContent="space-between">
-                                                <Typography variant="body1">Total Time:</Typography>
-                                                <Typography variant="body1">{totalTime} Mint</Typography>
-                                            </Grid>
-
-                                            <Grid container justifyContent="space-between">
-                                                <Typography variant="body1">Total Cost:</Typography>
-                                                <Typography variant="body1">{totalCost} AUD</Typography>
-                                            </Grid>
-
-                                            <Grid container justifyContent="space-between">
-                                                <Typography variant="body1">After Discount:</Typography>
-                                                <Typography variant="body1"> AUD</Typography>
-                                            </Grid> 
-                                        </div>
-
-                                    </FormContainer>
-                                </Form>
-
-
-                                <DialogActions>
-                                    <Button onClick={handleToClose}
-                                        color="primary">
-                                        Cancel
-                                    </Button>
-                                    <Button onClick={handleToClose}
-                                        color="primary">
-                                        Save
-                                    </Button>
-                                </DialogActions>
-
-                            </div>
-                        }};
-                    </Formik> */}
 
                 </DialogContent>
 

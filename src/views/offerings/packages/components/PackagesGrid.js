@@ -30,14 +30,14 @@ const PackagesGrid = () => {
     );
 
     return (
-        <div>
-            <div className="flex justify-end gap-4 items-center">  {/* Add flex, justify-end, and items-center for alignment */}
+        <div className="w-full">
+            <div className="flex justify-end gap-4 items-center"> {/* Add flex, justify-end, and items-center for alignment */}
                 <input 
                     type="text" 
                     value={search} 
                     onChange={(e) => setSearch(e.target.value)} 
                     placeholder="Search for a package..."
-                    className="p-2 border rounded"
+                    className="p-2 border rounded  flex-grow"
                 />
 
                 <ButtonWithIcon 

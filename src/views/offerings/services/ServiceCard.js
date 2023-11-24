@@ -10,17 +10,17 @@ const ServiceCard = ({ service, onUpdateClick, onDeleteClick }) => {
     const cardFooter = (
         <div cclassName="flex flex-col items-start">
            <div className="flex items-center mb-2">
-            <Avatar
-                size={30}
-                className="mr-2"
-                shape="circle"
-                src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-            />
-            <span>
-                <h6 className="text-sm">Duration</h6>
-                <span className="text-xs">Takes approx {averageTimeInMinutes} Mint</span>
-            </span>
-        </div>
+                <Avatar
+                    size={30}
+                    className="mr-2"
+                    shape="circle"
+                    src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
+                />
+                <span>
+                    <h6 className="text-sm">Duration</h6>
+                    <span className="text-xs">Takes approx {averageTimeInMinutes} Mint</span>
+                </span>
+            </div>
 
             <div className="flex">
                 <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick(id)}>

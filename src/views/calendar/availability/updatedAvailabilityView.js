@@ -18,20 +18,20 @@ const UpdatedAvailabilityView = (props) => {
     //Dialog for entering date time of the shift ...
     const [dialogIsOpen, setIsOpen] = useState(false);
     const [currentDaySelected, setCurrentDaySelected] = useState(null);
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
+    const [startTime, setStartTime] = useState(moment().format('HH:mm'));
+    const [endTime, setEndTime] = useState(startTime);
 
     const openDialog = () => {
         setIsOpen(true)
-        setStartTime(null);
-        setEndTime(null);
+        setStartTime(moment().format('HH:mm'));
+        setEndTime(moment().format('HH:mm'));
     }
 
 
     const onDialogClose = () => {
         setIsOpen(false)
-        setStartTime(null);
-        setEndTime(null);
+        setStartTime(moment().format('HH:mm'));
+        setEndTime(moment().format('HH:mm'));
 
     }
 
@@ -43,10 +43,10 @@ const UpdatedAvailabilityView = (props) => {
 
         //first find the if we have the selected day?
         //there is probability of index out of bound
-        // console.log("Current Selected day");
-        // console.log(currentDaySelected);
-        // console.log(editBarber.barberAvailability.days);
-        // console.log(editBarber.barberAvailability.days[currentDaySelected]);
+        console.log("Current Selected day");
+        console.log(currentDaySelected);
+        console.log(editBarber);
+
 
 
         if(currentDaySelected) {
@@ -397,22 +397,18 @@ const UpdatedAvailabilityView = (props) => {
                 <div className="px-6 pb-6">
                     <h5 className="mb-4">Add Shift</h5>
                     <div>
-                        {/* <div>
                             <p>Start Time:</p>
                             <TimePicker 
                                 format="HH:mm" 
                                 onChange={(time) => setStartTime(time ? time.format('HH:mm') : null)} 
                                 value={startTime ? moment(startTime, 'HH:mm') : null}
                             />
-                        </div>
-                <div>
-                    <p>End Time:</p>
-                    <TimePicker 
-                        format="HH:mm" 
-                        onChange={(time) => setEndTime(time ? time.format('HH:mm') : null)} 
-                        value={endTime ? moment(endTime, 'HH:mm') : null}
-                    />
-                </div> */}
+                        <p>End Time:</p>
+                        <TimePicker 
+                            format="HH:mm" 
+                            onChange={(time) => setEndTime(time ? time.format('HH:mm') : null)} 
+                            value={endTime ? moment(endTime, 'HH:mm') : null}
+                        />
                     </div>
                 </div>
                 <div className="text-right px-6 py-3 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg">

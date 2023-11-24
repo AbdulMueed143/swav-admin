@@ -9,8 +9,6 @@ export async function apiSignIn(data) {
 }
 
 export async function apiSignOut(token) {
-    // var authToken = `Bearer ${token}`;
-    // var data = '';
 
     return ApiService.fetchData({
         url: '/barber-service/api/v1/barber/logout',
