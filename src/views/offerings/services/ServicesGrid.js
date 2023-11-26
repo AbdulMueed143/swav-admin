@@ -7,11 +7,22 @@ import useBookingServices from 'utils/hooks/useBookingService'
 import { Loading } from 'components/shared';
 import Button  from 'components/ui/Buttons/Button';
 import UpdateServiceModal from './dialog/UpdateServiceModal';
+import Alert from 'components/ui/Alert'
+
 
 
 const ServicesGrid = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    //Alert
+    const [serverError, setServerError] = useState(false);
+    const [serverErrorMessage, setServerErrorMessage] = useState(false);
+
+    const handleAlertClose = () => {
+        setServerError(false);
+        setServerErrorMessage('');
+    }
 
 
     //Handling Update Model
@@ -36,6 +47,8 @@ const ServicesGrid = () => {
         const data = await updateService(values);
         if(data.status === -1) {
             //something went wrong ...
+            setServerError(true);
+            setServerErrorMessage(data.message);
         }
         else {
             // Call fetchServices to refresh the services
@@ -66,9 +79,15 @@ const ServicesGrid = () => {
 
     const onDeleteDialogOk = async () => {
         setIsDeleteDialogOpen(false);
+        setLoading(true);
         const data = await deleteService(selectedId);
         if(data.status === -1) {
             //something went wrong ...
+             //something went wrong ...
+             setLoading(false);
+
+             setServerError(true);
+             setServerErrorMessage(data.message);
         }
         else {
               // Call fetchServices to refresh the services
@@ -85,7 +104,6 @@ const ServicesGrid = () => {
 
     // Define a function to fetch and update the services
     const fetchServices = async () => {
-        setLoading(true);
         const data = await getServices();
         setServices(data);
         setLoading(false);
@@ -143,6 +161,13 @@ const ServicesGrid = () => {
             />
             </div>
 
+            {serverError && (
+             <div>
+                <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
+                    {serverErrorMessage}
+                </Alert>
+            </div>
+            )}
             <Dialog
                 isOpen={deleteDialogIsOpen}
                 onClose={onDeleteDialogClose}

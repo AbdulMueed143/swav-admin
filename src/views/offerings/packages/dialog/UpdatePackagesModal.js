@@ -30,29 +30,31 @@ const validationSchema = Yup.object().shape({
     //     .integer("Duration should be an integer"),
 })
  
-export default function AddPackageModal({open,handleToSave, handleToClose}) {
+export default function UpdatePackageModal({packageData,servicesAvailable, open,handleToSave, handleToClose}) {
 
     const { getServices } = useBookingServices();
-    const [services, setServices] = useState([]); // Initial state as an empty array
-
+    // const [services, setServices] = useState(servicesAvailable); // Initial state as an empty array
     const [selectedAmenities, setSelectedAmenities] = React.useState([]);
 
-     // Define a function to fetch and update the services
-     const fetchServices = async () => {
-        const data = await getServices();
-        setServices(data);
-        setSelectedAmenities(data);
-    };
+    //  // Define a function to fetch and update the services
+    //  const fetchServices = async () => {
+    //     const data = await getServices();
+    //     setServices(data);
+
+    //     //you match them with the 
+    //     const sel = data.filter(service=> packageData.amenitiesIds.includes(service.id));
+    //     setSelectedAmenities(sel);
+    // };
 
 
-    useEffect(() => {
-        // Call fetchServices on component mount
-        fetchServices();
-    }, []); // Empty dependency array means the effect will only run once
+    // useEffect(() => {
+    //     // Call fetchServices on component mount
+    //     fetchServices();
+    // }, []); // Empty dependency array means the effect will only run once
 
       
     // Map your services array to an array of options
-    const serviceMap = services.map(service => ({
+    const serviceMap = servicesAvailable.map(service => ({
         value: service.name,
         label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
     }));
@@ -75,11 +77,11 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
     }, [selectedAmenities]);
 
     const handleChange = (values) => {
-        console.log("Discounting ");
-        console.log(values);
-        if(values.discountPercentage > 0 && values.discountPercentage < 100) {
-            console.log(values.discountPercentage);
 
+        // console.log("Services A");
+        // console.log(services);
+
+        if(values.discountPercentage > 0 && values.discountPercentage < 100) {
             const discount = totalCost * (values.discountPercentage/100);
             setDiscountedCost(totalCost - discount); 
         }    
@@ -96,17 +98,17 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
                 },
                 }}> 
 
-                <DialogTitle>{"Add Package"}</DialogTitle>
+                <DialogTitle>{"Update Package"}</DialogTitle>
 
                 <DialogContent>
 
                 <Formik
                     enableReinitialize
                     initialValues={{
-                        discountPercentage : '',
-                        name: '',
-                        amenities: services,
-                        description: '',
+                        discountPercentage : packageData == null? '': packageData.discountPercentage,
+                        name: packageData == null? '': packageData.name,
+                        amenities: selectedAmenities,
+                        description: packageData == null? '': packageData.description,
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting }) => {
@@ -165,7 +167,7 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
                                         onChange={(selectedOptions) => {
                                             // Get selected amenities from services list using the selected names
                                             const selectedAmenities = selectedOptions.map(option => {
-                                                return services.find(service => service.name === option.value);
+                                                return servicesAvailable.find(service => service.name === option.value);
                                             });
 
                                             setSelectedAmenities(selectedAmenities);

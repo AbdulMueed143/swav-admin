@@ -2,21 +2,17 @@ import {  Avatar, Card } from 'components/ui'
 import Button  from 'components/ui/Buttons/Button';
 
 
-const PackagesCard = ({currentP ,onUpdateClick, onDeleteClick}) => {
+const PackagesCard = ({currentPackage, servicesAvailable, onUpdateClick, onDeleteClick}) => {
 
-    // const { id, name, description, price, averageTimeInMinutes } = currentP;
+    const MAX_SERVICES_DISPLAYED = 2;
 
+    const services = servicesAvailable.filter(service => currentPackage.amenitiesIds.includes(service.id));
 
-    const services = [
-        { name: 'Hair Cut', cost: 30, time: 30 },
-        { name: 'Shaving', cost: 20, time: 10 }
-    ];
-
-      const totalCost = services.reduce((total, service) => total + service.cost, 0);
-      const totalTime = services.reduce((total, service) => total + service.time, 0);
+    const totalCost = services.reduce((total, service) => total + service.price, 0);
+    const totalTime = services.reduce((total, service) => total + service.averageTimeInMinutes, 0);
     
-      const discountRate = 0.1;  // for example, 10% discount
-      const discountedCost = totalCost - (totalCost * discountRate);
+    const discountRate = 0.1;  // for example, 10% discount
+    const discountedCost = totalCost - (totalCost * discountRate);
     
 
       const cardFooter = (
@@ -29,10 +25,10 @@ const PackagesCard = ({currentP ,onUpdateClick, onDeleteClick}) => {
             </div>
 
             <div className="flex">
-                <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick()}>
+                <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick(currentPackage.id)}>
                     Delete 
                 </Button>
-                <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => onUpdateClick()}>
+                <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => onUpdateClick(currentPackage)}>
                     Update
                 </Button>
             </div>
@@ -48,22 +44,27 @@ const PackagesCard = ({currentP ,onUpdateClick, onDeleteClick}) => {
                 headerClass="p-0"
                 footerBorder={false}
                 >
-                <h4 className="font-bold my-3" style={{ marginBottom: '20px' }}>Custom Package 1</h4>
-                <span className="text-sm">This is the service etc ..</span>
+                <h4 className="font-bold my-3" style={{ marginBottom: '20px' }}>{currentPackage.name}</h4>
+                <p className="text-sm truncate" >{currentPackage.description}</p>
 
-                <h6 className="text-sm" style={{ marginBottom: '10px' }}>Services</h6>
+                <h6 className="text-sm" style={{ marginBottom: '10px', marginTop: '5px' }}>Services</h6>
                 
-                {services.map((service, index) => (
+                <div style={{  overflow: 'hidden' }}> 
+                {services.slice(0, MAX_SERVICES_DISPLAYED).map((service, index) => (
                     <div className="flex items-center" key={index} style={{ marginBottom: '10px' }}>
-                    <Avatar
-                        size={30}
-                        className="mr-2"
-                        shape="circle"
-                        src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
-                    />
-                    <span className="text-sm">{service.name}, {service.cost} AUD, {service.time} Mint</span>
+                        <Avatar
+                            size={30}
+                            className="mr-2"
+                            shape="circle"
+                            src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
+                        />
+                        <span className="text-sm">{service.name}, {service.cost} AUD, {service.time} Mint</span>
                     </div>
                 ))}
+        {services.length > MAX_SERVICES_DISPLAYED && (
+            <div className="text-sm">...and more</div>
+        )}
+    </div>
             </Card>
         </div>
     )

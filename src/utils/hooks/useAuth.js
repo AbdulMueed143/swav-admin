@@ -116,7 +116,7 @@ function useAuth() {
     }
 
     const signOut = async () => {
-        await apiSignOut(token.payload)
+        await apiSignOut(token)
         handleSignOut()
     }
 

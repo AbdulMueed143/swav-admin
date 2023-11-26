@@ -10,7 +10,6 @@ export async function apiGetServices(token) {
     })
 }
 
-
 export async function apiAddService(token, data) {
     return ApiService.fetchData({
         url: '/barber-service/api/v1/shop/amenity',
@@ -37,12 +36,11 @@ export async function apiDeleteService(token, data) {
 }
 
 
-
 export async function apiUpdateService(token, data) {
 
     console.log(data);
     return ApiService.fetchData({
-        url: '/barber-service/api/v1/shop/amenity/id/' + data.id,
+        url: '/barber-service/api/v1/shop/amenity/' + data.id,
         method: 'put',
         data,
         headers: {
