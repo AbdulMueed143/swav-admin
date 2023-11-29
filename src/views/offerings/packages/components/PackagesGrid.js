@@ -9,8 +9,19 @@ import UpdatePackageModal from '../dialog/UpdatePackagesModal';
 import { Loading } from 'components/shared';
 import Button  from 'components/ui/Buttons/Button';
 import { Dialog } from 'components/ui';
+import Alert from 'components/ui/Alert'
 
 const PackagesGrid = () => {
+
+       //Alert
+       const [serverError, setServerError] = useState(false);
+       const [serverErrorMessage, setServerErrorMessage] = useState(false);
+   
+       const handleAlertClose = () => {
+           setServerError(false);
+           setServerErrorMessage('');
+       }
+   
 
     //getting services to be used later on
     const { getServices } = useBookingServices();
@@ -63,6 +74,9 @@ const PackagesGrid = () => {
         const data = await addPackage(formValues);
         if(data.status === -1) {
             //something went wrong ...
+                  //something went wrong ...
+                  setServerError(true);
+                  setServerErrorMessage(data.message);
         }
         else {
             fetchPackages();
@@ -85,23 +99,34 @@ const PackagesGrid = () => {
     };
 
 
-    const onPackageUpdate = async(values) => {
+    //Whateve
 
-        // console.log(values);
-        // //lets make call to server
-        // const data = await updatePackage(values);
-        // if(data.status === -1) {
-        //     //something went wrong ...
-        // }
-        // else {
-        //     // Call fetchServices to refresh the services
-        //     fetchPackages();
-        // }
+    //Handling Update Model
 
-        // setOpen(false);
+    const handleClickToSaveUpdateModal = async (values, selectedAmenities)  => {
+        // Handle the form submission here using formValues
+
+        console.log(values);
+        //lets make call to server
+        values.amenitiesIds = selectedAmenities.map(amenity => amenity.id);
+
+        const data = await updatePackage(values);
+        if(data.status === -1) {
+            //something went wrong ...
+            setServerError(true);
+            setServerErrorMessage(data.message);
+        }
+        else {
+            // Call fetchServices to refresh the services
+            fetchPackages();
+        }
+
+        setOpen(false);
         handleClickToCloseUpdateModal();
     }
+ 
 
+    //======= End of handling Update Modal
 
     //Delete functionality 
 
@@ -123,6 +148,9 @@ const PackagesGrid = () => {
         const data = await deletePackage(selectedId);
         if(data.status === -1) {
             //something went wrong ...
+                  //something went wrong ...
+                  setServerError(true);
+                  setServerErrorMessage(data.message);
         }
         else {
               // Call fetchServices to refresh the services
@@ -153,6 +181,14 @@ const PackagesGrid = () => {
                 </ButtonWithIcon>
                 
             </div>
+
+            {serverError && (
+             <div>
+                <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
+                    {serverErrorMessage}
+                </Alert>
+            </div>
+            )}
 
 
             <Dialog
@@ -185,7 +221,7 @@ const PackagesGrid = () => {
             </div>
 
             <AddPackageModal open={open} handleToSave={handleToSave} handleToClose={handleToClose} /> 
-            <UpdatePackageModal packageData={selectedUpdatablePackage} servicesAvailable={services} open={openUpdateModal} handleToClose={handleClickToCloseUpdateModal} handleToSave={onPackageUpdate} />
+            <UpdatePackageModal packageData={selectedUpdatablePackage} servicesAvailable={services} open={openUpdateModal} handleToClose={handleClickToCloseUpdateModal} handleToSave={handleClickToSaveUpdateModal} />
 
         </div>
     );

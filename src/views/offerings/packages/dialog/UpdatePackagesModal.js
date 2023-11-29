@@ -59,6 +59,14 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
         label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
     }));
 
+    const selectedServicesMap = servicesAvailable.filter( service => {
+        if(packageData)
+            return packageData.amenitiesIds.includes(service.id);
+    }).map(service => ({
+        value: service.name,
+        label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
+    }));
+
       
     // const [selectedServices, setSelectedServices] = useState([]);
     const [totalTime, setTotalTime] = useState(0);
@@ -80,6 +88,8 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
 
         // console.log("Services A");
         // console.log(services);
+
+        console.log(packageData);
 
         if(values.discountPercentage > 0 && values.discountPercentage < 100) {
             const discount = totalCost * (values.discountPercentage/100);
@@ -105,9 +115,10 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
                 <Formik
                     enableReinitialize
                     initialValues={{
+                        id: packageData == null? '' : packageData.id,
                         discountPercentage : packageData == null? '': packageData.discountPercentage,
                         name: packageData == null? '': packageData.name,
-                        amenities: selectedAmenities,
+                        amenities: packageData == null ? null : servicesAvailable.filter( service => packageData.amenitiesIds.includes(service.id)),
                         description: packageData == null? '': packageData.description,
                     }}
                     validationSchema={validationSchema}
@@ -162,7 +173,7 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
                                     <Select
                                         isMulti
                                         placeholder="Please Select"
-                                        defaultValue={serviceMap}
+                                        defaultValue={selectedServicesMap}
                                         options={serviceMap}
                                         onChange={(selectedOptions) => {
                                             // Get selected amenities from services list using the selected names

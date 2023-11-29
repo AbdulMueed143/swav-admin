@@ -75,8 +75,6 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
     }, [selectedAmenities]);
 
     const handleChange = (values) => {
-        console.log("Discounting ");
-        console.log(values);
         if(values.discountPercentage > 0 && values.discountPercentage < 100) {
             console.log(values.discountPercentage);
 
@@ -174,21 +172,6 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
                                     />
                                 </FormItem>
 
-                                  
-                                    
-                                  {/* <Autocomplete
-                                            multiple
-                                            id="select-services"
-                                            options={services}
-                                            getOptionLabel={(option) => `${option.title}, ${option.cost} AUD, ${option.time} Mint`}
-                                            value={selectedAmenities}
-                                            onChange={(event, newValue) => {
-                                                setSelectedAmenities(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} variant="outlined" label="Services" placeholder="Services" />
-                                            )}
-                                        />   */}
 
                             <FormItem
                             asterisk
