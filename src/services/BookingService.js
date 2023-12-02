@@ -83,16 +83,3 @@ export async function apiDisableBarber(token, barberId, status) {
         }
     })
 }
-
-
-export async function apiAddBarberAvailability(token, data) {
-    return ApiService.fetchData({
-        url: '/api/v1/availabilities',
-        method: 'post',
-        data,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-}
-

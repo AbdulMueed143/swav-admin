@@ -77,3 +77,76 @@
 
 /* Paginated Page Link */
 
+.timeSlotList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.timeSlotListItem {
+    background-color: #ffffff; /* Light gray background */
+    margin-bottom: 10px; /* Spacing between items */
+    padding: 5px 10px; /* Padding inside each item */
+    border: 1px solid #dee2e6; /* Light border */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 13px; /* Font size */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow */
+    font-weight: 700;
+}
+
+
+
+
+.right-column {
+    display: flex;
+    justify-content: flex-end; /* Aligns items to the end of the container */
+}
+
+
+.grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust as needed */
+    gap: 20px; /* Spacing between cards */
+    padding: 20px;
+}
+
+.holiday-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.holiday-title {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.holiday-date {
+    color: #666;
+}
+
+
+.holiday-card {
+    /* ... existing styles ... */
+    position: relative;
+    transition: box-shadow 0.3s;
+}
+
+.holiday-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.delete-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* Style the delete icon as needed */
+.delete-icon:hover {
+    color: red; /* Example hover effect on the delete icon */
+}

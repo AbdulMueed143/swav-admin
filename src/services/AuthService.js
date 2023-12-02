@@ -10,9 +10,6 @@ export async function apiSignIn(data) {
 
 export async function apiSignOut(token) {
 
-    console.log("Someth");
-    console.log(token);
-
     return ApiService.fetchData({
         url: '/barber-service/api/v1/barber/logout',
         method: 'post',
@@ -46,7 +43,7 @@ export async function apiResetPassword(token, data) {
 
 //Links
 
-export async function apiRegister(token, data) {
+export async function apiRegister(data) {
     return ApiService.fetchData({
         url: '/barber-service/api/v1/barber/shop/business/register',
         method: 'post',

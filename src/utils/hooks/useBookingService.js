@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { apiGetServices, apiAddService, apiDeleteService, apiUpdateService, 
-    apiAddBarber, apiGetBarbers, apiDisableBarber, apiAddBarberAvailability } from 'services/BookingService'
+    apiAddBarber, apiGetBarbers, apiDisableBarber } from 'services/BookingService'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
 import { values } from 'lodash'
@@ -166,33 +166,33 @@ function useBookingServices() {
         }
     }
 
-    const addBarberAvailability = async (values, barber) => {
-        try
-        {
-            console.log("Requeast to add a barber availability")
-            console.log(values)
-            values.barberId = barber.id;
+    // const addBarberAvailability = async (values, barber) => {
+    //     try
+    //     {
+    //         console.log("Requeast to add a barber availability")
+    //         console.log(values)
+    //         values.barberId = barber.id;
 
-            const resp = await apiAddBarberAvailability(token, values, barber)
+    //         const resp = await apiAddBarberAvailability(token, values, barber)
 
-            console.log(resp)
-            if(resp.status === 200) {
-                return resp;
-            }
-            else {
-                return {
-                    status: -1,
-                    message: resp,
-                }    
-            }
-        } catch (errors) {
-            return {
-                status: -1,
-                message: errors?.response?.data?.message || errors.toString(),
-            }
-        }
+    //         console.log(resp)
+    //         if(resp.status === 200) {
+    //             return resp;
+    //         }
+    //         else {
+    //             return {
+    //                 status: -1,
+    //                 message: resp,
+    //             }    
+    //         }
+    //     } catch (errors) {
+    //         return {
+    //             status: -1,
+    //             message: errors?.response?.data?.message || errors.toString(),
+    //         }
+    //     }
 
-    }
+    // }
 
 
     return {
@@ -204,7 +204,7 @@ function useBookingServices() {
         deleteService,
         disableBarber,
         updateService,
-        addBarberAvailability
+        // addBarberAvailability
     }
 }
 

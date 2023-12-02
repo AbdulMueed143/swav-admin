@@ -147,10 +147,8 @@ const PackagesGrid = () => {
         setIsDeleteDialogOpen(false);
         const data = await deletePackage(selectedId);
         if(data.status === -1) {
-            //something went wrong ...
-                  //something went wrong ...
-                  setServerError(true);
-                  setServerErrorMessage(data.message);
+            setServerError(true);
+            setServerErrorMessage(data.message);
         }
         else {
               // Call fetchServices to refresh the services

@@ -4,36 +4,34 @@ import authRoute from './authRoute'
 export const publicRoutes = [...authRoute]
 
 export const protectedRoutes = [
+    //Path to home 
     {
         key: 'home',
         path: '/home',
         component: React.lazy(() => import('views/home/Home')),
         authority: [],
     },
+
     {
-        key: 'calendar.dashboard',
-        path: '/calendar',
-        component: React.lazy(() => import('views/calendar/dashboard/DashboardView')),
+        key: 'availability.dashboard',
+        path: '/availability/dashbaord',
+        component: React.lazy(() => import('views/scheduling/dashboard/DashboardView')),
         authority: [],
     },
+    // {
+    //     key: 'availability.dashboard',
+    //     path: '/availability/edit/:barberId',
+    //     component: React.lazy(() => import('views/scheduling/availability/updatedAvailabilityView')),
+    //     authority: [],
+    // },
     {
-        key: 'calendar.availability',
+        key: 'availability.edit',
         path: '/availability',
-        component: React.lazy(() => import('views/calendar/availability/updatedAvailabilityView')),
+        component: React.lazy(() => import('views/scheduling/availability/updatedAvailabilityView')),
         authority: [],
     },
-    {
-        key: 'calendar.availability',
-        path: '/availability/edit/:barberId',
-        component: React.lazy(() => import('views/calendar/availability/editBarberAvailability')),
-        authority: [],
-    },
-    {
-        key: 'calendar.scheduling',
-        path: '/scheduling',
-        component: React.lazy(() => import('views/calendar/scheduling/SchedulingView')),
-        authority: [],
-    },
+
+    // ====
     {
         key: 'store',
         path: '/store',
@@ -52,6 +50,8 @@ export const protectedRoutes = [
         component: React.lazy(() => import('views/barberviews/barbers/BarbersViews')),
         authority: [],
     },
+
+    //Services and PAckages
     {
         key: 'services',
         path: '/services',
@@ -64,16 +64,28 @@ export const protectedRoutes = [
         component: React.lazy(() => import('views/offerings/packages/PackagesView')),
         authority: [],
     },
+
+    //Rewards Screen
     {
         key: 'rewards',
         path: '/rewards',
         component: React.lazy(() => import('views/rewards/RewardsView')),
         authority: [],
     },
+
+    // Subscriotion screen
     {
         key: 'subscriptions',
         path: '/subscriptions',
         component: React.lazy(() => import('views/subscriptions/SubscriptionsView')),
+        authority: [],
+    },
+
+    //Profile setting path
+    {
+        key: 'profile',
+        path: '/profile',
+        component: React.lazy(() => import('views/profile/ProfileView')),
         authority: [],
     },
 ]

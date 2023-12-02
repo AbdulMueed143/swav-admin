@@ -7,6 +7,8 @@ import { REDIRECT_URL_KEY } from 'constants/app.constant'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
 import { values } from 'lodash'
+import ApiService from '../../services/ApiService'
+
 
 function useAuth() {
     const dispatch = useDispatch()
@@ -20,20 +22,35 @@ function useAuth() {
         try {
 
             const resp = await apiSignIn(values)
+
+            console.log("Sign in part");
             console.log(resp)
             if (resp.data) {
                 const token  = resp.data.accessToken
                 const refreshToken = resp.data.refreshToken
 
+
                 dispatch(onSignInSuccess(token))
-                if (resp.data.user) {
+
+                //and now we need to get the barber detail ...
+
+                const userDetail = await getLoggedInUserDetail(token);
+                
+                console.log("User Detail Object");
+                console.log(userDetail);
+
+                console.log("User resp.data.user");
+                console.log(resp.data.user);
+
+                if (userDetail) {
+                    console.log("Dispatching uer data");
                     dispatch(
                         setUser(
-                            resp.data.user || {
+                            userDetail || {
                                 avatar: '',
-                                userName: 'Anonymous',
+                                userName: userDetail.firstName + userDetail.lastName,
                                 authority: ['USER'],
-                                email: values.email,
+                                email: userDetail.email,
                             }
                         )
                     )
@@ -55,17 +72,50 @@ function useAuth() {
         }
     }
 
+    const getLoggedInUserDetail = async (token) => {
+
+        console.log("I received following token - getLoggedInUserDetail")
+        console.log(token);
+        
+        try {
+            const response = await ApiService.fetchData({
+                url: '/barber-service/api/v1/barber/detail',
+                method: 'get',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+    
+            //now I should have all the barbers, lets check the condition ..
+            if(response.status === 200) {
+                return response.data;
+            }
+            else {
+                return {
+                    status: -1,
+                    message: response,
+                }   
+            }
+
+        } catch (errors) {
+            return {
+                status: -1,
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
+
     const createAccount = async (values) => {
         try {
-            console.log('Sending api Register request');
-            console.log(values);
+            // console.log('Sending api Register request');
+            // console.log(values);
 
             const resp = await apiRegister(values)
-            console.log('Response from api ');
-            console.log(resp);
+            // console.log('Response from api ');
+            // console.log(resp);
 
-            console.log('Response Status');
-            console.log(resp.status);
+            // console.log('Response Status');
+            // console.log(resp.status);
 
             if(resp.status === 200) {
                 const  token  = resp.data.accessToken
@@ -73,19 +123,20 @@ function useAuth() {
 
                 dispatch(setToken(token))
                 dispatch(setSignedIn())
+                const userDetail = await getLoggedInUserDetail(token);
 
                 //Uncomment and add user detail
 
-                // dispatch(
-                //     setUser(
-                //         resp.data.user || {
-                //             avatar: '',
-                //             userName: 'Anonymous',
-                //             authority: ['USER'],
-                //             email: '',
-                //         }
-                //     )
-                // )
+                dispatch(
+                    setUser(
+                        userDetail || {
+                            avatar: '',
+                            userName: 'Anonymous',
+                            authority: ['USER'],
+                            email: '',
+                        }
+                    )
+                )
 
                 return {
                     status: 'success',

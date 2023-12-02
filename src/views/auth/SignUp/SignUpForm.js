@@ -209,7 +209,7 @@ const SignUpForm = (props) => {
                                         />
                                     </FormItem>
 
-                                </div>
+                            </div>
 
                                 <FormItem
                                     label="Email"
@@ -334,8 +334,8 @@ const SignUpForm = (props) => {
 
                                 </div>
 
-        </>
-      )}
+                                </>
+                        )}
 
       
 
