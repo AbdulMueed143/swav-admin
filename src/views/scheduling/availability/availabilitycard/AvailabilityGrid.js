@@ -1,0 +1,98 @@
+import { useState, useEffect } from 'react';
+import React from 'react'
+import useBookingServices from 'utils/hooks/useBookingService'
+import { Loading } from 'components/shared';
+import Button  from 'components/ui/Buttons/Button';
+import { Dialog } from 'components/ui';
+import AvailabilityCard from './AvailabilityCard';
+import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
+import UpdateAvailabilityModal from '../modals/UpdateAvailabilityModal';
+
+
+const AvailabilityGrid = () => {
+    // Initialize state for the search input
+    const [loading, setLoading] = useState(false);
+
+    const { getBarbers, addBarbers, disableBarber } = useBookingServices();
+    const [barbers, setBarbers] = useState([]); // Initial state as an empty array
+    const [search, setSearch] = useState('');
+
+    const { getBarbersWithAvailability, updateBarberAvailability  } = useAvailabilityService();
+
+    //End of handling the delete click ...
+
+    // Define a function to fetch and update the services
+    const fetchBarbers = async () => {
+        if(loading)
+            return;
+
+        setLoading(true);
+        const barbersWithAvailability = await getBarbersWithAvailability();
+        console.log("Barbers ", barbersWithAvailability);
+        setBarbers(barbersWithAvailability);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        console.log("AvailabilityGrid fetchBarbers ");
+        fetchBarbers();
+    }, []); // Empty dependency array means the effect will only run once
+
+
+
+
+    //Handling Update Model
+    const [selectedUpdatableBarber, setSelectedUpdatableBarber] = useState(null);
+    const [openUpdateModal, setIsUpdateModalOpen] = useState(false);
+    const handleClickToOpenUpdateModal = (updateBarber) => {
+        setSelectedUpdatableBarber(updateBarber);
+        setIsUpdateModalOpen(true);
+    };
+
+    const handleClickToCloseUpdateModal = () => {
+        setIsUpdateModalOpen(false);
+        setSelectedUpdatableBarber(null);
+    };
+
+
+    const handleClickToSaveUpdateModal = async (values)  => {
+        // Handle the form submission here using formValues
+        setIsUpdateModalOpen(false);
+        setSelectedUpdatableBarber(null);
+    }
+    
+
+
+    // // Filter the services based on the search input
+    // const filteredBarbers = barbers.filter(barber => 
+    //     barber.firstName.toLowerCase().includes(search.toLowerCase())
+    // );
+
+    return (
+        <div className="w-full"> {/* Ensures the container is full width */}
+        <div className="flex justify-end gap-4 items-center">
+            <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search for a barber..."
+                className="p-2 border rounded flex-grow"
+                />
+            
+            </div>
+
+            <Loading loading={loading} >
+                <div className="flex gap-4 flex-wrap mt-4"> 
+                    {barbers.map((barber, index) => (
+                        <AvailabilityCard  currentBarber={barber} onUpdateClick={handleClickToOpenUpdateModal} />
+                    ))}
+                </div>
+            </Loading>
+
+            <UpdateAvailabilityModal updateBarber={selectedUpdatableBarber} open={openUpdateModal} handleClose={handleClickToCloseUpdateModal} handleUpdate={handleClickToSaveUpdateModal}  />
+
+        </div>
+    );
+};
+
+export default AvailabilityGrid;

@@ -1,11 +1,23 @@
 import ApiService from './ApiService'
 
 
+export async function fetchBarbersMonthlyAvailability(token, requestBody) {
+    console.log("Availablity template data i am sending ");
+    console.log(requestBody);
+
+    return await ApiService.fetchData({
+        url: `/barber-availability-service/api/v1/availabilities/shop/monthly`,
+        method: 'post',
+        data: requestBody,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+}
+
+
 //Posting the template
 export async function apiUpsertAvailabilityTemplate(token, barberId, availabilityTemplate) {
-    console.log("Availablity template data i am sending ");
-    console.log(availabilityTemplate);
-
     return await ApiService.fetchData({
         url: `/barber-availability-service/api/v1/availability/template/barber/${barberId}`,
         method: 'post',

@@ -10,12 +10,6 @@ const { TabNav, TabList, TabContent } = Tabs
 
 
 const Home = () => {
-    const holidays = [
-        { title: 'New Year', startDate: '2023-01-01', endDate: '2023-01-01' },
-        { title: 'Spring Festival', startDate: '2023-03-01', endDate: '2023-03-05' },
-        // Add more holidays...
-    ];
-
 
     const userName = useSelector((state) => state.auth.user.userName)
     return <>
@@ -51,7 +45,7 @@ const Home = () => {
                     </TabContent>
 
                     <TabContent value="tab3">
-                        <HolidayGrid  holidays={holidays} />
+                        <HolidayGrid />
                     </TabContent>
                 </div>
             </Tabs>

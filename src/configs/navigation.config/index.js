@@ -28,7 +28,7 @@ const navigationConfig = [
     {
         key: 'Availability',
         path: '',
-        title: 'Availability',
+        title: 'Manage Availability',
         translateKey: 'nav.availability.scheduling',
         icon: 'availability',
         type: NAV_ITEM_TYPE_COLLAPSE,
@@ -37,7 +37,7 @@ const navigationConfig = [
             {
                 key: 'availability.dashboard',
                 path: '/availability/dashbaord',
-                title: 'Dashboard',
+                title: 'Availability Calendar',
                 translateKey: 'nav.availability.dashboard',
                 icon: 'availability',
                 type: NAV_ITEM_TYPE_ITEM,
@@ -47,7 +47,7 @@ const navigationConfig = [
             {
                 key: 'availability.edit',
                 path: '/availability',
-                title: 'Edit',
+                title: 'Update Barber Availability',
                 translateKey: 'nav.availability.edit',
                 icon: 'edit',
                 type: NAV_ITEM_TYPE_ITEM,

@@ -154,7 +154,7 @@ const HolidayGrid = () => {
 
 
             <div className='right-column' style={{marginRight : '50px'}}>
-                <ButtonWithIcon label="Add Holiday"  onClick={handleClickToOpen} />
+                <ButtonWithIcon label="Add Holiday" onClick={handleClickToOpen} />
             </div>
             
             <div className="grid-view">
@@ -168,70 +168,67 @@ const HolidayGrid = () => {
             </div>
 
             <div stlye={{}}>
-            <Dialog open={open} onClose={handleToClose}  fullWidth={true}
-            PaperProps={{
-                style: {
-                    minWidth: '400px', // Your desired minimum width
-                    maxWidth: '600px', // Your desired maximum width
-                },
-            }}> 
-                <DialogTitle>{"Add Holiday"}</DialogTitle>
-                    <DialogContent>
+                <Dialog isOpen={open} onClose={handleToClose} 
+                    PaperProps={{
+                        style: {
+                            minWidth: '400px', // Your desired minimum width
+                            maxWidth: '600px', // Your desired maximum width
+                        },
+                    }}> 
+                        <DialogTitle>{"Add Holiday"}</DialogTitle>
+                        <DialogContent>
 
-                        <Formik
-                            initialValues={{
-                                name: '',
-                                description : ''
-                            }}
-                            onSubmit={async (values) => {
-                                await new Promise((r) => setTimeout(r, 500))
-                                alert(JSON.stringify(values, null, 2))
-                            }}
-                        >
-                             {({ values, touched, errors, resetForm}) => (
-                                <div>
-                            <Form>
-                                <FormContainer >
-                                    <FormItem label="Holiday Name">
-                                        <Field
-                                            type="text"
-                                            name="name"
-                                            placeholder="Please enter holiday name."
-                                            component={Input}
+                            <Formik
+                                initialValues={{
+                                    name: ''
+                                }}
+                                onSubmit={async (values) => {
+                                    // await new Promise((r) => setTimeout(r, 500))
+                                    // alert(JSON.stringify(values, null, 2))
+                                }}
+                            >
+                                {({ values, touched, errors, resetForm}) => (
+                                    <div>
+                                <Form>
+                                    <FormContainer >
+                                        <FormItem label="Holiday Name">
+                                            <Field
+                                                type="text"
+                                                name="name"
+                                                placeholder="Please enter holiday name."
+                                                component={Input}
+                                            />
+                                        </FormItem>
+                                        <DatePicker
+                                            selected={startDate}
+                                            onChange={(dates) => {
+                                                const [start, end] = dates;
+                                                setStartDate(start);
+                                                setEndDate(end);
+                                            }}
+                                            startDate={startDate}
+                                            endDate={endDate}
+                                            selectsRange
+                                            inline
                                         />
-                                    </FormItem>
-                                    <FormItem label="Select Date/Dates for Holidays">
-                                    <DatePicker
-                                        selected={startDate}
-                                        onChange={(dates) => {
-                                            const [start, end] = dates;
-                                            setStartDate(start);
-                                            setEndDate(end);
-                                        }}
-                                        startDate={startDate}
-                                        endDate={endDate}
-                                        selectsRange
-                                        inline
-                                    />
-                                    </FormItem>
-                                </FormContainer>
-                            </Form>
+                                    </FormContainer>
+                                </Form>
 
-                            <DialogActions>
-                            <Button onClick={handleToClose} color="primary">
-                                Cancel
-                            </Button>
-                            <Button  onClick={() => handleToSave(values)} color="primary">
-                                Save
-                            </Button>
+                                <DialogActions>
+                                <Button onClick={handleToClose} color="primary">
+                                    Cancel
+                                </Button>
+                                <Button  onClick={() => handleToSave(values)} color="primary">
+                                    Save
+                                </Button>
 
-                        </DialogActions>
-                        </div>
-                )}
-                        </Formik>
+                            </DialogActions>
+                            </div>
+                        )}
+                            </Formik>
 
-                    </DialogContent>
-            </Dialog>
+                        </DialogContent>
+                </Dialog> 
             </div>
 
             <Dialog

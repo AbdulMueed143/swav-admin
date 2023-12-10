@@ -9,10 +9,10 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@fullcalendar/core": "^6.1.8",
-    "@fullcalendar/daygrid": "^6.1.8",
+    "@fullcalendar/core": "^6.1.10",
+    "@fullcalendar/daygrid": "^6.1.10",
     "@fullcalendar/interaction": "^6.1.8",
-    "@fullcalendar/react": "^6.1.8",
+    "@fullcalendar/react": "^6.1.10",
     "@fullcalendar/timegrid": "^6.1.8",
     "@mui/icons-material": "^5.14.14",
     "@mui/lab": "^5.0.0-alpha.149",
@@ -115,6 +115,8 @@
     ]
   },
   "devDependencies": {
+    "@event-calendar/core": "^2.4.1",
+    "@event-calendar/time-grid": "^2.4.1",
     "autoprefixer": "^10.4.0",
     "cross-env": "^7.0.3",
     "delay-cli": "^2.0.0",

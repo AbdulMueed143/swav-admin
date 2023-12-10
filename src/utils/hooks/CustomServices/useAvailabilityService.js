@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { apiFetchBarbersWithAvailabilityTemplate, apiUpsertAvailabilityTemplate } from 'services/BarberAvailabilityService'
+import { apiFetchBarbersWithAvailabilityTemplate, apiUpsertAvailabilityTemplate, fetchBarbersMonthlyAvailability } from 'services/BarberAvailabilityService'
 import { useNavigate } from 'react-router-dom'
 import useQuery from '../useQuery'
 
@@ -9,7 +9,35 @@ function useAvailabilityService() {
 
     const query = useQuery()
 
-    const { token, signedIn } = useSelector((state) => state.auth.session)
+    const { token, signedIn } = useSelector((state) => state.auth.session);
+
+    const getMonthlyAvailability = async (babersIds, year, month) => {
+        try {
+            
+            const requestBody = {
+                "barbersIds": babersIds,
+                "month": month,
+                "year": year
+            };
+            const resp = await fetchBarbersMonthlyAvailability(token, requestBody);
+            //now I should have all the barbers, lets check the condition ..
+            if(resp.status === 200) {
+                return resp.data;
+            }
+            else {
+                return {
+                    data : "Could not get monthly data: ".resp,
+                    status: -1
+                };
+            }
+
+        } catch (errors) {
+            return {
+                data : errors,
+                status: -1
+            };
+        }
+    }
 
     const getBarbersWithAvailability = async () => {
         try {
@@ -62,11 +90,14 @@ function useAvailabilityService() {
             };
         }
     };
+
+
     
 
     return {
         getBarbersWithAvailability,
-        updateBarberAvailability
+        updateBarberAvailability,
+        getMonthlyAvailability
     }
 }
 

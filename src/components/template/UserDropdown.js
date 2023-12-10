@@ -11,11 +11,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const dropdownItemList = [
-    {
-        path: '/profile',
-        icon: <FontAwesomeIcon icon={faUser} />,
-        label: 'Profile'
-    },
+    // {
+    //     path: '/profile',
+    //     icon: <FontAwesomeIcon icon={faUser} />,
+    //     label: 'Profile'
+    // },
     {
         path: '/profile',
         icon: <FontAwesomeIcon icon={faCog} />,
@@ -33,7 +33,7 @@ export const UserDropdown = ({ className }) => {
         <div className={classNames(className, 'flex items-center gap-2')}>
             <Avatar size={32} shape="circle" icon={<HiOutlineUser />} />
             <div className="hidden md:block">
-                <div className="text-xs capitalize">{userInfo.roles[0]}</div>
+                <div className="text-xs capitalize">{userInfo?.roles[0]}</div>
                 <div className="font-bold">{userInfo?.firstName} {userInfo?.lastName}</div>
             </div>
         </div>

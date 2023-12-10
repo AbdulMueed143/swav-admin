@@ -150,3 +150,130 @@
 .delete-icon:hover {
     color: red; /* Example hover effect on the delete icon */
 }
+
+
+#filterButton {
+    background-color: rgb(0, 136, 136); /* Green background */
+    color: white; /* White text */
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+#filterButton:hover {
+    background-color: rgb(27, 174, 174); /* Darker shade of green */
+}
+
+
+
+.day {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: #f2f2f2; /* Light gray background for each day */
+    border-radius: 5px;
+}
+
+.day p {
+    margin: 0 10px 0 0;
+    padding: 0;
+    color: #333; /* Darker text for better readability */
+    font-weight: bold;
+}
+
+.day .slot {
+    padding: 2px 5px;
+    margin-right: 5px;
+    background-color: #e0e0e0; /* Slightly darker background for slots */
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.no-availability {
+    color: #888; /* Lighter color for 'No Availability' */
+    font-style: italic;
+    padding: 10px;
+}
+
+
+.schedule-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f2f2f2;
+    padding: 10px;
+    height: 360px;
+    width: 100%;
+}
+
+.schedule-container > div:not(:last-child) {
+    border-right: 1px solid #ccc; /* Add a vertical line */
+    padding-right: 10px; /* Add some padding to the right of each div */
+    margin-right: 10px; /* Add some margin to the right of each div if needed */
+}
+
+/* If you have a fixed number of divs and you want them to have equal width, you can use the following */
+.schedule-container > div {
+    flex: 1; /* This will make each div take up equal space */
+    padding: 0 10px; /* Add padding on both sides */
+}
+
+.day {
+    text-align: center;
+    margin: 0 5px;
+    flex-basis: 14%; /* Divide the space evenly for 7 days */
+}
+
+.day.closed h6 {
+    color: red; /* Indicate closed days */
+}
+
+.add-btn {
+    display: block;
+    margin: 10px auto; /* Center button */
+    padding: 5px 10px;
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-btn:hover {
+    background-color: #45a049;
+}
+
+h6 {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+p {
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+.day {
+    border: 1px solid #ddd; /* Optional: adds a border around each day block */
+    padding: 5px;
+    margin-bottom: 10px; /* Space between each day block */
+    background-color: #f8f8f8; /* Optional: sets a background color for the day block */
+}
+
+.day h6 {
+    margin: 0 0 10px 0; /* Adds space below the day name */
+    padding-bottom: 5px; /* Optional: adds some padding below the day name */
+    border-bottom: 1px solid #ddd; /* Optional: adds a separator between the day name and times */
+}
+
+.day div p {
+    margin: 2px 0; /* Adds space between the time slots */
+}
+
+
+/* .react-datepicker-popper {
+    z-index: 9999 !important;
+} */
