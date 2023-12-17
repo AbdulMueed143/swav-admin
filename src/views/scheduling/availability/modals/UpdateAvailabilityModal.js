@@ -89,8 +89,8 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
     //Shift Add Functionality
     const [dialogIsOpen, setIsOpen] = useState(false);
     const [selectedDay, setSelectedDay] = useState(null);
-    const [startTime, setStartTime] = useState(moment().format('HH:mm'));
-    const [endTime, setEndTime] = useState(startTime);
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
     
     const openDialog = (day) => {
         setIsOpen(true);
@@ -106,9 +106,8 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
     const onDialogClose = () => {
         setIsOpen(false)
-        // setSelectedDay(null);
-        setStartTime(moment().format('HH:mm'));
-        setEndTime(moment().format('HH:mm'));
+        setStartTime(null);
+        setEndTime(null);
     }
 
     const createSlot = (day, selectedStartTime, selectedEndTime) =>{
@@ -157,11 +156,16 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
         const selectedStartTime = moment(startTime, 'HH:mm');
         const selectedEndTime = moment(endTime, 'HH:mm');
 
-        const createdSlot = createSlot(selectedDay, selectedStartTime, selectedEndTime);
-        addObjectToDay(selectedDay, createdSlot);
+        console.log("startTime ", startTime);
+        console.log("endTime ", endTime);
 
-        setStartTime(null);
-        setEndTime(null);
+        if(startTime != endTime) {
+            const createdSlot = createSlot(selectedDay, selectedStartTime, selectedEndTime);
+            addObjectToDay(selectedDay, createdSlot);
+    
+            setStartTime(null);
+            setEndTime(null);
+        }
     }
 
     const save = async () => {
@@ -283,34 +287,35 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                     onClose={()=>onDialogClose()}
                     onRequestClose={()=>onDialogClose()}
                 >
-                <div className="px-6 pb-6">
-                    <h5 className="mb-4">Add Shift</h5>
-                    <div>
-                            <p>Start Time:</p>
-                            <TimePicker 
-                            getPopupContainer={(triggerNode) => {
-                                return triggerNode.parentNode.parentNode.parentNode;
-                            }}
-                                 format="HH:mm" 
-                                 onChange={(time) => setStartTime(time ? time.format('HH:mm') : null)} 
-                                 minuteStep={15}
-
-                            />
+                <DialogTitle>Add Shift</DialogTitle>
+                <DialogContent>
+                    
+                <div className="time-picker-container">
+                    <div className="time-picker-group">
+                        <p>Start Time:</p>
+                        <TimePicker 
+                            getPopupContainer={(triggerNode) => triggerNode.parentNode.parentNode.parentNode}
+                            format="HH:mm" 
+                            onChange={(time) => setStartTime(time ? time.format('HH:mm') : null)} 
+                            minuteStep={15}
+                        />
+                    </div>
+                    <div className="time-picker-group">
                         <p>End Time:</p>
                         <TimePicker 
-                        
-                            getPopupContainer={(triggerNode) => {
-                                return triggerNode;
-                            }}
+                            getPopupContainer={(triggerNode) => triggerNode.parentNode}
                             format="HH:mm" 
                             onChange={(time) => setEndTime(time ? time.format('HH:mm') : null)} 
                             minuteStep={15}
-
                         />
                     </div>
                 </div>
-                    <div className="text-right px-6 py-3 bg-gray-100 dark:bg-gray-700 rounded-bl-lg rounded-br-lg">
-                        <Button
+
+                </DialogContent>
+
+
+                <DialogActions>
+                <Button
                             className="ltr:mr-2 rtl:ml-2"
                             onClick={()=>onDialogClose()}
                         >
@@ -319,7 +324,9 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                         <Button variant="solid" onClick={()=> onDialogOk()}>
                             Okay
                         </Button> 
-                    </div>
+                            </DialogActions>
+
+                    
                 </Dialog> 
 
                 </DialogContent>

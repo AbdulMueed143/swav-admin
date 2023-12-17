@@ -293,3 +293,28 @@ p {
 .slots-delete-icon:hover {
     color: red; /* Example hover effect on the delete icon */
 }
+
+.ant-picker-ok .ant-btn-primary {
+    background-color: #4CAF50; /* New background color */
+    border-color: #4CAF50; /* New border color */
+    color: #fff; /* Text color */
+}
+
+.ant-picker-ok:hover .ant-btn-primary:hover,
+.ant-picker-ok .ant-btn-primary:focus {
+    background-color: #3E8E41; /* Slightly darker color on hover/focus */
+    border-color: #3E8E41;
+}
+
+
+.time-picker-container {
+    display: flex;
+    justify-content: space-around; /* Or 'space-between', 'center', etc. */
+}
+
+.time-picker-group {
+    display: flex;
+    flex-direction: column; /* Aligns items vertically */
+    align-items: center; /* Centers items horizontally */
+    margin: 0 10px; /* Optional: Adds some space between the groups */
+}
