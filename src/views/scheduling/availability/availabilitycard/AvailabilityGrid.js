@@ -39,8 +39,6 @@ const AvailabilityGrid = () => {
     }, []); // Empty dependency array means the effect will only run once
 
 
-
-
     //Handling Update Model
     const [selectedUpdatableBarber, setSelectedUpdatableBarber] = useState(null);
     const [openUpdateModal, setIsUpdateModalOpen] = useState(false);
@@ -55,12 +53,14 @@ const AvailabilityGrid = () => {
     };
 
 
-    const handleClickToSaveUpdateModal = async (values)  => {
+    const handleClickToSaveUpdateModal = async ()  => {
         // Handle the form submission here using formValues
         setIsUpdateModalOpen(false);
         setSelectedUpdatableBarber(null);
+
+
+        fetchBarbers();
     }
-    
 
 
     // // Filter the services based on the search input

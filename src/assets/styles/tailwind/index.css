@@ -277,3 +277,19 @@ p {
 /* .react-datepicker-popper {
     z-index: 9999 !important;
 } */
+
+
+.slot-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.slots-delete-icon {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.slots-delete-icon:hover {
+    color: red; /* Example hover effect on the delete icon */
+}

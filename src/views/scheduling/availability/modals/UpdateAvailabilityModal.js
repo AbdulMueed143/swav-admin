@@ -6,16 +6,23 @@ import DialogContent from "@mui/material/DialogContent";
 import Button from "@mui/material/Button";
 import moment, { weekdays } from 'moment';
 import { TimePicker } from 'antd';
+import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
 
 import { FormItem, FormContainer } from 'components/ui'
 import Input from 'components/ui/Input'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import AddShiftDialog from './AddShiftDialog';
-
+// Example with FontAwesome
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Loading } from 'components/shared';
 
 
 export default function UpdateAvailabilityModal({updateBarber, open, handleClose, handleUpdate}) {
+
+    const {  updateBarberAvailability  } = useAvailabilityService();
+    const [loading, setLoading] = useState(false);
 
     // const { barberId, firstName, lastName, email, barberAvailability, about, status } = updateBarber;
     const [defaultWeekDays, setDefaultWeekDays] = useState({
@@ -30,20 +37,15 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
     const initializeWeekDays = () => {
 
-        console.log("defaultWeekDays ", defaultWeekDays);
-
         const initialWeekDays = { ...defaultWeekDays };
 
         // Iterate over each day of the week
         for (const day in initialWeekDays) {
-            // Check if the day exists in the barberAvailabilityTemplate and is an array
-            console.log("day ", day);
-
             updateBarber?.barberAvailability?.map( barber => {
                 if(barber?.barberAvailabilitiesTemplate?.dayOfWeek == day) {
                     //get all the timeslots 
                     const slots = barber?.barberAvailabilitiesTemplate?.timeSlots;
-                    initialWeekDays[day].push(slots)
+                    initialWeekDays[day] = slots;
                 }
             });
         }
@@ -54,7 +56,6 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
     useEffect(() => {
         if (open) {
-            console.log("Modal opened - setting week days");
             setDefaultWeekDays({
                 "MONDAY": [],
                 "TUESDAY": [],
@@ -69,29 +70,19 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
     }, [open]); // Empty dependency array means the effect will only run once
 
 
-    // useEffect(()=> {
-    //     //When week days change we want to fill the items below ... :) 
-    //     console.log("Week Days have changed ", weekDays);
-        
-    // }, [weekDays]);
+    function slotToString(slot) {
+
+        var startTimeAmPM = "am";
+        var endTimeAmPM = "am";
+
+        if(slot.startTime.hour >= 12)
+            startTimeAmPM = "pm";
+
+        if(slot.endTime.hour >= 12)
+            endTimeAmPM = "pm";
 
 
-    function slotToString(slots) {
-        
-        const slotString = slots.length > 0 ? slots.map( slot => { 
-            var startTimeAmPM = "am";
-            var endTimeAmPM = "am";
-
-            if(slot.startTime.hour >= 12)
-                startTimeAmPM = "pm";
-
-            if(slot.endTime.hour >= 12)
-                endTimeAmPM = "pm";
-
-
-            return `${slot.startTime.hour}:${slot.startTime.minute}${startTimeAmPM} - ${slot.endTime.hour}:${slot.endTime.minute}${endTimeAmPM}` 
-        }).join(', ') : 'N/A';
-        return `${slotString}`;
+        return `${slot.startTime.hour}:${slot.startTime.minute}${startTimeAmPM} - ${slot.endTime.hour}:${slot.endTime.minute}${endTimeAmPM}` 
     }
 
 
@@ -102,8 +93,6 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
     const [endTime, setEndTime] = useState(startTime);
     
     const openDialog = (day) => {
-
-        console.log("Open Dialog Clicked");
         setIsOpen(true);
         console.log("dialogIsOpen " , dialogIsOpen);
 
@@ -122,47 +111,85 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
         setEndTime(moment().format('HH:mm'));
     }
 
+    const createSlot = (day, selectedStartTime, selectedEndTime) =>{
+        return {
+            attendanceStatus: "TO_BE_MARKED",
+            slotName : day,
+            startTime : {
+                hour : selectedStartTime.hour(),
+                minute :  selectedStartTime.minute()
+            },
+            endTime : {
+                hour : selectedEndTime.hour(),
+                minute : selectedEndTime.minute()
+            }
+        }
+    }
 
-        const onDialogOk = () => {
+    const addObjectToDay = (selectedDay, newSlot) => {
 
+        for (const day in weekDays) {
+            if(day== selectedDay) {
+                //get all the timeslots 
+                weekDays[selectedDay].push(newSlot);
+            }
+        }
+    };
+
+    const removeSlotFromDay = (day, index) => {
+        setWeekDays(prevWeekDays => {
+            // Clone the array for the selected day
+            const updatedDay = [...prevWeekDays[day]];
+    
+            // Remove the item at the specified index
+            updatedDay.splice(index, 1);
+    
+            // Return the updated state
+            return {
+                ...prevWeekDays,
+                [day]: updatedDay
+            };
+        });
+    };
+    
+    const onDialogOk = () => {
         setIsOpen(false)
         const selectedStartTime = moment(startTime, 'HH:mm');
         const selectedEndTime = moment(endTime, 'HH:mm');
 
-        // if(currentDaySelected) {
-
-        //     //first we check if we already have atleast 1 value in template?
-        //     //if yes we do following
-        //     const hasSelectedDay = editBarber?.barberAvailability?.find(item => {
-        //         if(item?.barberAvailabilitiesTemplate?.dayOfWeek == currentDaySelected)
-        //             return true;
-
-        //         return false;
-        //     });
-
-        //     if(hasSelectedDay) {
-        //         addStartTimeAndEndTimeToEditBarber(selectedStartTime, selectedEndTime);
-        //     }
-        //     else {
-        //         //but add empty array to fill for the day ...
-        //         addEmptyDayOfWeek(currentDaySelected);
-        //         //then and this 
-        //         addStartTimeAndEndTimeToEditBarber(selectedStartTime, selectedEndTime);
-        //     }
-         
-        // }
-        // else {
-        //     //technically there should be error dialog
-        //     console.log("There should have been selected day");
-        // }
+        const createdSlot = createSlot(selectedDay, selectedStartTime, selectedEndTime);
+        addObjectToDay(selectedDay, createdSlot);
 
         setStartTime(null);
         setEndTime(null);
     }
 
+    const save = async () => {
+        //we got to save days for each day 
+        console.log("Saving ", weekDays)
 
+        const availabilities =  Object.keys(weekDays).map(day => {
+            return {
+                dayOfWeek: day,
+                timeSlots: weekDays[day]
+            };
+        });
 
+        setLoading(true);
+        const result = await updateBarberAvailability(updateBarber.barberId, availabilities);
 
+        if(result.status == -1) {
+            console.log("Failed ", );
+        } else {
+            console.log("Succeess", );
+        }
+
+        //close this by calling
+        handleUpdate();
+        setLoading(false);
+        
+    }
+    
 
     const formIkRef = useRef();
 
@@ -205,11 +232,18 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                                         <div key={day}>
                                             <h6>{day}</h6>
                                             {slots.length > 0 ? (
-                                                slots.map((slot, index) => <p key={index} className="slot">{slotToString(slot)}</p>)
+                                                slots.map((slot, index) => (
+                                                    <div key={index} className="slot-container">
+                                                        <p className="slot">{slotToString(slot)}</p>
+                                                        <button className='slots-delete-icon ' onClick={() => removeSlotFromDay(day, index)}>
+                                                            <FontAwesomeIcon icon={faTrash} />
+                                                        </button>  
+                                                    </div>
+                                                ))
                                             ) : (
                                                 <p className="no-availability slot">N/A</p>
                                             )}
-                                            <Button className="add-btn"onClick={() => openDialog()}>Add</Button>
+                                            <Button className="add-btn"onClick={() => openDialog(day)}>Add</Button>
                                         </div>
                                     ))
                                 )}
@@ -223,10 +257,13 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                                     color="primary">
                                     Cancel
                                 </Button>
-                                <Button onClick={() => handleUpdate(values)}
+                                <Button onClick={() => save()}
                                     color="primary">
                                     Save
                                 </Button> 
+
+                                <Loading loading={loading} >
+                                </Loading>
                             </DialogActions>
                         </div>
                     )}

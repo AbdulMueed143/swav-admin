@@ -57,13 +57,11 @@ function useAvailabilityService() {
 
     }
 
-    const updateBarberAvailability = async (editedBarber) => {
+    const updateBarberAvailability = async (barberId, availabilities) => {
         try {
-            const barberId = editedBarber.barberId;
-    
             // Map each availability to a promise of an API call
-            const apiCallPromises = editedBarber?.barberAvailability.map(barberAvailability =>
-                apiUpsertAvailabilityTemplate(token, barberId, barberAvailability?.barberAvailabilitiesTemplate)
+            const apiCallPromises = availabilities.map(barberAvailability =>
+                apiUpsertAvailabilityTemplate(token, barberId, barberAvailability)
             );
     
             // Wait for all API calls to resolve
