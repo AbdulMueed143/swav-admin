@@ -19,12 +19,13 @@ const navigationConfig = [
         key: 'bookings',
         path: '/bookings',
         title: 'Bookings',
-        translateKey: 'nav.bookings.bookingsviews',
+        translateKey: 'nav.bookings.bookingview',
         icon: 'booking',
         type: NAV_ITEM_TYPE_ITEM,
         authority: [],
         subMenu: [],
     },
+
     {
         key: 'Availability',
         path: '',
