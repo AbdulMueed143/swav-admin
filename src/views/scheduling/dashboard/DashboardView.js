@@ -19,20 +19,6 @@ const DashboardView = () => {
     //Maps
     const colorMap = new Map();
 
-    //We will store all the events based on whatever we got from the server
-    // const [eventsMap, setEventsMap] = useState(new Map());
-    // const addEventToMap = (yearMonth, event) => {
-    //     // Create a new Map for immutability
-    //     const newMap = new Map(eventsMap);
-    //     newMap.set(yearMonth, [event]);
-        
-    //     // Update the state with the new Map
-    //     setEventsMap(newMap);
-    // };
-
-
-    //Month Availability Data Variables
-
     //Selected Year and Month from calendar
     const today = new Date();
     const [selectedYear, setSelectedYear] = useState(today.getFullYear());
@@ -100,35 +86,8 @@ const DashboardView = () => {
       // Making sure changes take effect when variables change 
 
     useEffect(() => {
-
         //Whenever the date changes
-        const yearMonth = `${selectedYear}-${selectedMonth}`;
-
-        // console.log("Selected Month Changed ", yearMonth);
-
-        // if(eventsMap.has(yearMonth)) {
-        //     // //in this case ... we just reset the view itself..
-        //     console.log("Setting with current data in map ", eventsMap);
-        //     const allValues = Array.from(eventsMap.values()).flatMap(item => item).flatMap(item => item);
-        //     // console.log("All Data ", allValues);
-        //     setMonthlyAvailability(allValues);
-           
-        // }
-        // else {
-            fetchMonthlyAvailaibility(checkedBarbers, selectedYear, selectedMonth);
-        // }
-
-        // Promise.all([
-        //     fetchMonthlyAvailaibilityData(checkedBarbers, selectedYear, selectedMonth),
-        //     fetchMonthlyAvailaibilityData(checkedBarbers, selectedYear, selectedMonth),
-        // ]).then(([result1, result2]) => {
-        //     // Both promises have resolved
-        //     console.log('Results from first call:', result1);
-        //     console.log('Results from second call:', result2);
-        // }).catch(error => {
-        //     // Handle errors here
-        //     console.error('An error occurred:', error);
-        // });
+        fetchMonthlyAvailaibility(checkedBarbers, selectedYear, selectedMonth);
     }, [selectedMonth]);
 
     useEffect(() => {
@@ -204,6 +163,8 @@ const DashboardView = () => {
             const barberIds = response.map(barber => barber.barberId);
             setBarbers(response);
             setCheckedBarbers(barberIds);
+
+            fetchMonthlyAvailaibility(barberIds, selectedYear, selectedMonth);
         }
 
         //irrelevant of anything just close the loading bar ...

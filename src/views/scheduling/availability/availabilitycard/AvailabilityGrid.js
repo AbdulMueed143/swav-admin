@@ -28,13 +28,12 @@ const AvailabilityGrid = () => {
 
         setLoading(true);
         const barbersWithAvailability = await getBarbersWithAvailability();
-        console.log("Barbers ", barbersWithAvailability);
+        console.log("Barbers this is ", barbersWithAvailability);
         setBarbers(barbersWithAvailability);
         setLoading(false);
     };
 
     useEffect(() => {
-        console.log("AvailabilityGrid fetchBarbers ");
         fetchBarbers();
     }, []); // Empty dependency array means the effect will only run once
 

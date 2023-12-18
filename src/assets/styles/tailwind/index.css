@@ -306,7 +306,6 @@ p {
     border-color: #3E8E41;
 }
 
-
 .time-picker-container {
     display: flex;
     justify-content: space-around; /* Or 'space-between', 'center', etc. */

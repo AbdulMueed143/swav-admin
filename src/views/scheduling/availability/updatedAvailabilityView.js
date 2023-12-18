@@ -248,19 +248,6 @@ const UpdatedAvailabilityView = (props) => {
     let [editBarber, setEditBarber] = useState([]); 
 
 
-    // const fetchBarbers = async () => {
-    //     setLoading(true);
-    //     const barbersWithAvailability = await getBarbersWithAvailability();
-    //     setBarbers(barbersWithAvailability);
-    //     //We need copy for the edit view because we will allow that to be modified ...
-    //     // setEditableListBarbers(barbersWithAvailability);
-    //     setLoading(false);
-    //     setTableData((prevData) => ({
-    //         ...prevData,
-    //         ...{ total: barbersWithAvailability.total },
-    //     }))
-    // };
-
     return (
         <div >
 
