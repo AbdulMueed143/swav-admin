@@ -13,17 +13,19 @@ export const protectedRoutes = [
     },
 
     {
+        key: 'bookings',
+        path: '/bookings',
+        component: React.lazy(() => import('views/bookings/BookingView')),
+        authority: [],
+    },
+
+    {
         key: 'availability.dashboard',
         path: '/availability/dashbaord',
         component: React.lazy(() => import('views/scheduling/dashboard/DashboardView')),
         authority: [],
     },
-    // {
-    //     key: 'availability.dashboard',
-    //     path: '/availability/edit/:barberId',
-    //     component: React.lazy(() => import('views/scheduling/availability/updatedAvailabilityView')),
-    //     authority: [],
-    // },
+   
     {
         key: 'availability.edit',
         path: '/availability',
