@@ -1,17 +1,15 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import  FormItem from 'components/ui/Form/FormItem'
 import FormContainer from 'components/ui/Form/FormContainer'
 
 import Input from 'components/ui/Input';
-import Button  from 'components/ui/Buttons/Button';
-import Checkbox from 'components/ui/Checkbox/Checkbox'
 import { Field, Form, Formik } from 'formik'
-import { HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi'
 import * as Yup from 'yup'
 import { useSelector } from 'react-redux'
-
-
+import { Alert } from 'components/ui'
+import useBarberService from 'utils/hooks/CustomServices/useBarberService';
+import AddressAutocomplete from 'components/ui/custom/barbers/AddressAutocomplete'
 
 const validationSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email Required'),
@@ -26,29 +24,89 @@ const validationSchema = Yup.object().shape({
     rememberMe: Yup.bool(),
 })
 
-const BusinessDetailForm = () => {
+const ShopDetailForm = () => {
+
+    const [shopName, setShopName] = useState("");
+    const [website, setWebsite] = useState("");
+    const [placeId, setPlaceId] = useState("");
+    const [googleAddress, setGoogleAddress] = useState("");
+    const [googlePhoneNumber, setGooglePhoneNumber] = useState("");
+    const [openingHours, setOpeningHours] = useState("");
+
+
+    const { fetchBarberShopDetail } = useBarberService();
+
 
     const userInfo = useSelector((state) => state.auth.user);
+    const [loading, setLoading] = useState(false);
+    const [barberShopInfo, setBarberShopInfo] = useState(null);
 
-    console.log(userInfo);
+    //Alert
+    const [serverError, setServerError] = useState(false);
+    const [serverErrorMessage, setServerErrorMessage] = useState(false);
+
+      const handleAlertClose = () => {
+        setServerError(false);
+        setServerErrorMessage('');
+    }
+
+    const showError = (message) => {
+        setServerError(true);
+        setServerErrorMessage(message);
+    }
+
+
+
+    //now we will get the shop details
+    const fetchShopDetail = async() =>  {
+        setLoading(true);
+
+        const response = await fetchBarberShopDetail(userInfo.barberShopId);
+
+        if(response.status == -1) {
+            //error
+            setServerError(true);
+            setServerErrorMessage(response.message);
+        }
+        else {
+            console.log("Setting Result ", response);
+            setBarberShopInfo(response);
+        }
+
+        //now show error or get the detail
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        fetchShopDetail();
+    }, []);
+
 
     return (
         <div>
+
+{serverError && (
+             <div>
+                <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
+                    {serverErrorMessage}
+                </Alert>
+            </div>
+            )}
             <Formik
                  initialValues={{
                     businessName: '',
-                    shopName: '',
-                    ownerFirstName: userInfo.firstName ,
-                    ownerLastName: userInfo.lastName,
-                    ownerEmail: userInfo.email,
-                    ownerPhoneNumber: userInfo.phoneNumber,
-                    ownerPassword: '',
+                    shopName: barberShopInfo == null ? '' : barberShopInfo?.name ,
+                    country: barberShopInfo == null ? '' : barberShopInfo?.address?.country,
+                    city: barberShopInfo == null ? '' : barberShopInfo?.address?.city,
+                    postcode: barberShopInfo == null ? '' : barberShopInfo?.address?.postalCode,
                     address: '',
                     properties: {},
                     ownerConfirmPassword: '',
                     googleAddress: '',
                     placeId: ''
                 }}
+
+                enableReinitialize
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm, setSubmitting }) => {
                     setTimeout(() => {
@@ -62,19 +120,62 @@ const BusinessDetailForm = () => {
                     <Form>
                         <FormContainer>
 
+                            <FormItem
+                                    label="Search Your Barber Shop To Point Via GPS"
+                                    invalid={errors.shopName && touched.shopName}
+                                    errorMessage={errors.shopName}>
+
+                                <AddressAutocomplete 
+                                            setBusinessName={setShopName}
+                                            setGoogleAddress={setGoogleAddress}
+                                            setWebsite={setWebsite}
+                                            setPlaceId={setPlaceId}
+                                            setOpeningHours={setOpeningHours}
+                                        />
+                            </FormItem>
+
                                 <FormItem
-                                    label="Business Name"
-                                    invalid={errors.customBusinessName && touched.customBusinessName}
-                                    errorMessage={errors.customBusinessName}>
+                                    label="Shop Name"
+                                    invalid={errors.shopName && touched.shopName}
+                                    errorMessage={errors.shopName}>
 
                                     <Field
                                         type="text"
                                         autoComplete="off"
-                                        name="customBusinessName"
-                                        placeholder="Business Name"
+                                        name="shopName"
+                                        placeholder="Shop Name"
                                         component={Input}
                                 />
                                 </FormItem>
+
+                                <FormItem
+                                    label="Website"
+                                    invalid={errors.website && touched.website}
+                                    errorMessage={errors.website}>
+
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="website"
+                                        placeholder="Website (Optional)"
+                                        component={Input}
+                                />
+                                </FormItem>
+
+                                <FormItem
+                                    label="Phone Number"
+                                    invalid={errors.website && touched.website}
+                                    errorMessage={errors.website}>
+
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="phoneNumber"
+                                        placeholder="Phone Number (Optional)"
+                                        component={Input}
+                                />
+                                </FormItem>
+
 
                                 <FormItem
                                     label="Address"
@@ -171,5 +272,5 @@ const BusinessDetailForm = () => {
     )
 }
 
-export default BusinessDetailForm
+export default ShopDetailForm
 

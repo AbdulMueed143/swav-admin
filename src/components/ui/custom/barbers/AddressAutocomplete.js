@@ -10,7 +10,7 @@ const AddressAutocomplete = ({ setBusinessName, setGoogleAddress, setWebsite, se
       country: "AU",
     },
     types: ['establishment'],
-    fields: ['name', 'formatted_address',  'formatted_phone_number', 'website', 'opening_hours',  'place_id']
+    fields: ['name', 'formatted_address', 'address_components', 'formatted_phone_number', 'website', 'opening_hours',  'place_id']
   };
 
   return (
@@ -20,7 +20,7 @@ const AddressAutocomplete = ({ setBusinessName, setGoogleAddress, setWebsite, se
       // onChange={setValue}
       options={options}
       onPlaceSelected={(place) => {
-        console.log(place);
+        console.log("found", place);
         setBusinessName(place.name);
         setGoogleAddress(place.formatted_address);
         setWebsite(place.website)
