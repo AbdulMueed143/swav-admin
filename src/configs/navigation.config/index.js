@@ -26,6 +26,17 @@ const navigationConfig = [
         subMenu: [],
     },
 
+    // {
+    //     key: 'book/appointment/',
+    //     path: '/book/appointment',
+    //     title: 'Book Appointment',
+    //     translateKey: 'nav.bookings.bookingview',
+    //     icon: 'booking',
+    //     type: NAV_ITEM_TYPE_ITEM,
+    //     authority: [],
+    //     subMenu: [],
+    // },
+
     {
         key: 'Availability',
         path: '',
