@@ -63,36 +63,35 @@ const SignUpForm = (props) => {
         console.log("Values to send");
         console.log(values);
 
-        const { ownerFirstName, ownerLastName , customBusinessName, address, city, state, postcode, country, ownerPhoneNumber, ownerPassword, ownerEmail }  = values
+        const { ownerFirstName, ownerLastName , shopName, customBusinessName, ownerPhoneNumber, ownerPassword, ownerEmail }  = values
         
         var currentAddress = ""
         var extraProperties = {}
-        var shopName = ""
 
-        if (manualEntry === true) {
-            //Address depends on how it was added ...
-            //If user added address manually the we do it differently otherwise differently
-            shopName = customBusinessName
-            setBusinessName(customBusinessName);
-            currentAddress = {
-                line1: address,
-                city: city,
-                state: state,
-                postalCode: postcode,
-                country: country,
-                placeId: placeId
-            }
-        }
-        else {
-            shopName = businessName
-            currentAddress = {
-                line1: googleAddress,
-                placeId: placeId,
-                properties: {
-                    "website" : website,
-                }
-            }
-        }
+        // if (manualEntry === true) {
+        //     //Address depends on how it was added ...
+        //     //If user added address manually the we do it differently otherwise differently
+        //      customBusinessName = shopName
+        //     setBusinessName(customBusinessName);
+        //     currentAddress = {
+        //         line1: address,
+        //         city: city,
+        //         state: state,
+        //         postalCode: postcode,
+        //         country: country,
+        //         placeId: placeId
+        //     }
+        // }
+        // else {
+        //     shopName = businessName
+        //     currentAddress = {
+        //         line1: googleAddress,
+        //         placeId: placeId,
+        //         properties: {
+        //             "website" : website,
+        //         }
+        //     }
+        // }
 
         // Map values to API expected variables
         const apiValues = {
@@ -103,8 +102,6 @@ const SignUpForm = (props) => {
             ownerEmail: ownerEmail,
             ownerPhoneNumber: ownerPhoneNumber,
             ownerPassword: ownerPassword,
-            address: currentAddress,
-            properties: extraProperties
         }
 
         // Expected payload
@@ -156,11 +153,8 @@ const SignUpForm = (props) => {
                         ownerEmail: '',
                         ownerPhoneNumber: '',
                         ownerPassword: '',
-                        address: '',
                         properties: {},
                         ownerConfirmPassword: '',
-                        googleAddress: '',
-                        placeId: ''
                     }}
                     onSubmit={(values) => {
                         // onRegisterAccount(values); // Call onRegisterAccount when form is submitted and valid
@@ -210,6 +204,20 @@ const SignUpForm = (props) => {
                                     </FormItem>
 
                             </div>
+
+                            <FormItem
+                                    label="Shop Name"
+                                    invalid={errors.shopName && touched.shopName}
+                                    errorMessage={errors.shopName}>
+
+                                    <Field
+                                        type="email"
+                                        autoComplete="off"
+                                        name="shopName"
+                                        placeholder="Shop Name"
+                                        component={Input}
+                                />
+                                </FormItem>
 
                                 <FormItem
                                     label="Email"
