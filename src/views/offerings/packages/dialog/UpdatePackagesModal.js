@@ -1,15 +1,13 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Button from "@mui/material/Button";
-import TextField from '@mui/material/TextField';
 import { FormItem, FormContainer } from 'components/ui'
 import Input from 'components/ui/Input'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { Autocomplete } from '@mui/lab';
 import useBookingServices from 'utils/hooks/useBookingService'
 import Select from 'components/ui/Select'
 
@@ -31,27 +29,10 @@ const validationSchema = Yup.object().shape({
 })
  
 export default function UpdatePackageModal({packageData,servicesAvailable, open,handleToSave, handleToClose}) {
+    const formIkRef = useRef();
 
     const { getServices } = useBookingServices();
-    // const [services, setServices] = useState(servicesAvailable); // Initial state as an empty array
     const [selectedAmenities, setSelectedAmenities] = React.useState([]);
-
-    //  // Define a function to fetch and update the services
-    //  const fetchServices = async () => {
-    //     const data = await getServices();
-    //     setServices(data);
-
-    //     //you match them with the 
-    //     const sel = data.filter(service=> packageData.amenitiesIds.includes(service.id));
-    //     setSelectedAmenities(sel);
-    // };
-
-
-    // useEffect(() => {
-    //     // Call fetchServices on component mount
-    //     fetchServices();
-    // }, []); // Empty dependency array means the effect will only run once
-
       
     // Map your services array to an array of options
     const serviceMap = servicesAvailable.map(service => ({
@@ -67,35 +48,36 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
         label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
     }));
 
-      
-    // const [selectedServices, setSelectedServices] = useState([]);
     const [totalTime, setTotalTime] = useState(0);
     const [totalCost, setTotalCost] = useState(0);
     const [discountedCost, setDiscountedCost] = useState(0);
 
+    useEffect(() => {
+        setSelectedAmenities(servicesAvailable.filter( service => packageData?.amenitiesIds?.includes(service.id)));
+    },[]);
 
     useEffect(() => {
-
         if(selectedAmenities) {
-            setTotalTime(selectedAmenities.reduce((total, service) => total + service.averageTimeInMinutes, 0));
-            setTotalCost(selectedAmenities.reduce((total, service) => total + service.price, 0));
-            setDiscountedCost(totalCost);
+            let time = selectedAmenities.map(service => service.averageTimeInMinutes).reduce((a, b) => a + b, 0);
+            let total = selectedAmenities.map(service => service.price).reduce((a, b) => a + b, 0);
+            setTotalTime(time);
+            setTotalCost(total);
+            const discount = getDiscountValue(formIkRef.current?.values?.discountPercentage || 0);
+            setDiscountedCost(total - discount);
         }
 
     }, [selectedAmenities]);
 
     const handleChange = (values) => {
-
-        // console.log("Services A");
-        // console.log(services);
-
-        console.log(packageData);
-
-        if(values.discountPercentage > 0 && values.discountPercentage < 100) {
-            const discount = totalCost * (values.discountPercentage/100);
-            setDiscountedCost(totalCost - discount); 
-        }    
+        console.log("Changing Discount ", values.discountPercentage, totalCost, getDiscountValue(values.discountPercentage));
+        setDiscountedCost(totalCost - getDiscountValue(values.discountPercentage)); 
     };
+
+    const getDiscountValue = (discountPercentage) => {
+        if(discountPercentage >=0 && discountPercentage <= 100) {
+            return totalCost * (discountPercentage/100);
+        }    
+    }
 
 
     return (
@@ -116,9 +98,9 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
                     enableReinitialize
                     initialValues={{
                         id: packageData == null? '' : packageData.id,
-                        discountPercentage : packageData == null? '': packageData.discountPercentage,
+                        discountPercentage : packageData == null? 0 : packageData.discountPercentage,
                         name: packageData == null? '': packageData.name,
-                        amenities: packageData == null ? null : servicesAvailable.filter( service => packageData.amenitiesIds.includes(service.id)),
+                        amenities: packageData == null ? [] : servicesAvailable.filter( service => packageData.amenitiesIds.includes(service.id)),
                         description: packageData == null? '': packageData.description,
                     }}
                     validationSchema={validationSchema}
@@ -126,8 +108,7 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
                         setSubmitting(false);
                         
                     }}
-                    // innerRef={formIkRef}
-
+                    innerRef={formIkRef}
                 >
 
                     {({ values, touched, errors, resetForm, submitForm}) => (
@@ -180,28 +161,10 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
                                             const selectedAmenities = selectedOptions.map(option => {
                                                 return servicesAvailable.find(service => service.name === option.value);
                                             });
-
                                             setSelectedAmenities(selectedAmenities);
-                                    
                                         }}
                                     />
                                 </FormItem>
-
-                                  
-                                    
-                                  {/* <Autocomplete
-                                            multiple
-                                            id="select-services"
-                                            options={services}
-                                            getOptionLabel={(option) => `${option.title}, ${option.cost} AUD, ${option.time} Mint`}
-                                            value={selectedAmenities}
-                                            onChange={(event, newValue) => {
-                                                setSelectedAmenities(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} variant="outlined" label="Services" placeholder="Services" />
-                                            )}
-                                        />   */}
 
                             <FormItem
                             asterisk

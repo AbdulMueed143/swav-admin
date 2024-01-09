@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
@@ -31,6 +31,7 @@ const validationSchema = Yup.object().shape({
 })
  
 export default function AddPackageModal({open,handleToSave, handleToClose}) {
+    const formIkRef = useRef();
 
     const { getServices } = useBookingServices();
     const [services, setServices] = useState([]); // Initial state as an empty array
@@ -65,23 +66,26 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
 
 
     useEffect(() => {
-
         if(selectedAmenities) {
-            setTotalTime(selectedAmenities.reduce((total, service) => total + service.averageTimeInMinutes, 0));
-            setTotalCost(selectedAmenities.reduce((total, service) => total + service.price, 0));
-            setDiscountedCost(totalCost);
+            let time = selectedAmenities.map(service => service.averageTimeInMinutes).reduce((a, b) => a + b, 0);
+            let total = selectedAmenities.map(service => service.price).reduce((a, b) => a + b, 0);
+            setTotalTime(time);
+            setTotalCost(total);
+            const discount = getDiscountValue(formIkRef.current?.values?.discountPercentage || 0);
+            setDiscountedCost(total - discount);
         }
 
     }, [selectedAmenities]);
 
     const handleChange = (values) => {
-        if(values.discountPercentage > 0 && values.discountPercentage < 100) {
-            console.log(values.discountPercentage);
-
-            const discount = totalCost * (values.discountPercentage/100);
-            setDiscountedCost(totalCost - discount); 
-        }    
+        setDiscountedCost(totalCost - getDiscountValue(values.discountPercentage)); 
     };
+
+    const getDiscountValue = (discountPercentage) => {
+        if(discountPercentage >=0 && discountPercentage <= 100) {
+            return totalCost * (discountPercentage/100);
+        }    
+    }
 
 
     return (
@@ -101,7 +105,7 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
                 <Formik
                     enableReinitialize
                     initialValues={{
-                        discountPercentage : '',
+                        discountPercentage : 0,
                         name: '',
                         amenities: services,
                         description: '',
@@ -111,8 +115,7 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
                         setSubmitting(false);
                         
                     }}
-                    // innerRef={formIkRef}
-
+                    innerRef={formIkRef}
                 >
 
                     {({ values, touched, errors, resetForm, submitForm}) => (

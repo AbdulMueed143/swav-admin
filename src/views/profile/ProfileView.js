@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux'
 import Tabs from 'components/ui/Tabs'
 import { HiScissors, HiOutlineUser, HiOutlineSun } from 'react-icons/hi'
 import ProfileForm from './forms/ProfileForm'
-import BusinessDetailForm from './forms/BusinessDetailForm'
 import HolidayGrid from './grids/HolidaysGrid'
+import ShopDetailForm from './forms/ShopDetailForm'
+import TaxAndSurchargeForm from './forms/TaxSurchargeForm'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -24,6 +25,9 @@ const Home = () => {
                         Business
                     </TabNav>
                     <TabNav value="tab3" icon={<HiOutlineSun />}>
+                        Tax and Surcharge
+                    </TabNav>
+                    <TabNav value="tab4" icon={<HiOutlineSun />}>
                         Holidays
                     </TabNav>
                 </TabList>
@@ -40,11 +44,17 @@ const Home = () => {
                             </p>
                         </div>
 
-                        <BusinessDetailForm />
+                        <ShopDetailForm />
 
                     </TabContent>
 
                     <TabContent value="tab3">
+
+                        <TaxAndSurchargeForm />
+
+                    </TabContent>
+
+                    <TabContent value="tab4">
                         <HolidayGrid />
                     </TabContent>
                 </div>

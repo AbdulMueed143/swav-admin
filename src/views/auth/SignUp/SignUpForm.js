@@ -63,36 +63,35 @@ const SignUpForm = (props) => {
         console.log("Values to send");
         console.log(values);
 
-        const { ownerFirstName, ownerLastName , customBusinessName, address, city, state, postcode, country, ownerPhoneNumber, ownerPassword, ownerEmail }  = values
+        const { ownerFirstName, ownerLastName , shopName, customBusinessName, ownerPhoneNumber, ownerPassword, ownerEmail }  = values
         
         var currentAddress = ""
         var extraProperties = {}
-        var shopName = ""
 
-        if (manualEntry === true) {
-            //Address depends on how it was added ...
-            //If user added address manually the we do it differently otherwise differently
-            shopName = customBusinessName
-            setBusinessName(customBusinessName);
-            currentAddress = {
-                line1: address,
-                city: city,
-                state: state,
-                postalCode: postcode,
-                country: country,
-                placeId: placeId
-            }
-        }
-        else {
-            shopName = businessName
-            currentAddress = {
-                line1: googleAddress,
-                placeId: placeId,
-                properties: {
-                    "website" : website,
-                }
-            }
-        }
+        // if (manualEntry === true) {
+        //     //Address depends on how it was added ...
+        //     //If user added address manually the we do it differently otherwise differently
+        //      customBusinessName = shopName
+        //     setBusinessName(customBusinessName);
+        //     currentAddress = {
+        //         line1: address,
+        //         city: city,
+        //         state: state,
+        //         postalCode: postcode,
+        //         country: country,
+        //         placeId: placeId
+        //     }
+        // }
+        // else {
+        //     shopName = businessName
+        //     currentAddress = {
+        //         line1: googleAddress,
+        //         placeId: placeId,
+        //         properties: {
+        //             "website" : website,
+        //         }
+        //     }
+        // }
 
         // Map values to API expected variables
         const apiValues = {
@@ -103,8 +102,6 @@ const SignUpForm = (props) => {
             ownerEmail: ownerEmail,
             ownerPhoneNumber: ownerPhoneNumber,
             ownerPassword: ownerPassword,
-            address: currentAddress,
-            properties: extraProperties
         }
 
         // Expected payload
@@ -156,11 +153,8 @@ const SignUpForm = (props) => {
                         ownerEmail: '',
                         ownerPhoneNumber: '',
                         ownerPassword: '',
-                        address: '',
                         properties: {},
                         ownerConfirmPassword: '',
-                        googleAddress: '',
-                        placeId: ''
                     }}
                     onSubmit={(values) => {
                         // onRegisterAccount(values); // Call onRegisterAccount when form is submitted and valid
@@ -211,6 +205,20 @@ const SignUpForm = (props) => {
 
                             </div>
 
+                            <FormItem
+                                    label="Shop Name"
+                                    invalid={errors.shopName && touched.shopName}
+                                    errorMessage={errors.shopName}>
+
+                                    <Field
+                                        type="email"
+                                        autoComplete="off"
+                                        name="shopName"
+                                        placeholder="Shop Name"
+                                        component={Input}
+                                />
+                                </FormItem>
+
                                 <FormItem
                                     label="Email"
                                     invalid={errors.ownerEmail && touched.ownerEmail}
@@ -225,7 +233,7 @@ const SignUpForm = (props) => {
                                 />
                                 </FormItem>
 
-                                    <div>
+                                    {/* <div>
 
                                     {!manualEntry && (
                                         <FormItem
@@ -243,107 +251,105 @@ const SignUpForm = (props) => {
                                         </FormItem>
                                     )}
 
-                        {manualEntry && (
-                                <>
+                                    {manualEntry && (
+                                            <>
 
-                                <FormItem
-                                    label="Business Name"
-                                    invalid={errors.customBusinessName && touched.customBusinessName}
-                                    errorMessage={errors.customBusinessName}>
+                                            <FormItem
+                                                label="Business Name"
+                                                invalid={errors.customBusinessName && touched.customBusinessName}
+                                                errorMessage={errors.customBusinessName}>
 
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="customBusinessName"
-                                        placeholder="Business Name"
-                                        component={Input}
-                                />
-                                </FormItem>
+                                                <Field
+                                                    type="text"
+                                                    autoComplete="off"
+                                                    name="customBusinessName"
+                                                    placeholder="Business Name"
+                                                    component={Input}
+                                            />
+                                            </FormItem>
 
-                            <FormItem
-                                    label="Address"
-                                    invalid={errors.address && touched.address}
-                                    errorMessage={errors.address}>
+                                        <FormItem
+                                                label="Address"
+                                                invalid={errors.address && touched.address}
+                                                errorMessage={errors.address}>
 
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="address"
-                                        placeholder="Address"
-                                        component={Input}
-                                />
-                                </FormItem>
+                                                <Field
+                                                    type="text"
+                                                    autoComplete="off"
+                                                    name="address"
+                                                    placeholder="Address"
+                                                    component={Input}
+                                            />
+                                            </FormItem>
 
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
-                                    <FormItem
-                                        label="State"
-                                        invalid={errors.state && touched.state}
-                                        errorMessage={errors.state}
-                                    >
-                                        <Field
-                                            type="text"
-                                            autoComplete="off"
-                                            name="state"
-                                            placeholder="State"
-                                            component={Input} />
-                                    </FormItem>
-
-                                    <FormItem
-                                        label="Postcode"
-                                        invalid={errors.postcode && touched.postcode}
-                                        errorMessage={errors.postcode}
-                                    >
-                                        <Field
-                                            type="text"
-                                            autoComplete="off"
-                                            name="postcode"
-                                            placeholder="Postcode"
-                                            component={Input} />
-                                    </FormItem>
-
-                                </div>
-
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-
-                                    <FormItem
-                                        label="City"
-                                        invalid={errors.city && touched.city}
-                                        errorMessage={errors.city}
-                                    >
+                                                <FormItem
+                                                    label="State"
+                                                    invalid={errors.state && touched.state}
+                                                    errorMessage={errors.state}
+                                                >
                                                     <Field
                                                         type="text"
                                                         autoComplete="off"
-                                                        name="city"
-                                                        placeholder="City"
+                                                        name="state"
+                                                        placeholder="State"
                                                         component={Input} />
-                                    </FormItem>
+                                                </FormItem>
 
-                                    <FormItem
-                                        label="Country"
-                                        invalid={errors.country && touched.country}
-                                        errorMessage={errors.country}
-                                    >
+                                                <FormItem
+                                                    label="Postcode"
+                                                    invalid={errors.postcode && touched.postcode}
+                                                    errorMessage={errors.postcode}
+                                                >
                                                     <Field
                                                         type="text"
                                                         autoComplete="off"
-                                                        name="country"
-                                                        placeholder="Country"
+                                                        name="postcode"
+                                                        placeholder="Postcode"
                                                         component={Input} />
-                                    </FormItem>
+                                                </FormItem>
 
-                                </div>
+                                            </div>
 
-                                </>
-                        )}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
-      
+                                                <FormItem
+                                                    label="City"
+                                                    invalid={errors.city && touched.city}
+                                                    errorMessage={errors.city}
+                                                >
+                                                                <Field
+                                                                    type="text"
+                                                                    autoComplete="off"
+                                                                    name="city"
+                                                                    placeholder="City"
+                                                                    component={Input} />
+                                                </FormItem>
+
+                                                <FormItem
+                                                    label="Country"
+                                                    invalid={errors.country && touched.country}
+                                                    errorMessage={errors.country}
+                                                >
+                                                                <Field
+                                                                    type="text"
+                                                                    autoComplete="off"
+                                                                    name="country"
+                                                                    placeholder="Country"
+                                                                    component={Input} />
+                                                </FormItem>
+
+                                            </div>
+
+                                            </>
+                                    )}
 
 
-                                    </div>
+                                    </div> */}
 
 
-                                <FormItem>                    
+                                {/* <FormItem>                    
                                             <button 
                                                 style={{ 
                                                     float: 'right', 
@@ -362,7 +368,7 @@ const SignUpForm = (props) => {
                                                 }}>
                                                 {manualEntry ? 'Find Address Using Google' : 'Add Address Manually'}
                                             </button>
-                                </FormItem>   
+                                </FormItem>    */}
 
                                 <FormItem
                                     label="Phone Number"

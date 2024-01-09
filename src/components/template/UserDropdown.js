@@ -33,8 +33,13 @@ export const UserDropdown = ({ className }) => {
         <div className={classNames(className, 'flex items-center gap-2')}>
             <Avatar size={32} shape="circle" icon={<HiOutlineUser />} />
             <div className="hidden md:block">
-                {/* <div className="text-xs capitalize">{userInfo?.roles[0]}</div> */}
-                <div className="font-bold">{userInfo?.firstName} {userInfo?.lastName}</div>
+            <div className="text-xs capitalize">
+                {userInfo && Array.isArray(userInfo.roles) && userInfo.roles.length > 0 && userInfo.roles[0]}
+            </div>
+                <div className="font-bold">
+                    
+                    {userInfo?.firstName} {userInfo?.lastName}
+                </div>
             </div>
         </div>
     )
