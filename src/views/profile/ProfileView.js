@@ -5,6 +5,7 @@ import { HiScissors, HiOutlineUser, HiOutlineSun } from 'react-icons/hi'
 import ProfileForm from './forms/ProfileForm'
 import HolidayGrid from './grids/HolidaysGrid'
 import ShopDetailForm from './forms/ShopDetailForm'
+import TaxAndSurchargeForm from './forms/TaxSurchargeForm'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -48,6 +49,8 @@ const Home = () => {
                     </TabContent>
 
                     <TabContent value="tab3">
+
+                        <TaxAndSurchargeForm />
 
                     </TabContent>
 

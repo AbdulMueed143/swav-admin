@@ -76,40 +76,16 @@ const ShopDetailForm = () => {
 
         const response = await updateShopDetail(businessDetails);
 
+        if(response.status === -1) {
+            showError(response.message);
+        }
+        // else {
+        //     fetchHolidays();
+        // }
+    
+
         setLoading(false);
     };
-
-    // const handleToSave = async(values)  => {
-
-    //     const startDateAsMoment = moment(startDate);
-    //     const endDateAsMoment = moment(endDate);
-
-    //     values.startDate = {
-    //         day : startDateAsMoment.date(),
-    //         month : startDateAsMoment.month() + 1,
-    //         year :  startDateAsMoment.year()
-    //     }
-
-    //     values.endDate = {
-    //         day : endDateAsMoment.date(),
-    //         month : endDateAsMoment.month() + 1,
-    //         year :  endDateAsMoment.year()
-    //     }
-
-    //     //lets make call to server
-    //     const response = await addHoliday(values);
-    //     if(response.status === -1) {
-    //         showError(response.message);
-    //     }
-    //     else {
-    //         fetchHolidays();
-    //     }
-
-    //     //reset dates
-    //     resetDatePickerDates();
-    //     setOpen(false);
-    // }
-
 
     //now we will get the shop details
     const fetchShopDetail = async() =>  {
@@ -148,13 +124,14 @@ const ShopDetailForm = () => {
     return (
         <div>
 
-{serverError && (
-             <div>
-                <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
-                    {serverErrorMessage}
-                </Alert>
-            </div>
+            {serverError && (
+                <div>
+                    <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
+                        {serverErrorMessage}
+                    </Alert>
+                </div>
             )}
+
             <Formik
                  initialValues={{
                     businessName: shopName,

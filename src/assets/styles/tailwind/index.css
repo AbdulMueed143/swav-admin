@@ -326,3 +326,16 @@ p {
 .services-select-box__control {
     font-size: 9px;
 }
+
+
+
+.switcher-container {
+    margin-bottom: 20px;
+}
+
+
+
+.right-column {
+    margin-right: 1px;
+    align-self: flex-end;
+}

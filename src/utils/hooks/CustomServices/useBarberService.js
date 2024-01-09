@@ -13,10 +13,9 @@ function useBarberService() {
 
     const fetchBarberShopDetail = async (barberId) => {
         try {
-            console.log("Making request to server ");
             const resp = await apiFetchBarberShopDetail(barberId, token);
 
-            console.log("Got response from server ", resp);
+            console.log("fetchBarberShopDetail Resp ", resp);
 
             // if(resp.status === 200) {
                 return resp;
