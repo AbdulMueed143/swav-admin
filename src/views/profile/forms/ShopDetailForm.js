@@ -2,26 +2,18 @@
 import { useEffect, useState } from 'react'
 import  FormItem from 'components/ui/Form/FormItem'
 import FormContainer from 'components/ui/Form/FormContainer'
-
+import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import Input from 'components/ui/Input';
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useSelector } from 'react-redux'
 import { Alert } from 'components/ui'
-import useBarberService from 'utils/hooks/CustomServices/useBarberService';
 import AddressAutocomplete from 'components/ui/custom/barbers/AddressAutocomplete'
+import { values } from 'lodash';
+import useBarberService from 'utils/hooks/CustomServices/useBarberService';
+import useBusinesssService from 'utils/hooks/CustomServices/useBusinessService';
 
 const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Email Required'),
-    userName: Yup.string()
-        .min(3, 'Too Short!')
-        .max(12, 'Too Long!')
-        .required('User Name Required'),
-    password: Yup.string()
-        .required('Password Required')
-        .min(8, 'Too Short!')
-        .matches(/^[A-Za-z0-9_-]*$/, 'Only Letters & Numbers Allowed'),
-    rememberMe: Yup.bool(),
 })
 
 const ShopDetailForm = () => {
@@ -29,13 +21,19 @@ const ShopDetailForm = () => {
     const [shopName, setShopName] = useState("");
     const [website, setWebsite] = useState("");
     const [placeId, setPlaceId] = useState("");
-    const [googleAddress, setGoogleAddress] = useState("");
-    const [googlePhoneNumber, setGooglePhoneNumber] = useState("");
-    const [openingHours, setOpeningHours] = useState("");
+    const [address, setAddress] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [openingHours, setOpeningHours] = useState(null);
+    const [state, setState] = useState("");
+    const [city, setCity] = useState("");
+    const [country, setCountry] = useState("");
+    const [postCode, setPostCode] = useState("");
+    const [latitude, setLat] = useState("");
+    const [longitude, setLng] = useState("");
 
 
+    const { updateShopDetail } = useBusinesssService();
     const { fetchBarberShopDetail } = useBarberService();
-
 
     const userInfo = useSelector((state) => state.auth.user);
     const [loading, setLoading] = useState(false);
@@ -55,6 +53,62 @@ const ShopDetailForm = () => {
         setServerErrorMessage(message);
     }
 
+    const handleUpdate = async(values)  => {
+        //we will start load
+        setLoading(true);
+
+        let businessDetails = {
+            barberShopName : values.shopName,
+            phoneNumber: values.phoneNumber,
+            address: {
+                line1: values.address,
+                state : values.state,
+                postalCode: values.postcode,
+                city: values.city,
+                country : values.country,
+                placeId : values.placeId,
+            },
+            website: values.website,
+            longitude: longitude,
+            latitude: latitude,
+            openingHours: openingHours
+        }
+
+        const response = await updateShopDetail(businessDetails);
+
+        setLoading(false);
+    };
+
+    // const handleToSave = async(values)  => {
+
+    //     const startDateAsMoment = moment(startDate);
+    //     const endDateAsMoment = moment(endDate);
+
+    //     values.startDate = {
+    //         day : startDateAsMoment.date(),
+    //         month : startDateAsMoment.month() + 1,
+    //         year :  startDateAsMoment.year()
+    //     }
+
+    //     values.endDate = {
+    //         day : endDateAsMoment.date(),
+    //         month : endDateAsMoment.month() + 1,
+    //         year :  endDateAsMoment.year()
+    //     }
+
+    //     //lets make call to server
+    //     const response = await addHoliday(values);
+    //     if(response.status === -1) {
+    //         showError(response.message);
+    //     }
+    //     else {
+    //         fetchHolidays();
+    //     }
+
+    //     //reset dates
+    //     resetDatePickerDates();
+    //     setOpen(false);
+    // }
 
 
     //now we will get the shop details
@@ -69,7 +123,6 @@ const ShopDetailForm = () => {
             setServerErrorMessage(response.message);
         }
         else {
-            console.log("Setting Result ", response);
             setBarberShopInfo(response);
         }
 
@@ -81,6 +134,16 @@ const ShopDetailForm = () => {
         fetchShopDetail();
     }, []);
 
+    useEffect(() => {
+        setShopName(barberShopInfo?.name || "");
+        setWebsite(barberShopInfo?.website || "");
+        setAddress(barberShopInfo?.address?.country || "");
+        setPhoneNumber(barberShopInfo?.phoneNumber || "");
+        setState(barberShopInfo?.address?.state || "");
+        setCity(barberShopInfo?.address?.city || "");
+        setCountry(barberShopInfo?.address?.country || "");
+        setPostCode(barberShopInfo?.address?.postalCode || "");
+    }, [barberShopInfo]);
 
     return (
         <div>
@@ -94,16 +157,17 @@ const ShopDetailForm = () => {
             )}
             <Formik
                  initialValues={{
-                    businessName: '',
-                    shopName: barberShopInfo == null ? '' : barberShopInfo?.name ,
-                    country: barberShopInfo == null ? '' : barberShopInfo?.address?.country,
-                    city: barberShopInfo == null ? '' : barberShopInfo?.address?.city,
-                    postcode: barberShopInfo == null ? '' : barberShopInfo?.address?.postalCode,
-                    address: '',
+                    businessName: shopName,
+                    shopName: shopName ,
+                    country: country,
+                    city: city,
+                    postcode: postCode,
+                    website: website,
+                    state: state,
+                    phoneNumber : phoneNumber,
+                    address: address,
                     properties: {},
-                    ownerConfirmPassword: '',
-                    googleAddress: '',
-                    placeId: ''
+                    placeId: placeId
                 }}
 
                 enableReinitialize
@@ -116,7 +180,7 @@ const ShopDetailForm = () => {
                     }, 400)
                 }}
             >
-                {({ touched, errors, resetForm }) => (
+                {({ values, touched, errors, resetForm }) => (
                     <Form>
                         <FormContainer>
 
@@ -127,11 +191,19 @@ const ShopDetailForm = () => {
 
                                 <AddressAutocomplete 
                                             setBusinessName={setShopName}
-                                            setGoogleAddress={setGoogleAddress}
+                                            setGoogleAddress={setAddress}
                                             setWebsite={setWebsite}
                                             setPlaceId={setPlaceId}
                                             setOpeningHours={setOpeningHours}
-                                        />
+                                            setPhoneNumber={setPhoneNumber}
+                                            setState={setState}
+                                            setCity={setCity}
+                                            setPostCode={setPostCode}
+                                            setCountry={setCountry}
+                                            setLat={setLat}
+                                            setLng={setLng}
+                                />
+
                             </FormItem>
 
                                 <FormItem
@@ -148,33 +220,38 @@ const ShopDetailForm = () => {
                                 />
                                 </FormItem>
 
-                                <FormItem
-                                    label="Website"
-                                    invalid={errors.website && touched.website}
-                                    errorMessage={errors.website}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}> 
 
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="website"
-                                        placeholder="Website (Optional)"
-                                        component={Input}
-                                />
-                                </FormItem>
+                                    <FormItem
+                                        label="Website"
+                                        invalid={errors.website && touched.website}
+                                        errorMessage={errors.website}
+                                        style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
 
-                                <FormItem
-                                    label="Phone Number"
-                                    invalid={errors.website && touched.website}
-                                    errorMessage={errors.website}>
+                                        <Field
+                                            type="text"
+                                            autoComplete="off"
+                                            name="website"
+                                            placeholder="Website (Optional)"
+                                            component={Input}
+                                    />
+                                    </FormItem>
 
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="phoneNumber"
-                                        placeholder="Phone Number (Optional)"
-                                        component={Input}
-                                />
-                                </FormItem>
+                                    <FormItem
+                                        label="Phone Number"
+                                        invalid={errors.phoneNumber && touched.phoneNumber}
+                                        errorMessage={errors.phoneNumber}
+                                        style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
+                                        <Field
+                                            type="text"
+                                            autoComplete="off"
+                                            name="phoneNumber"
+                                            placeholder="Phone Number (Optional)"
+                                            component={Input}
+                                    />
+                                    </FormItem>
+
+                                </div>
 
 
                                 <FormItem
@@ -207,6 +284,19 @@ const ShopDetailForm = () => {
                                     </FormItem>
 
                                     <FormItem
+                                        label="City"
+                                        invalid={errors.city && touched.city}
+                                        errorMessage={errors.city}
+                                    >
+                                                    <Field
+                                                        type="text"
+                                                        autoComplete="off"
+                                                        name="city"
+                                                        placeholder="City"
+                                                        component={Input} />
+                                    </FormItem>
+
+                                    <FormItem
                                         label="Postcode"
                                         invalid={errors.postcode && touched.postcode}
                                         errorMessage={errors.postcode}
@@ -224,19 +314,6 @@ const ShopDetailForm = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
                                     <FormItem
-                                        label="City"
-                                        invalid={errors.city && touched.city}
-                                        errorMessage={errors.city}
-                                    >
-                                                    <Field
-                                                        type="text"
-                                                        autoComplete="off"
-                                                        name="city"
-                                                        placeholder="City"
-                                                        component={Input} />
-                                    </FormItem>
-
-                                    <FormItem
                                         label="Country"
                                         invalid={errors.country && touched.country}
                                         errorMessage={errors.country}
@@ -252,18 +329,10 @@ const ShopDetailForm = () => {
                                 </div>
 
                             
-                            {/* <FormItem> */}
-                                {/* <Button
-                                    type="reset"
-                                    className="ltr:mr-2 rtl:ml-2"
-                                    onClick={() => resetForm()}
-                                >
-                                    Reset
-                                </Button> */}
-                                {/* <Button variant="solid" type="submit">
-                                    Submit
-                                </Button> */}
-                            {/* </FormItem> */}
+                                <div className='right-column' style={{marginRight : '1px'}}>
+                                    <ButtonWithIcon label="Update" onClick={() => handleUpdate(values)} />
+                                </div>
+            
                         </FormContainer>
                     </Form>
                 )}

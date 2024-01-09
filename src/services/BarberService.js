@@ -23,3 +23,21 @@ export async function apiFetchBarberShopDetail(barberId, token) {
     // Return the additional data (you may need to adjust this based on your API response structure)
     return response.data;
 }
+
+
+export async function apiUpdateBarberShopDetail(shopDetail, token) {
+    // Replace this URL with the actual endpoint and modify parameters as needed
+    const url = `/barber-service/api/v1/shop/detail`;
+
+    const response = await ApiService.fetchData({
+        url: url,
+        method: 'put',
+        data: shopDetail,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    // Return the additional data (you may need to adjust this based on your API response structure)
+    return response.data;
+}
