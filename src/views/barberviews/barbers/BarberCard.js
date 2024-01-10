@@ -44,15 +44,11 @@ const BarberCard = ({ barber, onStatusSwitcherToggle }) => {
 
                 <Switcher  className="mr-2 mb-2" 
                             defaultChecked={status !== "DISABLED"} 
-                            onChange={(checked) => onStatusSwitcherToggle(checked, barberId)} 
- />
+                            onChange={(checked) => onStatusSwitcherToggle(checked, barberId)} />
 
-                
             </div>
         </div>
     )
-
-
 
 
     const cardHeader = (

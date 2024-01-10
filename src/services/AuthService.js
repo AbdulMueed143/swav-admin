@@ -30,6 +30,17 @@ export async function apiForgotPassword(token, data) {
     })
 }
 
+export async function apiResetTempPassword(token, data) {
+    return ApiService.fetchData({
+        url: '/barber-service/api/v1/barber/update/temp/password',
+        method: 'put',
+        data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 export async function apiResetPassword(token, data) {
     return ApiService.fetchData({
         url: '/barber-service/reset-password',
