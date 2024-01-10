@@ -28,7 +28,7 @@ const validationSchema = Yup.object().shape({
     //     .integer("Duration should be an integer"),
 })
  
-export default function UpdatePackageModal({packageData,servicesAvailable, open,handleToSave, handleToClose}) {
+export default function UpdatePackageModal({packageData, servicesAvailable, open,handleToSave, handleToClose}) {
     const formIkRef = useRef();
 
     const { getServices } = useBookingServices();
@@ -57,16 +57,30 @@ export default function UpdatePackageModal({packageData,servicesAvailable, open,
     },[]);
 
     useEffect(() => {
-        if(selectedAmenities) {
-            let time = selectedAmenities.map(service => service.averageTimeInMinutes).reduce((a, b) => a + b, 0);
-            let total = selectedAmenities.map(service => service.price).reduce((a, b) => a + b, 0);
+        let currentSelectedAmenities =  [];
+
+        if(selectedAmenities && selectedAmenities.length > 0) {
+            currentSelectedAmenities = selectedAmenities;
+        } else {
+            currentSelectedAmenities = servicesAvailable.filter( service => {
+                if(packageData)
+                    return packageData.amenitiesIds.includes(service.id);
+            }).map(service => service);
+        }
+
+        if(currentSelectedAmenities) {
+            let time = currentSelectedAmenities.map(service => service.averageTimeInMinutes).reduce((a, b) => a + b, 0);
+            let total = currentSelectedAmenities.map(service => service.price).reduce((a, b) => a + b, 0);
+
             setTotalTime(time);
             setTotalCost(total);
-            const discount = getDiscountValue(formIkRef.current?.values?.discountPercentage || 0);
+
+            let currentDiscountP = (packageData == null? 0 : packageData?.discountPercentage);
+            const discount = total * ( currentDiscountP / 100);
             setDiscountedCost(total - discount);
         }
 
-    }, [selectedAmenities]);
+    }, [selectedAmenities, open]);
 
     const handleChange = (values) => {
         console.log("Changing Discount ", values.discountPercentage, totalCost, getDiscountValue(values.discountPercentage));
