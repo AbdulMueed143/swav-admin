@@ -26,14 +26,23 @@ function useAuth() {
             console.log("Sign in part");
             console.log(resp)
             if (resp.data) {
-                const token  = resp.data.accessToken
-                const refreshToken = resp.data.refreshToken
+                
+                const tempAuthenticationSessionId = resp.data.tempAuthenticationSessionId;
 
+                console.log("tempAuthenticationSessionId ", tempAuthenticationSessionId);
+
+                if(tempAuthenticationSessionId) {
+                    //then we are in temp session and user has to go to reset password page
+                    navigate(
+                        '/reset-password'
+                    )
+                }
+                else {
+
+                const token  = resp.data.accessToken;
+                const refreshToken = resp.data.refreshToken;
 
                 dispatch(onSignInSuccess(token))
-
-                //and now we need to get the barber detail ...
-
                 const userDetail = await getLoggedInUserDetail(token);
                 
                 console.log("User Detail Object");
@@ -63,6 +72,8 @@ function useAuth() {
                     status: 'success',
                     message: '',
                 }
+                }
+                
             }
         } catch (errors) {
             return {
