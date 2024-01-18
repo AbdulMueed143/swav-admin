@@ -19,36 +19,37 @@ export async function apiSignOut(token) {
     })
 }
 
-export async function apiForgotPassword(token, data) {
+export async function apiForgotPassword(email) {
+
     return ApiService.fetchData({
-        url: '/barber-service/api/v1/auth/forgot-password',
+        url: 'barber-service/api/v1/barber/password/forgot',
         method: 'post',
-        data,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+        data : {
+            email: email
+        },
     })
 }
 
-export async function apiResetTempPassword(token, data) {
+export async function apiResetTempPassword(email, password, sessionId) {
+
+    let data = {
+        email : email,
+        tempAuthenticationSessionId : sessionId,
+        newPassword: password
+    }
+
     return ApiService.fetchData({
         url: '/barber-service/api/v1/barber/update/temp/password',
         method: 'put',
-        data,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+        data: data
     })
 }
 
-export async function apiResetPassword(token, data) {
+export async function apiResetForgotPassword(requestBody) {
     return ApiService.fetchData({
-        url: '/barber-service/reset-password',
+        url: '/barber-service/api/v1/barber/password/reset',
         method: 'post',
-        data,
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
+        data: requestBody,
     })
 }
 

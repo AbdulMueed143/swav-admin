@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { setUser, initialState } from 'store/auth/userSlice'
-import { apiSignIn, apiSignOut, apiSignUp, apiRegister } from 'services/AuthService'
+import { apiSignIn, apiSignOut, apiSignUp, apiRegister, apiResetTempPassword, apiResetForgotPassword } from 'services/AuthService'
 import { onSignInSuccess, onSignOutSuccess, onSignInFailure, setToken, setSignedIn } from 'store/auth/sessionSlice'
 import appConfig from 'configs/app.config'
 import { REDIRECT_URL_KEY } from 'constants/app.constant'
@@ -14,6 +14,7 @@ function useAuth() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
+
     const query = useQuery()
 
     const { token, signedIn } = useSelector((state) => state.auth.session)
@@ -21,20 +22,17 @@ function useAuth() {
     const signIn = async (values) => {
         try {
 
-            const resp = await apiSignIn(values)
-
-            console.log("Sign in part");
-            console.log(resp)
+            const resp = await apiSignIn(values);
+            
             if (resp.data) {
                 
                 const tempAuthenticationSessionId = resp.data.tempAuthenticationSessionId;
 
-                console.log("tempAuthenticationSessionId ", tempAuthenticationSessionId);
-
                 if(tempAuthenticationSessionId) {
+
                     //then we are in temp session and user has to go to reset password page
                     navigate(
-                        '/reset-password'
+                        '/reset-password?email=' + encodeURIComponent(values.email) + '&sessionId=' + encodeURIComponent(tempAuthenticationSessionId)
                     )
                 }
                 else {
@@ -83,6 +81,82 @@ function useAuth() {
         }
     }
 
+
+    const resetForgotPassword = async( email, newPassword, otp) => {
+
+        try {
+
+            const requestBody = {
+                otp : otp,
+                email: email,
+                newPassword: newPassword
+            }
+
+            const resp = await apiResetForgotPassword(requestBody)
+
+            if (resp.status >= 200 && resp.status <= 299) {
+             
+                navigate(
+                    '/sign-in'
+                )
+                return {
+                    status: 'success',
+                    message: '',
+                }
+                
+            }
+
+        } catch (errors) {
+            return {
+                status: 'failed',
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
+
+    const resetTempPassword = async (email, password, sessionId) => {
+        try {
+
+            const resp = await apiResetTempPassword(email, password, sessionId)
+
+            if (resp.data) {
+                const token  = resp.data.accessToken;
+                const refreshToken = resp.data.refreshToken;
+
+                dispatch(onSignInSuccess(token))
+                const userDetail = await getLoggedInUserDetail(token);
+                
+                if (userDetail) {
+                    console.log("Dispatching uer data");
+                    dispatch(
+                        setUser(
+                            userDetail || {
+                                avatar: '',
+                                userName: userDetail.firstName + userDetail.lastName,
+                                authority: ['USER'],
+                                email: userDetail.email,
+                            }
+                        )
+                    )
+                }
+                const redirectUrl = query.get(REDIRECT_URL_KEY)
+                navigate(
+                    redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath
+                )
+                return {
+                    status: 'success',
+                    message: '',
+                }
+                
+            }
+        } catch (errors) {
+            return {
+                status: 'failed',
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
+
     const getLoggedInUserDetail = async (token) => {
 
         console.log("I received following token - getLoggedInUserDetail")
@@ -118,15 +192,8 @@ function useAuth() {
 
     const createAccount = async (values) => {
         try {
-            // console.log('Sending api Register request');
-            // console.log(values);
 
             const resp = await apiRegister(values)
-            // console.log('Response from api ');
-            // console.log(resp);
-
-            // console.log('Response Status');
-            // console.log(resp.status);
 
             if(resp.status === 200) {
                 const  token  = resp.data.accessToken
@@ -135,8 +202,6 @@ function useAuth() {
                 dispatch(setToken(token))
                 dispatch(setSignedIn())
                 const userDetail = await getLoggedInUserDetail(token);
-
-                //Uncomment and add user detail
 
                 dispatch(
                     setUser(
@@ -186,7 +251,9 @@ function useAuth() {
         authenticated: token && signedIn,
         signIn,
         signOut,
-        createAccount
+        createAccount,
+        resetTempPassword,
+        resetForgotPassword
     }
 }
 

@@ -20,7 +20,9 @@ const ForgotPasswordForm = (props) => {
     const onSendMail = async (values, setSubmitting) => {
         setSubmitting(true)
         try {
-            const resp = await apiForgotPassword(values)
+
+            console.log(values.email);
+            const resp = await apiForgotPassword(values.email)
 
             if (resp.status == 200) {
                 setSubmitting(false)
