@@ -25,10 +25,10 @@ const validationSchema = Yup.object().shape({
     ),
 })
 
-const ResetPasswordForm = (props) => {
+const ResetForgotPasswordForm = (props) => {
     const { disableSubmit = false, className, signInUrl = '/sign-in' } = props
 
-    const { resetTempPassword } = useAuth()
+    const { resetForgotPassword } = useAuth()
 
 
     const location = useLocation();
@@ -54,15 +54,13 @@ const ResetPasswordForm = (props) => {
     const navigate = useNavigate()
 
     const onSubmit = async (values, setSubmitting) => {
-        const { password } = values
+        // const { password } = values
 
-        console.log("USer set email ", email);
-        console.log("USer set pass ", password);
-        console.log("USer set sessionId ", sessionId);
+        console.log("USer set email ", values.email);
 
         setSubmitting(true)
         try {
-            const result = await resetTempPassword(email, password, sessionId)
+            const result = await resetForgotPassword(values.email, values.password, values.passCode)
            
             if (result.status === 'failed') {
                 setMessage(result.message)
@@ -107,6 +105,7 @@ const ResetPasswordForm = (props) => {
                 // Remove this initial value
                 initialValues={{
                     email: '',
+                    passCode: '',
                     password: '',
                     confirmPassword: '',
                     rememberMe: true,
@@ -123,6 +122,37 @@ const ResetPasswordForm = (props) => {
                 {({ touched, errors, isSubmitting }) => (
                     <Form>
                         <FormContainer>
+
+                            <FormItem
+                                        label="Email"
+                                        invalid={
+                                            errors.email && touched.email
+                                        }
+                                        errorMessage={errors.email}
+                                    >
+                                        <Field
+                                            autoComplete="off"
+                                            name="email"
+                                            placeholder="Email"
+                                            component={Input}
+                                        />
+                                    </FormItem>
+
+                                <FormItem
+                                        label="One Time Passcode"
+                                        invalid={
+                                            errors.passCode && touched.passCode
+                                        }
+                                        errorMessage={errors.passCode}
+                                    >
+                                        <Field
+                                            autoComplete="off"
+                                            name="passCode"
+                                            placeholder="One Time Passcode"
+                                            component={PasswordInput}
+                                        />
+                                    </FormItem>
+
                                     <FormItem
                                         label="Password"
                                         invalid={
@@ -175,4 +205,4 @@ const ResetPasswordForm = (props) => {
     )
 }
 
-export default ResetPasswordForm
+export default ResetForgotPasswordForm
