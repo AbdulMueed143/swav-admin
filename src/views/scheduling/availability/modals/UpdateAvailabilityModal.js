@@ -71,18 +71,20 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
 
     function slotToString(slot) {
-
-        var startTimeAmPM = "am";
-        var endTimeAmPM = "am";
-
-        if(slot.startTime.hour >= 12)
-            startTimeAmPM = "pm";
-
-        if(slot.endTime.hour >= 12)
-            endTimeAmPM = "pm";
-
-
-        return `${slot.startTime.hour}:${slot.startTime.minute}${startTimeAmPM} - ${slot.endTime.hour}:${slot.endTime.minute}${endTimeAmPM}` 
+        var startTimeHour = slot.startTime.hour % 12;
+        var endTimeHour = slot.endTime.hour % 12;
+    
+        // Convert 0 hour to 12 (for 12 AM and 12 PM)
+        startTimeHour = startTimeHour ? startTimeHour : 12;
+        endTimeHour = endTimeHour ? endTimeHour : 12;
+    
+        var startTimeAmPM = slot.startTime.hour >= 12 ? "pm" : "am";
+        var endTimeAmPM = slot.endTime.hour >= 12 ? "pm" : "am";
+    
+        var startTimeMinute = slot.startTime.minute < 10 ? `0${slot.startTime.minute}` : slot.startTime.minute;
+        var endTimeMinute = slot.endTime.minute < 10 ? `0${slot.endTime.minute}` : slot.endTime.minute;
+    
+        return `${startTimeHour}:${startTimeMinute}${startTimeAmPM} - ${endTimeHour}:${endTimeMinute}${endTimeAmPM}`;
     }
 
 
@@ -153,11 +155,8 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
     
     const onDialogOk = () => {
         setIsOpen(false)
-        const selectedStartTime = moment(startTime, 'HH:mm');
-        const selectedEndTime = moment(endTime, 'HH:mm');
-
-        console.log("startTime ", startTime);
-        console.log("endTime ", endTime);
+        const selectedStartTime = moment(startTime, 'hh:mm a');
+        const selectedEndTime = moment(endTime, 'hh:mm a');
 
         if(startTime != endTime) {
             const createdSlot = createSlot(selectedDay, selectedStartTime, selectedEndTime);
@@ -170,7 +169,6 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
     const save = async () => {
         //we got to save days for each day 
-        console.log("Saving ", weekDays)
 
         const availabilities =  Object.keys(weekDays).map(day => {
             return {
@@ -295,18 +293,20 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                         <p>Start Time:</p>
                         <TimePicker 
                             getPopupContainer={(triggerNode) => triggerNode.parentNode.parentNode.parentNode}
-                            format="HH:mm" 
-                            onChange={(time) => setStartTime(time ? time.format('HH:mm') : null)} 
+                            format="hh:mm a" 
+                            onChange={(time) => setStartTime(time ? time.format('hh:mm a') : null)} 
                             minuteStep={15}
+                            showNow={false}
                         />
                     </div>
                     <div className="time-picker-group">
                         <p>End Time:</p>
                         <TimePicker 
                             getPopupContainer={(triggerNode) => triggerNode.parentNode}
-                            format="HH:mm" 
-                            onChange={(time) => setEndTime(time ? time.format('HH:mm') : null)} 
+                            format="hh:mm a"
+                            onChange={(time) => setEndTime(time ? time.format('hh:mm a') : null)} 
                             minuteStep={15}
+                            showNow={false}
                         />
                     </div>
                 </div>

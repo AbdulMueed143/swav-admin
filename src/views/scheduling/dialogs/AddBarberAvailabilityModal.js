@@ -116,7 +116,7 @@ export default function AddBarberAvailabilityModal({open, handleToSave, handleTo
                                                 </div>
                                             ))}
                                             
-                                            <Button t onClick={() => arrayHelpers.push({ startTime: '', endTime: '' })} >
+                                            <Button onClick={() => arrayHelpers.push({ startTime: '', endTime: '' })} >
                                                 Add Shift
                                             </Button>
 

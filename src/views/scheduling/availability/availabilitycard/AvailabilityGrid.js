@@ -28,7 +28,6 @@ const AvailabilityGrid = () => {
 
         setLoading(true);
         const barbersWithAvailability = await getBarbersWithAvailability();
-        console.log("Barbers this is ", barbersWithAvailability);
         setBarbers(barbersWithAvailability);
         setLoading(false);
     };
@@ -60,12 +59,6 @@ const AvailabilityGrid = () => {
 
         fetchBarbers();
     }
-
-
-    // // Filter the services based on the search input
-    // const filteredBarbers = barbers.filter(barber => 
-    //     barber.firstName.toLowerCase().includes(search.toLowerCase())
-    // );
 
     return (
         <div className="w-full"> {/* Ensures the container is full width */}
