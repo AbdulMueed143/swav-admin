@@ -26,17 +26,12 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
     }, []); // Empty dependency array means the effect will only run once
 
     function computeAvailability() {
-        // console.log("Barber ", firstName, lastName, barberAvailability);
-        
-        // Process barberAvailability
         currentBarber.barberAvailability.forEach(availability => {
             const day = availability.barberAvailabilitiesTemplate.dayOfWeek;
             const slots = availability.barberAvailabilitiesTemplate.timeSlots;
 
             slots.forEach(slot => {
-                const startTime = `${slot.startTime.hour}:${slot.startTime.minute.toString().padStart(2, '0')}`;
-                const endTime = `${slot.endTime.hour}:${slot.endTime.minute.toString().padStart(2, '0')}`;
-                weekDays[day].push(`${startTime}-${endTime}`);
+                weekDays[day].push(slotToString(slot));
 
                 const updatedWeekDays = {
                     ...weekDays,
@@ -46,29 +41,26 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
             });
 
         });
-
-
-        // // console.log("Barber ", firstName, lastName, " has these availabilities ", weekDays);
-
-        // const formattedAvailability = Object.entries(weekDays).map(([day, slots]) => {
-        //     const dayName = day.charAt(0) + day.slice(1).toLowerCase();
-        //     const slotString = slots.length > 0 ? slots.join(', ') : 'No Availability';
-        //     return `${dayName}: ${slotString}`;
-        // });
-
-        // // console.log("formattedAvailability ", formattedAvailability);
-
-        //         if (availabilityList) {
-        //     availabilityList.innerHTML = '';
-        // }
-
-        // formattedAvailability?.forEach(item => {
-        //     const listItem = document.createElement('li');
-        //     listItem.textContent = item;
-        //     availabilityList?.appendChild(listItem);
-        // });
-      
     }
+
+
+    function slotToString(slot) {
+        var startTimeHour = slot.startTime.hour % 12;
+        var endTimeHour = slot.endTime.hour % 12;
+    
+        // Convert 0 hour to 12 (for 12 AM and 12 PM)
+        startTimeHour = startTimeHour ? startTimeHour : 12;
+        endTimeHour = endTimeHour ? endTimeHour : 12;
+    
+        var startTimeAmPM = slot.startTime.hour >= 12 ? "pm" : "am";
+        var endTimeAmPM = slot.endTime.hour >= 12 ? "pm" : "am";
+    
+        var startTimeMinute = slot.startTime.minute < 10 ? `0${slot.startTime.minute}` : slot.startTime.minute;
+        var endTimeMinute = slot.endTime.minute < 10 ? `0${slot.endTime.minute}` : slot.endTime.minute;
+    
+        return `${startTimeHour}:${startTimeMinute}${startTimeAmPM} - ${endTimeHour}:${endTimeMinute}${endTimeAmPM}`;
+    }
+
 
 
     const cardHeader = (

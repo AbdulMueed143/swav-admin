@@ -264,8 +264,6 @@ const UpdatedAvailabilityView = (props) => {
 
             <AvailabilityGrid />
 
-
-
         </div>
     )
 }
