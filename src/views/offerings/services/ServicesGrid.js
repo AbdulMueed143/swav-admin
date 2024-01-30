@@ -8,12 +8,14 @@ import { Loading } from 'components/shared';
 import Button  from 'components/ui/Buttons/Button';
 import UpdateServiceModal from './dialog/UpdateServiceModal';
 import Alert from 'components/ui/Alert'
+import { useSelector } from 'react-redux'
 
 
 
 const ServicesGrid = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const userInfo = useSelector((state) => state.auth.user);
 
     //Alert
     const [serverError, setServerError] = useState(false);
@@ -155,10 +157,21 @@ const ServicesGrid = () => {
                 placeholder="Search for a service..."
                 className="p-2 border rounded flex-grow" // Add flex-grow to make the input take available space
             />
+
+
+{(userInfo && Array.isArray(userInfo.roles) && userInfo.roles.length > 0 && (userInfo.roles[0] == 'OWNER')) ? 
+            (
+               
             <ButtonWithIcon 
-                label="Add Service"
-                onClick={handleClickToOpen}
-            />
+            label="Add Service"
+            onClick={handleClickToOpen}
+        />
+            ) : 
+            (
+                <div></div>
+               
+            )}
+
             </div>
 
             {serverError && (

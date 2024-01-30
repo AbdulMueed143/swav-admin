@@ -10,8 +10,12 @@ import { Loading } from 'components/shared';
 import Button  from 'components/ui/Buttons/Button';
 import { Dialog } from 'components/ui';
 import Alert from 'components/ui/Alert'
+import { useSelector } from 'react-redux'
 
 const PackagesGrid = () => {
+
+    const userInfo = useSelector((state) => state.auth.user);
+
 
        //Alert
        const [serverError, setServerError] = useState(false);
@@ -172,20 +176,27 @@ const PackagesGrid = () => {
                     className="p-2 border rounded  flex-grow"
                 />
 
+            {(userInfo && Array.isArray(userInfo.roles) && userInfo.roles.length > 0 && (userInfo.roles[0] == 'OWNER')) ? 
+            (
                 <ButtonWithIcon 
-                    label="Add Package"
-                    onClick={handleClickToOpen}
+                label="Add Package"
+                onClick={handleClickToOpen}
                 >
                 </ButtonWithIcon>
+            ) : 
+            (
+                <div></div>
+               
+            )}
                 
             </div>
 
             {serverError && (
-             <div>
-                <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
-                    {serverErrorMessage}
-                </Alert>
-            </div>
+                <div>
+                    <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
+                        {serverErrorMessage}
+                    </Alert>
+                </div>
             )}
 
 
