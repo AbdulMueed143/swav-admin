@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import  FormItem from 'components/ui/Form/FormItem'
 import FormContainer from 'components/ui/Form/FormContainer'
 import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
@@ -17,6 +17,10 @@ const validationSchema = Yup.object().shape({
 })
 
 const ShopDetailForm = () => {
+
+    const bookingURL = process.env.REACT_APP_BARBER_BOOKING_SERVICE_URL;
+
+    const [bookingServiceUrl, setBookingServiceUrl] = useState("");
 
     const [shopName, setShopName] = useState("");
     const [website, setWebsite] = useState("");
@@ -79,11 +83,7 @@ const ShopDetailForm = () => {
         if(response.status === -1) {
             showError(response.message);
         }
-        // else {
-        //     fetchHolidays();
-        // }
-    
-
+        
         setLoading(false);
     };
 
@@ -119,19 +119,13 @@ const ShopDetailForm = () => {
         setCity(barberShopInfo?.address?.city || "");
         setCountry(barberShopInfo?.address?.country || "");
         setPostCode(barberShopInfo?.address?.postalCode || "");
+        setBookingServiceUrl( bookingURL+"/" + barberShopInfo?.barberShopBusinessId || "");
+
+        console.log("Barber Shop Business ID ", barberShopInfo?.barberShopBusinessId);
     }, [barberShopInfo]);
 
     return (
         <div>
-
-            {serverError && (
-                <div>
-                    <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
-                        {serverErrorMessage}
-                    </Alert>
-                </div>
-            )}
-
             <Formik
                  initialValues={{
                     businessName: shopName,
@@ -144,14 +138,14 @@ const ShopDetailForm = () => {
                     phoneNumber : phoneNumber,
                     address: address,
                     properties: {},
-                    placeId: placeId
+                    placeId: placeId,
+                    bookingServiceUrl : bookingServiceUrl
                 }}
 
                 enableReinitialize
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm, setSubmitting }) => {
                     setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2))
                         setSubmitting(false)
                         resetForm()
                     }, 400)
@@ -160,7 +154,6 @@ const ShopDetailForm = () => {
                 {({ values, touched, errors, resetForm }) => (
                     <Form>
                         <FormContainer>
-
                             <FormItem
                                     label="Search Your Barber Shop To Point Via GPS"
                                     invalid={errors.shopName && touched.shopName}
@@ -180,57 +173,53 @@ const ShopDetailForm = () => {
                                             setLat={setLat}
                                             setLng={setLng}
                                 />
+                            </FormItem>
+                            <FormItem
+                                label="Shop Name"
+                                invalid={errors.shopName && touched.shopName}
+                                errorMessage={errors.shopName}>
 
+                                <Field
+                                    type="text"
+                                    autoComplete="off"
+                                    name="shopName"
+                                    placeholder="Shop Name"
+                                    component={Input}
+                            />
                             </FormItem>
 
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}> 
+
                                 <FormItem
-                                    label="Shop Name"
-                                    invalid={errors.shopName && touched.shopName}
-                                    errorMessage={errors.shopName}>
+                                    label="Website"
+                                    invalid={errors.website && touched.website}
+                                    errorMessage={errors.website}
+                                    style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
 
                                     <Field
                                         type="text"
                                         autoComplete="off"
-                                        name="shopName"
-                                        placeholder="Shop Name"
+                                        name="website"
+                                        placeholder="Website (Optional)"
                                         component={Input}
                                 />
                                 </FormItem>
 
-                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}> 
+                                <FormItem
+                                    label="Phone Number"
+                                    invalid={errors.phoneNumber && touched.phoneNumber}
+                                    errorMessage={errors.phoneNumber}
+                                    style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="phoneNumber"
+                                        placeholder="Phone Number (Optional)"
+                                        component={Input}
+                                />
+                                </FormItem>
 
-                                    <FormItem
-                                        label="Website"
-                                        invalid={errors.website && touched.website}
-                                        errorMessage={errors.website}
-                                        style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
-
-                                        <Field
-                                            type="text"
-                                            autoComplete="off"
-                                            name="website"
-                                            placeholder="Website (Optional)"
-                                            component={Input}
-                                    />
-                                    </FormItem>
-
-                                    <FormItem
-                                        label="Phone Number"
-                                        invalid={errors.phoneNumber && touched.phoneNumber}
-                                        errorMessage={errors.phoneNumber}
-                                        style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
-                                        <Field
-                                            type="text"
-                                            autoComplete="off"
-                                            name="phoneNumber"
-                                            placeholder="Phone Number (Optional)"
-                                            component={Input}
-                                    />
-                                    </FormItem>
-
-                                </div>
-
-
+                            </div>
                                 <FormItem
                                     label="Address"
                                     invalid={errors.address && touched.address}
@@ -304,6 +293,18 @@ const ShopDetailForm = () => {
                                     </FormItem>
 
                                 </div>
+
+                                <FormItem
+                                    label="Booking Link"
+                                    >
+
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="bookingServiceUrl"
+                                        component={Input}
+                                />
+                                </FormItem>
 
                             
                                 <div className='right-column' style={{marginRight : '1px'}}>
