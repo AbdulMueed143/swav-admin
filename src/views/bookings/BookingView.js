@@ -14,8 +14,10 @@ const Home = () => {
         eventMaxStack: 3,
         dayMaxEventRows: true
       });
-      
 
+    //Get the bookings
+    //Bookings for range of dates ...
+    //also barberId or Id's
 
     return <>
         <div class="flex flex-col h-full">

@@ -8,6 +8,7 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useSelector } from 'react-redux'
 import { Alert } from 'components/ui'
+import Select from 'components/ui/Select';
 import AddressAutocomplete from 'components/ui/custom/barbers/AddressAutocomplete'
 import { values } from 'lodash';
 import useBarberService from 'utils/hooks/CustomServices/useBarberService';
@@ -19,8 +20,24 @@ const validationSchema = Yup.object().shape({
 const ShopDetailForm = () => {
 
     const bookingURL = process.env.REACT_APP_BARBER_BOOKING_SERVICE_URL;
+    const options = [ 
+        {value: 5, label: '5'},
+        {value: 10, label: '10'},
+        {value: 15, label: '15'},
+        {value: 30, label: '30'},
+        {value: 45, label: '45'},
+        {value: 60, label: '60'}];
+    
+    const [selectedPaddingOption, setSelectedPaddingOption] = useState(options[3]);
+    const handleChange = selectedOption => {
+        const matchedIndex = options.findIndex(option => option.value === selectedOption.value);
+        setSelectedPaddingOption(options[matchedIndex]);
+        // Perform any additional actions with the selected option
+        setPaddingInMinutes(selectedOption.value)
+    };
 
     const [bookingServiceUrl, setBookingServiceUrl] = useState("");
+    const [paddingInMinutes, setPaddingInMinutes] = useState(30);
 
     const [shopName, setShopName] = useState("");
     const [website, setWebsite] = useState("");
@@ -75,8 +92,10 @@ const ShopDetailForm = () => {
             website: values.website,
             longitude: longitude,
             latitude: latitude,
-            openingHours: openingHours
+            openingHours: openingHours,
+            paddingInMinutes: selectedPaddingOption.value
         }
+        console.log("Sending ", businessDetails);
 
         const response = await updateShopDetail(businessDetails);
 
@@ -120,8 +139,17 @@ const ShopDetailForm = () => {
         setCountry(barberShopInfo?.address?.country || "");
         setPostCode(barberShopInfo?.address?.postalCode || "");
         setBookingServiceUrl( bookingURL+"/" + barberShopInfo?.barberShopBusinessId || "");
+ 
 
-        console.log("Barber Shop Business ID ", barberShopInfo?.barberShopBusinessId);
+        setLat(barberShopInfo?.address?.location.y);
+        setLng(barberShopInfo?.address?.location.x);
+
+
+               
+        setPaddingInMinutes(barberShopInfo?.paddingInMinutes);
+        const matchedIndex = options.findIndex(option => option.value === barberShopInfo?.paddingInMinutes);
+        setSelectedPaddingOption(options[matchedIndex]);
+
     }, [barberShopInfo]);
 
     return (
@@ -139,7 +167,8 @@ const ShopDetailForm = () => {
                     address: address,
                     properties: {},
                     placeId: placeId,
-                    bookingServiceUrl : bookingServiceUrl
+                    bookingServiceUrl : bookingServiceUrl,
+                    padding: 30,
                 }}
 
                 enableReinitialize
@@ -304,6 +333,15 @@ const ShopDetailForm = () => {
                                         name="bookingServiceUrl"
                                         component={Input}
                                 />
+                                </FormItem>
+
+                                <FormItem label="Padding" name="padding">
+                                        <Select
+                                            placeholder="Select Padding"
+                                            value={selectedPaddingOption}
+                                            options={options}
+                                            onChange={handleChange}
+                                        ></Select>
                                 </FormItem>
 
                             
