@@ -104,7 +104,6 @@ const DashboardView = () => {
      * 
     */
 
-
     // a custom render function
     const renderEventContent = (eventInfo) => {
 
@@ -292,7 +291,6 @@ const DashboardView = () => {
 
             <div>
 
-
             <FullCalendar
               showNonCurrentDates={false}
                 plugins={[dayGridPlugin, timeGridPlugin]} // Include timeGridPlugin
@@ -322,9 +320,7 @@ const DashboardView = () => {
 
                   viewDidMount={handleViewChange}
                   datesSet={handleDateChange}
-
             />
-
                
             </div>
 
