@@ -22,8 +22,6 @@ export async function apiAddService(token, data) {
 }
 
 export async function apiDeleteService(token, data) {
-    console.log("Log data object");
-    console.log(data.id);
 
     //Gotta add the id we want to delete ... 
     return ApiService.fetchData({
@@ -34,7 +32,6 @@ export async function apiDeleteService(token, data) {
         }
     })
 }
-
 
 export async function apiUpdateService(token, data) {
 
@@ -48,6 +45,7 @@ export async function apiUpdateService(token, data) {
         }
     })
 }
+
 //End of Services
 
 
@@ -61,7 +59,6 @@ export async function apiGetBarbers(token) {
         }
     })
 }
-
 
 export async function apiAddBarber(token, data) {
     return ApiService.fetchData({
@@ -78,6 +75,27 @@ export async function apiDisableBarber(token, barberId, status) {
     return ApiService.fetchData({
         url: `/barber-service/api/v1/shop/barber/disable/${barberId}/${status}`,
         method: 'patch',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export async function apiFetchBookings(token, barbersIds, fromDate, toDate) {
+
+    const requestBody = {
+        barbersIds: barbersIds,
+        bookingsFromDate: fromDate,
+        bookingsToDate: toDate
+    }
+
+    console.log("Bookings requestBody ",token, requestBody);
+
+
+    return ApiService.fetchData({
+        url: '/barber-service/api/v1/shop/bookings',
+        method: 'post',
+        data: requestBody,
         headers: {
             Authorization: `Bearer ${token}`
         }

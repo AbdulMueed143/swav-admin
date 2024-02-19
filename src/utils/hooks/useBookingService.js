@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { apiGetServices, apiAddService, apiDeleteService, apiUpdateService, 
-    apiAddBarber, apiGetBarbers, apiDisableBarber } from 'services/BookingService'
+    apiAddBarber, apiGetBarbers, apiDisableBarber, apiFetchBookings } from 'services/BookingService'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
 import { values } from 'lodash'
@@ -166,6 +166,27 @@ function useBookingServices() {
         }
     }
 
+    const fetchBookings = async (barbersIds, fromDate, toDate) => {
+        try
+        {
+            const resp = await apiFetchBookings(token, barbersIds, fromDate, toDate)
+            if(resp.status === 200) {
+                return resp;
+            }
+            else {
+                return {
+                    status: -1,
+                    message: resp,
+                }    
+            }
+        } catch (errors) {
+            return {
+                status: -1,
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
+
     // const addBarberAvailability = async (values, barber) => {
     //     try
     //     {
@@ -204,6 +225,7 @@ function useBookingServices() {
         deleteService,
         disableBarber,
         updateService,
+        fetchBookings
         // addBarberAvailability
     }
 }

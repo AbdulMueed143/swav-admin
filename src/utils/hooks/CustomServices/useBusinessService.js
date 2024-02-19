@@ -13,9 +13,7 @@ function useBusinesssService() {
 
     const updateShopDetail = async (shopDetails) => {
         try {
-            console.log("Making request to server with shop details ", shopDetails);
             const resp = await apiUpdateBarberShopDetail(shopDetails, token);
-            console.log("Got response from server ", resp);
 
             if(resp.status === 200) {
                 return resp;
