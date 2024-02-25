@@ -285,8 +285,7 @@ const DashboardView = () => {
                     Filter
             </Button>
 
-            </div>
-
+        </div>
             
 
             <div>
