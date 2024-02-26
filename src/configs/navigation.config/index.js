@@ -125,6 +125,42 @@ const navigationConfig = [
         ],
         
     },
+
+    
+    {
+        key: 'Settings',
+        path: '',
+        title: 'Settings',
+        translateKey: 'nav.offerings.offerings',
+        icon: 'setting',
+        type: NAV_ITEM_TYPE_COLLAPSE,
+        authority: [],
+        subMenu: [
+            {
+                key: 'Business',
+                path: '/profile',
+                title: 'Business Settings',
+                translateKey: 'nav.profile.ProfileView',
+                icon: '',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: [],
+            },
+            {
+                key: 'Email',
+                path: '/email',
+                title: 'Email Settings',
+                translateKey: 'nav.email.EmailSettingView',
+                icon: '',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: [],
+            },
+        ],
+        
+    },
+
+
     {
         key: 'subscriptions',
         path: '/subscriptions',

@@ -10,7 +10,8 @@ import {
     HiScissors,
     HiGift,
     HiOutlineClock,
-    HiOutlineBookOpen
+    HiOutlineBookOpen,
+    HiCog
 } from 'react-icons/hi'
 import { HiCalendarDays, HiBuildingStorefront } from 'react-icons/hi2'
 import { TfiDashboard } from 'react-icons/tfi'
@@ -31,6 +32,7 @@ const navigationIcon = {
     booking: <HiOutlineBookOpen />,
     edit: <HiOutlineTemplate />,
     availability: <HiOutlineClock />,
+    setting: <HiCog />,
 
 }
 

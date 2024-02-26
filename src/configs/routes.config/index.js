@@ -90,4 +90,12 @@ export const protectedRoutes = [
         component: React.lazy(() => import('views/profile/ProfileView')),
         authority: [],
     },
+
+        //Profile setting path
+        {
+            key: 'email',
+            path: '/email',
+            component: React.lazy(() => import('views/email/EmailSettingView')),
+            authority: [],
+        },
 ]
