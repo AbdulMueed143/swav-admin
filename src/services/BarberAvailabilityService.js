@@ -1,6 +1,23 @@
 import ApiService from './ApiService'
 
 
+export async function fetchBarberAvailabilityTemplateForDate(barberId, currentDate, token) {
+    // Replace this URL with the actual endpoint and modify parameters as needed
+    const url = `/barber-availability-service/api/v1/availability/template/barber/${barberId}`;
+
+    const response = await ApiService.fetchData({
+        url: url,
+        method: 'get',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    // Return the additional data (you may need to adjust this based on your API response structure)
+    return response.data;
+}
+
+
 export async function fetchBarbersMonthlyAvailability(token, requestBody) {
 
     return await ApiService.fetchData({
@@ -25,6 +42,19 @@ export async function apiUpsertAvailabilityTemplate(token, barberId, availabilit
         }
     });
 }
+
+
+export async function apiUpsertAvailabilityTemplateForDate(token, barberId, availabilityTemplate) {
+    return await ApiService.fetchData({
+        url: `/barber-availability-service/api/v1/availability/template/override/date/barber/${barberId}`,
+        method: 'post',
+        data: availabilityTemplate,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+}
+
 
 //Barbers
 export async function apiFetchBarbersWithAvailabilityTemplate(token) {
@@ -57,6 +87,7 @@ export async function apiFetchBarbersWithAvailabilityTemplate(token) {
 }
 
 
+
 async function fetchBarberAvailabilityTemplate(barberId, token) {
     // Replace this URL with the actual endpoint and modify parameters as needed
     const url = `/barber-availability-service/api/v1/availability/template/barber/${barberId}`;
@@ -72,3 +103,5 @@ async function fetchBarberAvailabilityTemplate(barberId, token) {
     // Return the additional data (you may need to adjust this based on your API response structure)
     return response.data;
 }
+
+

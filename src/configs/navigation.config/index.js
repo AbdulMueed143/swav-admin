@@ -128,6 +128,18 @@ const navigationConfig = [
 
     
     {
+        key: 'subscriptions',
+        path: '/subscriptions',
+        title: 'Subscriptions',
+        translateKey: 'nav.subscriptions.subscriptionsview',
+        icon: 'rewards',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: [],
+        subMenu: [],
+    },
+
+    
+    {
         key: 'Settings',
         path: '',
         title: 'Settings',
@@ -160,17 +172,6 @@ const navigationConfig = [
         
     },
 
-
-    {
-        key: 'subscriptions',
-        path: '/subscriptions',
-        title: 'Subscriptions',
-        translateKey: 'nav.subscriptions.subscriptionsview',
-        icon: 'rewards',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
-        subMenu: [],
-    },
 
     // {
     //     key: 'profile',

@@ -80,7 +80,6 @@ export const UserDropdown = ({ className }) => {
                         </Link>
                     </Dropdown.Item>
                 ))}
-                <Dropdown.Item variant="divider" /> 
                 <Dropdown.Item
                     onClick={signOut}
                     eventKey="Sign Out"
