@@ -283,6 +283,20 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
         }
     };
 
+    const removeSlotFromDate = (date, index) => {
+        setOverrideDates(prevWeekDates => {
+            const updatedDate = [...prevWeekDates[date]];
+    
+            updatedDate.splice(index, 1);
+    
+            // Return the updated state
+            return {
+                ...prevWeekDates,
+                [date]: updatedDate
+            };
+        });
+    };
+
     const removeSlotFromDay = (day, index) => {
         setWeekDays(prevWeekDays => {
             // Clone the array for the selected day
@@ -447,7 +461,7 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                                                     <div key={index} className="slot-container">
                                                         <p className="slot">{slotToString(slot)}</p>
                                                         <button className='slots-delete-icon '>
-                                                            <FontAwesomeIcon icon={faTrash} />
+                                                            <FontAwesomeIcon icon={faTrash} onClick={() => removeSlotFromDate(formatDateAsServerDate(selectedDateToBeOverrided), index)} />
                                                         </button>  
                                                     </div>
                                                 ))
