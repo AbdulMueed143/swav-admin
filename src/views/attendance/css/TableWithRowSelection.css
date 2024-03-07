@@ -1,0 +1,40 @@
+.listHeader, .listRow {
+  display: flex;
+  text-align: left;
+  font-size: smaller;
+}
+
+.listHeader div, .listRow div {
+  flex: 1; /* Adjust based on your layout */
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.listHeader div:last-child, .listRow div:last-child {
+  border-right: none;
+}
+
+.listHeader {
+  font-weight: 600;
+  background-color:rgb(210, 210, 210);
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .listHeader, .listRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .listRow > div {
+    flex-basis: auto;
+    width: 100%;
+    padding: 5px 0;
+  }
+
+  .listRow select {
+    width: auto;
+  }
+}

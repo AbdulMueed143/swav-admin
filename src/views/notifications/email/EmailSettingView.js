@@ -9,7 +9,14 @@ const Home = () => {
     return <>
         <div class="flex flex-col h-full">
         <div>
+          {/* 
           
+          Welcome Email:
+            - Subject
+            - Welcome Email Text
+          
+          
+          */}
         </div>
         </div>
     </>

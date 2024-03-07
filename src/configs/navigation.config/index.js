@@ -27,6 +27,17 @@ const navigationConfig = [
         subMenu: [],
     },
 
+    {
+        key: 'attendance',
+        path: '/attendance',
+        title: 'Attendance',
+        translateKey: 'nav.attendance.attendanceview',
+        icon: 'booking',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: [],
+        subMenu: [],
+    },
+
     // {
     //     key: 'book/appointment/',
     //     path: '/book/appointment',
@@ -159,10 +170,10 @@ const navigationConfig = [
                 subMenu: [],
             },
             {
-                key: 'Email',
-                path: '/email',
-                title: 'Email Settings',
-                translateKey: 'nav.email.EmailSettingView',
+                key: 'Notifications',
+                path: '/notifications',
+                title: 'Notifications Settings',
+                translateKey: 'nav.notifications.NotificationView',
                 icon: '',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: [],
