@@ -20,6 +20,13 @@ export const protectedRoutes = [
     },
 
     {
+        key: 'attendance',
+        path: '/attendance',
+        component: React.lazy(() => import('views/attendance/AttendanceView')),
+        authority: [],
+    },
+
+    {
         key: 'availability.dashboard',
         path: '/availability/dashbaord',
         component: React.lazy(() => import('views/scheduling/dashboard/DashboardView')),
@@ -90,4 +97,12 @@ export const protectedRoutes = [
         component: React.lazy(() => import('views/profile/ProfileView')),
         authority: [],
     },
+
+        //Profile setting path
+        {
+            key: 'notifications',
+            path: '/notifications',
+            component: React.lazy(() => import('views/notifications/NotificationView')),
+            authority: [],
+        },
 ]

@@ -89,9 +89,6 @@ export async function apiFetchBookings(token, barbersIds, fromDate, toDate) {
         bookingsToDate: toDate
     }
 
-    console.log("Bookings requestBody ",token, requestBody);
-
-
     return ApiService.fetchData({
         url: '/barber-service/api/v1/shop/bookings',
         method: 'post',
@@ -100,4 +97,44 @@ export async function apiFetchBookings(token, barbersIds, fromDate, toDate) {
             Authorization: `Bearer ${token}`
         }
     })
+}
+
+
+export async function apiUpdateBooking(token, bookingId, status) {
+    const requestBody = {
+        bookingId: bookingId,
+        newBookingStatus: status
+    }
+
+    console.log("Making status change request ", requestBody);
+
+    return ApiService.fetchData({
+        url: '/barber-availability-service/api/v1/booking/update/status',
+        method: 'patch',
+        data: requestBody,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+
+export async function apiFetchBookingsForDate(token, bookingDate) {
+    return ApiService.fetchData({
+        url: `/barber-availability-service/api/v1/booking/available/for/${bookingDate}`,
+        method: 'get',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+export async function apiFetchBookingAvailabilityForRange(token, fromDate, toDate) {
+    return ApiService.fetchData({
+        url: `/barber-availability-service/api/v1/booking/available/for/range/${fromDate}/${toDate}`,
+        method: 'get',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
 }

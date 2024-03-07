@@ -1,5 +1,4 @@
 import { ActionLink, CalendarView, Loading } from 'components/shared'
-import { Calendar } from 'components/ui'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import AppointmentTimeline from './timeline/AppointmentTimeline'

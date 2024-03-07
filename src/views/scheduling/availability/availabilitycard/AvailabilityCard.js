@@ -20,24 +20,38 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
         "SUNDAY": []
     });
 
+    const [overrideDates, setOverrideDates] = useState({});
+
     useEffect(() => {
         console.log("use effect to calculate values ");
         computeAvailability();
     }, []); // Empty dependency array means the effect will only run once
 
     function computeAvailability() {
-        currentBarber.barberAvailability.forEach(availability => {
-            const day = availability.barberAvailabilitiesTemplate.dayOfWeek;
-            const slots = availability.barberAvailabilitiesTemplate.timeSlots;
 
-            slots.forEach(slot => {
+        console.log("computeAvailability ", currentBarber?.barberAvailability);
+
+        //Only availabilities that have day of the week 
+        const withDayOfWeek = currentBarber?.barberAvailability?.filter(item => 
+            item?.barberAvailabilitiesTemplate?.hasOwnProperty('dayOfWeek'));
+        
+        const withDate = currentBarber?.barberAvailability?.filter(item => 
+            item?.barberAvailabilitiesTemplate?.hasOwnProperty('date'));
+
+
+        console.log("withDayOfWeek ", withDayOfWeek);
+
+        withDayOfWeek?.forEach(availability => {
+            const day = availability.barberAvailabilitiesTemplate?.dayOfWeek;
+            const slots = availability.barberAvailabilitiesTemplate?.timeSlots;
+
+            slots?.forEach(slot => {
                 weekDays[day].push(slotToString(slot));
 
                 const updatedWeekDays = {
                     ...weekDays,
                 };
                 setWeekDays(updatedWeekDays);
-
             });
 
         });

@@ -16,11 +16,11 @@ const dropdownItemList = [
     //     icon: <FontAwesomeIcon icon={faUser} />,
     //     label: 'Profile'
     // },
-    {
-        path: '/profile',
-        icon: <FontAwesomeIcon icon={faCog} />,
-        label: 'Business Setting'  
-    }
+    // {
+    //     path: '/profile',
+    //     icon: <FontAwesomeIcon icon={faCog} />,
+    //     label: 'Business Setting'  
+    // }
 ]
 
 export const UserDropdown = ({ className }) => {
@@ -80,7 +80,6 @@ export const UserDropdown = ({ className }) => {
                         </Link>
                     </Dropdown.Item>
                 ))}
-                <Dropdown.Item variant="divider" /> 
                 <Dropdown.Item
                     onClick={signOut}
                     eventKey="Sign Out"

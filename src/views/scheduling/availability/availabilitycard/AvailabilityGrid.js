@@ -76,7 +76,7 @@ const AvailabilityGrid = () => {
             <Loading loading={loading} >
                 <div className="flex gap-4 flex-wrap mt-4"> 
                     {barbers.map((barber, index) => (
-                        <AvailabilityCard  currentBarber={barber} onUpdateClick={handleClickToOpenUpdateModal} />
+                        <AvailabilityCard currentBarber={barber} onUpdateClick={handleClickToOpenUpdateModal} />
                     ))}
                 </div>
             </Loading>
