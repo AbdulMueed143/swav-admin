@@ -16,12 +16,9 @@ function usePackagesService() {
             const resp = await apiGetPackages(token);
 
             if(resp.status === 200) {
-
-                console.log(resp.data);
                 return resp.data;
             }
             else {
-                console.log(" failed");
                 return [];
             }
 
@@ -34,7 +31,6 @@ function usePackagesService() {
     const addPackage = async (values) => {
         try
         {
-            console.log(values);
             const resp = await apiAddPackage(token, values);
 
             if(resp.status === 200) {
@@ -70,9 +66,6 @@ function usePackagesService() {
                 }    
             }
         } catch (errors) {
-            console.log("Some ERRROR");
-            console.log(errors);
-
             return {
                 status: -1,
                 message: errors?.response?.data?.message || errors.toString(),

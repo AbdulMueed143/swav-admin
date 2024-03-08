@@ -43,8 +43,6 @@ const ResetPasswordForm = (props) => {
         if (emailParam) setEmail(emailParam);
         if (sessionIdParam) setSessionId(sessionIdParam);
 
-        console.log("USer set email ", email, emailParam);
-        console.log("USer set sessionId ", sessionId, sessionIdParam);
     }, []);
 
     const [resetComplete, setResetComplete] = useState(false)
@@ -55,10 +53,6 @@ const ResetPasswordForm = (props) => {
 
     const onSubmit = async (values, setSubmitting) => {
         const { password } = values
-
-        console.log("USer set email ", email);
-        console.log("USer set pass ", password);
-        console.log("USer set sessionId ", sessionId);
 
         setSubmitting(true)
         try {

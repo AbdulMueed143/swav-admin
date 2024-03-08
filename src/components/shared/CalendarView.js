@@ -128,8 +128,6 @@ const CalendarView = (props) => {
             date: avail.date,
         }))
 
-        // console.log('onlineEvents: ', onlineEvents);
-
         const offlineEvents = availabilityData?.availability.filter(user => user.status === "offline")?.map((avail) => ({
             title: "Holiday",
             start: avail.date,
@@ -138,15 +136,6 @@ const CalendarView = (props) => {
             date: avail.date
         }))
 
-        // const holidayEvents = availabilityData?.holidays.map(user => ({
-        //     title: "Holiday",
-        //     start: user,
-        //     end: user,
-        //     type: "holiday",
-        //     date: user
-        // }));
-
-        // const AllEvents = [...onlineEvents, ...offlineEvents, ...holidayEvents];
         const AllEvents = [...onlineEvents, ...offlineEvents];
 
         const handleDelete = (day, index) => {
@@ -165,8 +154,6 @@ const CalendarView = (props) => {
 
         const handleShowMore = (timeSlot, day) => {
             
-            // console.log('Handle show more...TIMESLOT ', timeSlot);
-            // console.log('extendedProps.day ', day);
             setShowAllShiftData(true);
             setShowAllShiftDataList(timeSlot);
             setDisplayShowMoreBtn(false);
@@ -188,7 +175,6 @@ const CalendarView = (props) => {
                     }}
                     eventContent={(arg) => {
                         const { extendedProps } = arg.event;
-                        // console.log('arg:: ', arg);
                         const maxDisplayCount = 2; // Maximum number of e`lements to display
                         const { timeSlot } = extendedProps;
                         return (

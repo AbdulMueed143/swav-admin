@@ -42,15 +42,8 @@ function useAuth() {
 
                 dispatch(onSignInSuccess(token))
                 const userDetail = await getLoggedInUserDetail(token);
-                
-                console.log("User Detail Object");
-                console.log(userDetail);
-
-                console.log("User resp.data.user");
-                console.log(resp.data.user);
 
                 if (userDetail) {
-                    console.log("Dispatching uer data");
                     dispatch(
                         setUser(
                             userDetail || {
@@ -127,7 +120,6 @@ function useAuth() {
                 const userDetail = await getLoggedInUserDetail(token);
                 
                 if (userDetail) {
-                    console.log("Dispatching uer data");
                     dispatch(
                         setUser(
                             userDetail || {
@@ -159,9 +151,6 @@ function useAuth() {
 
     const getLoggedInUserDetail = async (token) => {
 
-        console.log("I received following token - getLoggedInUserDetail")
-        console.log(token);
-        
         try {
             const response = await ApiService.fetchData({
                 url: '/barber-service/api/v1/barber/detail',

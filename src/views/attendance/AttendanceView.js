@@ -19,7 +19,6 @@ const Home = () => {
 
     const handleOnMarkBookingsCompleted = async (bookingsCompleted) => {
         //now se send the request to mark bookings as completed
-        console.log("The data i am going to send is ", bookingsCompleted);
         const response = await updateBarberBookings(bookingsCompleted);
 
         if(response.status == -1) {
@@ -60,7 +59,6 @@ const Home = () => {
 
     const handleActiveStartDateChange = async(event) => {
         // Handle view change (e.g., month change)
-        console.log('View changed. New active start date:',event);
 
         const { firstDayOfMonth, lastDayOfMonth } = getFirstAndLastDayOfMonth(event);
         await fetchBookingAvailabilities(firstDayOfMonth, lastDayOfMonth);
@@ -94,7 +92,6 @@ const Home = () => {
                 //failed
             }
             else {
-                console.log("setBookingAvailabilityStatus ", response.data);
                 setBookingAvailabilityStatus(response.data)
             }
 

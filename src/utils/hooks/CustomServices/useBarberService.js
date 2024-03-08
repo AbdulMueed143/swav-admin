@@ -15,8 +15,6 @@ function useBarberService() {
         try {
             const resp = await apiFetchBarberShopDetail(barberId, token);
 
-            console.log("fetchBarberShopDetail Resp ", resp);
-
             // if(resp.status === 200) {
                 return resp;
             // }

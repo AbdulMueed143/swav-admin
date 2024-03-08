@@ -43,8 +43,6 @@ const ResetForgotPasswordForm = (props) => {
         if (emailParam) setEmail(emailParam);
         if (sessionIdParam) setSessionId(sessionIdParam);
 
-        console.log("USer set email ", email, emailParam);
-        console.log("USer set sessionId ", sessionId, sessionIdParam);
     }, []);
 
     const [resetComplete, setResetComplete] = useState(false)

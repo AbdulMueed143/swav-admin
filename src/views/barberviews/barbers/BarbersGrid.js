@@ -78,7 +78,6 @@ const BarbersGrid = () => {
         // Handle the form submission here using formValues
         formValues.properties = {}
         formValues.amenities = amenities;
-        console.log(formValues);
 
         //lets make call to server
         const data = await addBarbers(formValues);

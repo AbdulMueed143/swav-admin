@@ -72,7 +72,6 @@ const PackagesGrid = () => {
         // Handle the form submission here using formValues
         formValues.properties = {}
         formValues.amenitiesIds = selectedAmenities.map(amenity => amenity.id);
-        console.log(formValues);
 
         //lets make call to server
         const data = await addPackage(formValues);
@@ -110,7 +109,6 @@ const PackagesGrid = () => {
     const handleClickToSaveUpdateModal = async (values, selectedAmenities)  => {
         // Handle the form submission here using formValues
 
-        console.log(values);
         //lets make call to server
         values.amenitiesIds = selectedAmenities.map(amenity => amenity.id);
 
