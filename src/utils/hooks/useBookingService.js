@@ -22,7 +22,6 @@ function useBookingServices() {
                 return resp.data;
             }
             else {
-                console.log(" failed")
                 return [];
             }
 
@@ -80,12 +79,9 @@ function useBookingServices() {
             const resp = await apiGetServices(token)
 
             if(resp.status === 200) {
-
-                console.log(resp.data);
                 return resp.data;
             }
             else {
-                console.log(" failed")
                 return [];
             }
 
@@ -98,7 +94,6 @@ function useBookingServices() {
     const addService = async (values) => {
         try
         {
-            console.log(values);
             const resp = await apiAddService(token, values)
 
             if(resp.status === 200) {
@@ -135,9 +130,6 @@ function useBookingServices() {
                 }    
             }
         } catch (errors) {
-            console.log("Some ERRROR");
-            console.log(errors);
-
             return {
                 status: -1,
                 message: errors?.response?.data?.message || errors.toString(),
@@ -188,41 +180,11 @@ function useBookingServices() {
         }
     }
 
-    // const addBarberAvailability = async (values, barber) => {
-    //     try
-    //     {
-    //         console.log("Requeast to add a barber availability")
-    //         console.log(values)
-    //         values.barberId = barber.id;
-
-    //         const resp = await apiAddBarberAvailability(token, values, barber)
-
-    //         console.log(resp)
-    //         if(resp.status === 200) {
-    //             return resp;
-    //         }
-    //         else {
-    //             return {
-    //                 status: -1,
-    //                 message: resp,
-    //             }    
-    //         }
-    //     } catch (errors) {
-    //         return {
-    //             status: -1,
-    //             message: errors?.response?.data?.message || errors.toString(),
-    //         }
-    //     }
-
-    // }
-
-
     const fetchBookingsForDate = async (bookingDate) => {
         try
         {
             const resp = await apiFetchBookingsForDate(token, bookingDate)
 
-            console.log("api response ", resp);
             if(resp.status === 200) {
                 return resp;
             }
@@ -265,7 +227,6 @@ function useBookingServices() {
     const updateBarberBookings = async (bookingsToUpdate) => {
         try {
 
-            console.log("Uopdating barber bookings ", bookingsToUpdate);
             // Map each availability to a promise of an API call
             const apiCallPromises = bookingsToUpdate.map(booking =>
                 apiUpdateBooking(token, booking.bookingId, booking.status)
@@ -280,14 +241,12 @@ function useBookingServices() {
             if (allSuccessful) {
                 return responses.map(resp => resp.data);
             } else {
-                console.log("One or more update failed");
                 return {
                     data : "One or more template could not be updated",
                     status: -1
                 };
             }
         } catch (errors) {
-            console.log("Error occurred:", errors);
             return {
                 data : errors,
                 status: -1

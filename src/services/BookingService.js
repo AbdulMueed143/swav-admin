@@ -22,8 +22,6 @@ export async function apiAddService(token, data) {
 }
 
 export async function apiDeleteService(token, data) {
-
-    //Gotta add the id we want to delete ... 
     return ApiService.fetchData({
         url: '/barber-service/api/v1/shop/amenity/id/' + data.id,
         method: 'delete',
@@ -34,8 +32,6 @@ export async function apiDeleteService(token, data) {
 }
 
 export async function apiUpdateService(token, data) {
-
-    console.log(data);
     return ApiService.fetchData({
         url: '/barber-service/api/v1/shop/amenity/' + data.id,
         method: 'put',
@@ -105,8 +101,6 @@ export async function apiUpdateBooking(token, bookingId, status) {
         bookingId: bookingId,
         newBookingStatus: status
     }
-
-    console.log("Making status change request ", requestBody);
 
     return ApiService.fetchData({
         url: '/barber-availability-service/api/v1/booking/update/status',

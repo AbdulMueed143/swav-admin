@@ -38,7 +38,6 @@ function useHolidaysService() {
     const addHoliday = async (values) => {
         try
         {
-            console.log(values);
             const resp = await apiAddHoliday(token, values);
 
             if(resp.status === 200) {
@@ -62,8 +61,6 @@ function useHolidaysService() {
     const deleteHoliday = async (holidayId) => {
         try
         {
-            console.log("Use holiday delete");
-            console.log(holidayId);
             const resp = await apiDeleteHoliday(token, holidayId);
 
             if(resp.status === 200) {

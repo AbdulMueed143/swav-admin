@@ -28,7 +28,6 @@ const AddressAutocomplete = ({ setBusinessName, setGoogleAddress, setWebsite,
       // onChange={setValue}
       options={options}
       onPlaceSelected={(place) => {
-        // console.log("found ", place, place.name, place.formatted_address, place.website, place.place_id, place.opening_hours);
         setBusinessName(place.name);
         setGoogleAddress(place.formatted_address);
         setWebsite(place.website);

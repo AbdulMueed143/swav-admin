@@ -55,9 +55,6 @@ const TaxAndSurchargeForm = () => {
 
         const response = await fetchBarberShopDetail(userInfo.barberShopId);
 
-        console.log("fetchShopDetail - fetchBarberShopDetail  ", response);
-        console.log("fetchShopDetail - fetchBarberShopDetail  ", response.afterHourSurcharge);
-
         if(response.status == -1) {
             //error
             setServerError(true);

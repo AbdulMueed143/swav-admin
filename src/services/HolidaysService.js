@@ -22,8 +22,6 @@ export async function apiAddHoliday(token, data) {
 }
 
 export async function apiDeleteHoliday(token, deleteId) {
-    console.log("Making Delete network call");
-    console.log(deleteId);
     //Gotta add the id we want to delete ... 
     return ApiService.fetchData({
         url: '/barber-availability-service/api/v1/barber/shop/holiday/' + deleteId,

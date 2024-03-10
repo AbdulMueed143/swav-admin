@@ -64,7 +64,7 @@ const ShopDetailForm = () => {
     const [serverError, setServerError] = useState(false);
     const [serverErrorMessage, setServerErrorMessage] = useState(false);
 
-      const handleAlertClose = () => {
+    const handleAlertClose = () => {
         setServerError(false);
         setServerErrorMessage('');
     }
@@ -95,7 +95,6 @@ const ShopDetailForm = () => {
             openingHours: openingHours,
             paddingInMinutes: selectedPaddingOption.value
         }
-        console.log("Sending ", businessDetails);
 
         const response = await updateShopDetail(businessDetails);
 
@@ -141,8 +140,8 @@ const ShopDetailForm = () => {
         setBookingServiceUrl( bookingURL+"/" + barberShopInfo?.barberShopBusinessId || "");
  
 
-        setLat(barberShopInfo?.address?.location.y);
-        setLng(barberShopInfo?.address?.location.x);
+        setLat(barberShopInfo?.address?.location?.y);
+        setLng(barberShopInfo?.address?.location?.x);
 
 
                

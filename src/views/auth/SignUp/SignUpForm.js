@@ -60,38 +60,10 @@ const SignUpForm = (props) => {
     const onRegisterAccount = async (values, setSubmitting) => {
         formIkRef.current.setSubmitting(true)
 
-        console.log("Values to send");
-        console.log(values);
-
         const { ownerFirstName, ownerLastName , shopName, customBusinessName, ownerPhoneNumber, ownerPassword, ownerEmail }  = values
         
         var currentAddress = ""
         var extraProperties = {}
-
-        // if (manualEntry === true) {
-        //     //Address depends on how it was added ...
-        //     //If user added address manually the we do it differently otherwise differently
-        //      customBusinessName = shopName
-        //     setBusinessName(customBusinessName);
-        //     currentAddress = {
-        //         line1: address,
-        //         city: city,
-        //         state: state,
-        //         postalCode: postcode,
-        //         country: country,
-        //         placeId: placeId
-        //     }
-        // }
-        // else {
-        //     shopName = businessName
-        //     currentAddress = {
-        //         line1: googleAddress,
-        //         placeId: placeId,
-        //         properties: {
-        //             "website" : website,
-        //         }
-        //     }
-        // }
 
         // Map values to API expected variables
         const apiValues = {

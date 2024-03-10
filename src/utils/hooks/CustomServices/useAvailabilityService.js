@@ -48,7 +48,6 @@ function useAvailabilityService() {
                 return resp.data;
             }
             else {
-                console.log(" failed");
                 return [];
             }
 
@@ -66,7 +65,6 @@ function useAvailabilityService() {
                 return resp.data;
             }
             else {
-                console.log(" failed");
                 return [];
             }
         } catch (errors) {
@@ -91,14 +89,12 @@ function useAvailabilityService() {
                 // Assuming you want to return all data from successful responses
                 return responses.map(resp => resp.data);
             } else {
-                console.log("One or more requests failed");
                 return {
                     data : "One or more template could not be updated",
                     status: -1
                 };
             }
         } catch (errors) {
-            console.log("Error occurred:", errors);
             return {
                 data : errors,
                 status: -1
@@ -123,14 +119,12 @@ function useAvailabilityService() {
                 // Assuming you want to return all data from successful responses
                 return responses.map(resp => resp.data);
             } else {
-                console.log("One or more requests failed");
                 return {
                     data : "One or more template could not be updated",
                     status: -1
                 };
             }
         } catch (errors) {
-            console.log("Error occurred:", errors);
             return {
                 data : errors,
                 status: -1

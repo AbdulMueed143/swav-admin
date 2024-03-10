@@ -233,7 +233,6 @@ const Home = () => {
     const [barbers, setBarbers] = useState([]); // Initial state as an empty array
     
     function applyFilter() {
-        console.log('Checked Barbers:', checkedBarbers);
         // fetchMonthlyAvailaibility(checkedBarbers, selectedYear, selectedMonth);
     }
 

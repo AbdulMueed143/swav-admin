@@ -139,7 +139,6 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
             const withDate = updateBarber?.barberAvailability?.filter(item => 
             item?.barberAvailabilitiesTemplate?.hasOwnProperty('date'));
 
-            console.log("With Date ", withDate);
 
            withDate?.map( barber => {
                 //get all the timeslots 
@@ -154,7 +153,6 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
 
     useEffect(() => {
-        console.log("Changes are ", overrideDates);
     }, [overrideDates]);
 
     function slotToString(slot) {
@@ -181,7 +179,6 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
     const openSDDialog = () => {
         setSDDialogOpen(true);
-        console.log("openSDDialog " , sdDialogIsOpen);
 
         //We need to know about the date that was selected .... 
         setStartTimeSD(moment().format('HH:mm')); 
@@ -203,7 +200,6 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
         if(startTimeSD != endTimeSD) {
             const createdSlot = createSlotSD(selectedDateToBeOverrided, selectedStartTime, selectedEndTime);
 
-            console.log("Created a slot ", createdSlot);
             updateOverrideDates(formatDateAsServerDate(selectedDateToBeOverrided), [createdSlot]);
     
             setStartTimeSD(null);
@@ -238,7 +234,6 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
     
     const openDialog = (day) => {
         setIsOpen(true);
-        console.log("dialogIsOpen " , dialogIsOpen);
 
         if(day != undefined && day != null)
             setSelectedDay(day);
