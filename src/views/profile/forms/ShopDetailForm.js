@@ -140,7 +140,7 @@ const ShopDetailForm = () => {
         setCity(barberShopInfo?.address?.city || "");
         setCountry(barberShopInfo?.address?.country || "");
         setPostCode(barberShopInfo?.address?.postalCode || "");
-        setBookingServiceUrl( bookingURL+"/" + barberShopInfo?.id || "");
+        setBookingServiceUrl( bookingURL+"/?shop=" + barberShopInfo?.id || "");
  
 
         setLat(barberShopInfo?.address?.location?.y);
