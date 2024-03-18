@@ -129,6 +129,9 @@ const ShopDetailForm = () => {
     }, []);
 
     useEffect(() => {
+
+        console.log("Use effect seting bvarber info ", barberShopInfo);
+
         setShopName(barberShopInfo?.name || "");
         setWebsite(barberShopInfo?.website || "");
         setAddress(barberShopInfo?.address?.country || "");
@@ -137,7 +140,7 @@ const ShopDetailForm = () => {
         setCity(barberShopInfo?.address?.city || "");
         setCountry(barberShopInfo?.address?.country || "");
         setPostCode(barberShopInfo?.address?.postalCode || "");
-        setBookingServiceUrl( bookingURL+"/" + barberShopInfo?.barberShopBusinessId || "");
+        setBookingServiceUrl( bookingURL+"/" + barberShopInfo?.id || "");
  
 
         setLat(barberShopInfo?.address?.location?.y);
