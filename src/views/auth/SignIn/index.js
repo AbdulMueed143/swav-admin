@@ -6,11 +6,9 @@ import logo from './../../../assets/images/logo.png'; // Adjust the path as need
 const SignIn = () => {
     return (
         <>
-
-        <div className="center-content"> 
-            <img src={logo} alt="SWAV Logo" className="logo" />
-
-            <SignInForm disableSubmit={false} />
+            <div className="center-content"> 
+                <img src={logo} alt="SWAV Logo" className="logo" />
+                <SignInForm disableSubmit={false} />
             </div>
         </>
     )

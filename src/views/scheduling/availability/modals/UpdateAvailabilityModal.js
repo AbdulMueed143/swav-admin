@@ -380,7 +380,7 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                         zIndex: 100
                     },
                 }}> 
-                <DialogTitle>{updateBarber?.firstName} {updateBarber?.lastName} {"Availability"}</DialogTitle>
+                <DialogTitle>{"Standard Weekly Availability Setting ("}{updateBarber?.firstName} {updateBarber?.lastName}{")"}</DialogTitle>
                 <DialogContent>
                 <Formik
                     enableReinitialize
@@ -394,87 +394,83 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                 >
 
                     {({ values, touched, errors, resetForm, submitForm }) => (
-                        <div>
+                    <div>
                             <Form>
                                 <FormContainer>
- 
-                                <div className="schedule-container">
-
-                                {weekDays && (
-                                    Object.entries(weekDays).map(([day, slots]) => (
-                                        <div key={day}>
-                                            <h6>{day}</h6>
-                                            {slots.length > 0 ? (
-                                                slots.map((slot, index) => (
-                                                    <div key={index} className="slot-container">
-                                                        <p className="slot">{slotToString(slot)}</p>
-                                                        <button className='slots-delete-icon ' onClick={() => removeSlotFromDay(day, index)}>
-                                                            <FontAwesomeIcon icon={faTrash} />
-                                                        </button>  
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <p className="no-availability slot">N/A</p>
-                                            )}
-                                            <Button className="add-btn"onClick={() => openDialog(day)}>Add</Button>
-                                        </div>
-                                    ))
-                                )}
-                                </div> 
-
-                     </FormContainer>
-                     
+                                    <div className="schedule-container">
+                                        {weekDays && (
+                                            Object.entries(weekDays).map(([day, slots]) => (
+                                                <div key={day}>
+                                                    <h6>{day}</h6>
+                                                    {slots.length > 0 ? (
+                                                        slots.map((slot, index) => (
+                                                            <div key={index} className="slot-container">
+                                                                <p className="slot">{slotToString(slot)}</p>
+                                                                <button className='slots-delete-icon ' onClick={() => removeSlotFromDay(day, index)}>
+                                                                    <FontAwesomeIcon icon={faTrash} />
+                                                                </button>  
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <p className="no-availability slot">N/A</p>
+                                                    )}
+                                                    <Button className="add-btn"onClick={() => openDialog(day)}>Add</Button>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div> 
+                                </FormContainer>
                             </Form>
 
-                    <div style={{marginTop: '10px', marginBottom: '10px'}}>
-                        <h5>If you want to change shifts for any specific date, please select date here and change shift for specific date.</h5>
+                        <div style={{marginTop: '10px', marginBottom: '10px'}}>
+                            <h5>If you want to change shifts for any specific date, please select date here and change shift for specific date.</h5>
 
-                        <div style={{display: 'flex', marginTop: '10px'}}>  
+                            <div style={{display: 'flex', marginTop: '10px'}}>  
 
-                            <div style={{width : '60%'}}>
-                                <Calendar value={selectedDateToBeOverrided} onChange={handleOverrideDateChange} />
-                            </div>
-
-                            <div style={{width: '40%', background:'#eee', padding: '10px', borderRadius: '10px'}}>
-                                <div>
-                                    <h6>{formatDate(selectedDateToBeOverrided)}</h6>
-                                <div>
-                                
-
-                                {loadingSpecificDateSlots ? (
-                                    <div>
-                                        <Loading loading={loadingSpecificDateSlots} >
-                                        </Loading>
-                                    </div>
-                                ) 
-                                : 
-                                (
-                                    <div>
-
-                                    {overrideDates[formatDateAsServerDate(selectedDateToBeOverrided)]?.length > 0 ? (
-                                                overrideDates[formatDateAsServerDate(selectedDateToBeOverrided)].map((slot, index) => (
-                                                    <div key={index} className="slot-container">
-                                                        <p className="slot">{slotToString(slot)}</p>
-                                                        <button className='slots-delete-icon '>
-                                                            <FontAwesomeIcon icon={faTrash} onClick={() => removeSlotFromDate(formatDateAsServerDate(selectedDateToBeOverrided), index)} />
-                                                        </button>  
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <p className="no-availability slot">N/A</p>
-                                            )}
-
-                                    </div>
-                                )}
-                                    <Button className="add-btn"onClick={() => openSDDialog()}>Add</Button>
-
-                                    </div>
-                                
+                                <div style={{width : '60%'}}>
+                                    <Calendar value={selectedDateToBeOverrided} onChange={handleOverrideDateChange} />
                                 </div>
-                            </div>                          
 
+                                <div style={{width: '40%', background:'#eee', padding: '10px', borderRadius: '10px'}}>
+                                    <div>
+                                        <h6>{formatDate(selectedDateToBeOverrided)}</h6>
+                                    <div>
+                                    
+
+                                    {loadingSpecificDateSlots ? (
+                                        <div>
+                                            <Loading loading={loadingSpecificDateSlots} >
+                                            </Loading>
+                                        </div>
+                                    ) 
+                                    : 
+                                    (
+                                        <div>
+
+                                        {overrideDates[formatDateAsServerDate(selectedDateToBeOverrided)]?.length > 0 ? (
+                                                    overrideDates[formatDateAsServerDate(selectedDateToBeOverrided)].map((slot, index) => (
+                                                        <div key={index} className="slot-container">
+                                                            <p className="slot">{slotToString(slot)}</p>
+                                                            <button className='slots-delete-icon '>
+                                                                <FontAwesomeIcon icon={faTrash} onClick={() => removeSlotFromDate(formatDateAsServerDate(selectedDateToBeOverrided), index)} />
+                                                            </button>  
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p className="no-availability slot">N/A</p>
+                                                )}
+
+                                        </div>
+                                    )}
+                                        <Button className="add-btn"onClick={() => openSDDialog()}>Add</Button>
+
+                                        </div>
+                                    
+                                    </div>
+                                </div>                          
+
+                            </div>
                         </div>
-                    </div>
 
                         <DialogActions>
                             <Button onClick={handleClose}

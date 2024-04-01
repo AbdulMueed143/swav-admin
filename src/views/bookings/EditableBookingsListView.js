@@ -47,7 +47,7 @@ const EditableBookingsListView = ({selectedDate, bookingData, onBarberStatusChan
           <div>{moment(row.start).format('h:mma')}</div>
           <div>{moment(row.end).format('h:mma')}</div>
           <div>
-            <select value={bookingStatuses[row.bookingId]} onChange={(e) => updateStatus(row.bookingId, e.target.value)}>
+            <select value={bookingStatuses[row.bookingId]} disabled={(bookingStatuses[row.bookingId] == "CANCELLED" ) ? true : false} onChange={(e) => updateStatus(row.bookingId, e.target.value)}>
               <option value="CONFIRMED">CONFIRMED</option>
               <option value="CANCELLED">CANCELLED</option>
             </select>
