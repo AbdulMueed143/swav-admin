@@ -321,6 +321,8 @@ const Home = () => {
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Include timeGridPlugin
                 initialView='dayGridMonth'
                 events={monthlyBookings}
+                eventLimit={true}
+                dayMaxEventRows={true}
                 eventContent={renderEventContent}
                 dateClick={handleDateClick}
                 headerToolbar={{
@@ -334,8 +336,8 @@ const Home = () => {
                     minute: '2-digit',
                     meridiem: false,
                 }}
+                
                 views={{
-                    
                     month: { ...calendarSettings },
                     dayMaxEvents: 3,
                     eventMaxStack: 3,
