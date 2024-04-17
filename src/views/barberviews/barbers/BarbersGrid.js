@@ -26,6 +26,10 @@ const BarbersGrid = () => {
     const [selectedStatus, setSelectedStatus] = useState(null);
 
 
+    const onBarberSettingClicked = (barberId) => {
+
+    }
+
     const onStatusSwitcherToggle = (checked, id) => {
         setSelectedId(id);
         setSelectedStatus(checked);
@@ -149,7 +153,7 @@ const BarbersGrid = () => {
                 <Loading loading={loading} >
                     <div className="flex gap-4 flex-wrap mt-4"> 
                         {filteredBarbers.map((barber, index) => (
-                            <BarberCard key={index} barber={barber} onStatusSwitcherToggle={onStatusSwitcherToggle} />
+                            <BarberCard key={index} barber={barber} onSettingsClicked={onBarberSettingClicked} onStatusSwitcherToggle={onStatusSwitcherToggle} />
                         ))}
                     </div>
                 </Loading>

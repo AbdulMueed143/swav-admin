@@ -274,9 +274,9 @@ const Home = () => {
                 customLoader={
                     <div className="flex items-center justify-center p-5">
                         <div className="flex space-x-2 animate-pulse">
-                            <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
-                            <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
-                            <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
+                            <div className="w-2 h-2 bg-green-700 rounded-full"></div>
+                            <div className="w-2 h-2 bg-green-700 rounded-full"></div>
+                            <div className="w-2 h-2 bg-green-700 rounded-full"></div>
                         </div>
                     </div>
                 }

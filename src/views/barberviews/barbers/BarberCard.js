@@ -1,9 +1,11 @@
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  Avatar, Card } from 'components/ui'
 import Button  from 'components/ui/Buttons/Button';
 import Switcher from 'components/ui/Switcher';
 
 
-const BarberCard = ({ barber, onStatusSwitcherToggle }) => {
+const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
 
     const { barberId, firstName, lastName, email, phoneNumber, amenities, about, status } = barber;
 
@@ -51,15 +53,18 @@ const BarberCard = ({ barber, onStatusSwitcherToggle }) => {
     )
 
 
+
     const cardHeader = (
-        <div className="rounded-tl-lg rounded-tr-lg overflow-hidden"  style={{ height: '250px', width: '300px' }}>
-            <img 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80" 
-                alt="card header" 
+        <div className="rounded-tl-lg rounded-tr-lg overflow-hidden relative" style={{ height: '250px', width: '300px' }}>
+            <img
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
+                alt="card header"
             />
+            <FontAwesomeIcon icon={faCog} className="absolute top-0 right-0 m-2 text-white" onClick={() => onSettingsClicked(barberId) } />
         </div>
     );
+    
     return (
         <div className="max-w-xs" style={{ width: '300px', height: '500px' }}>
             <Card

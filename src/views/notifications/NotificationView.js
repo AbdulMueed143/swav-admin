@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import Tabs from 'components/ui/Tabs'
 import { HiScissors, HiOutlineUser, HiOutlineSun, HiOutlineMail, HiDeviceMobile } from 'react-icons/hi'
+import EmailSettingView from './email/EmailSettingView'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -16,16 +17,10 @@ const Home = () => {
                     <TabNav value="tab1" icon={<HiOutlineMail />}>
                         Email Setting
                     </TabNav>
-                    <TabNav value="tab2" icon={<HiDeviceMobile />}>
-                        SMS Setting
-                    </TabNav>
                 </TabList>
                 <div className="p-4">
                     <TabContent value="tab1">
-                        
-                    </TabContent>
-                    <TabContent value="tab2">
-                        
+                        <EmailSettingView />
                     </TabContent>
                 </div>
             </Tabs>

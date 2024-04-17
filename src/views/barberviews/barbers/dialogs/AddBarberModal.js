@@ -77,14 +77,13 @@ export default function AddBarberModal({open, handleToSave, handleToClose}) {
                     lastName: '',
                     phoneNumber: '',
                     email: '',
+                    bookingWindowInWeeks: '2',
                     amenities: services,
                     about: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                   
                     setSubmitting(false);
-
                 }}
             >
                 {({ values, touched, errors, resetForm}) => (
@@ -179,6 +178,21 @@ export default function AddBarberModal({open, handleToSave, handleToClose}) {
                                 </FormItem>
 
                                 <FormItem
+                                    label="Advance Booking Window in Weeks (1-52)"
+                                    invalid={errors.bookingWindowInWeeks && touched.bookingWindowInWeeks}
+                                    errorMessage={errors.bookingWindowInWeeks}
+                                >
+                                    <Field
+                                        type="number" // Change the type to 'number' to allow only numeric inputs
+                                        name="bookingWindowInWeeks" // Make sure the 'name' attribute corresponds to your data model
+                                        placeholder="Enter weeks (1-52)"
+                                        component={Input}
+                                        min="1"  // Set the minimum value to 1
+                                        max="52" // Set the maximum value to 52
+                                    />
+                                </FormItem>
+
+                                <FormItem
                                     label="About"
                                     invalid={errors.amenities && touched.about}
                                     errorMessage={errors.about}
@@ -190,6 +204,7 @@ export default function AddBarberModal({open, handleToSave, handleToClose}) {
                                         component={Input}
                                     />
                                 </FormItem>
+
 
                             </FormContainer>
                         </Form>
@@ -213,3 +228,6 @@ export default function AddBarberModal({open, handleToSave, handleToClose}) {
         </div>
     );
 }
+
+
+
