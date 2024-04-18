@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react'
 import { SIZES } from '../utils/constant'
 
 export const defaultConfig = {
-    themeColor: 'indigo',
+    themeColor: 'Green',
     direction: 'ltr',
     mode: 'light',
     locale: 'en',

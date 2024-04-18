@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 const whiteListTwColor = [
-    'indigo-600',
+    'green-700',
     'emerald-500',
     'cyan-500',
     'blue-600',
