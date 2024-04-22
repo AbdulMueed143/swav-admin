@@ -308,7 +308,7 @@ const Home = () => {
             </Checkbox.Group>
 
 
-            <Button className="mr-2 mb-2" variant="twoTone" color="green-900" onClick={applyFilter}>
+            <Button className="mr-2 mb-2" variant="twoTone" color="teal-900" onClick={applyFilter}>
                     Filter
             </Button>
 

@@ -76,9 +76,16 @@ export const protectedRoutes = [
 
     //Rewards Screen
     {
-        key: 'rewards',
-        path: '/rewards',
-        component: React.lazy(() => import('views/rewards/RewardsView')),
+        key: 'rewards.edit',
+        path: '/reward/edit',
+        component: React.lazy(() => import('views/rewards/edit/EditRewardsView')),
+        authority: [],
+    },
+
+    {
+        key: 'rewards.edit',
+        path: '/rewards/edit',
+        component: React.lazy(() => import('views/rewards/edit/EditRewardsView')),
         authority: [],
     },
 
