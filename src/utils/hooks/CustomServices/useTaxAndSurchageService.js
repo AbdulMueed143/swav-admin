@@ -15,6 +15,8 @@ function useTaxAndSurchageService() {
         try {
             const resp = await apiUpdateAfterHourSurcharge(surchargeDetail, token);
 
+            console.log("resp   sdsf asdfsadf", resp);
+
             if(resp.status === 200) {
                 return resp;
             }

@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux'
 import useTaxAndSurchageService from 'utils/hooks/CustomServices/useTaxAndSurchageService';
 import { Loading } from 'components/shared';
 import moment, { weekdays } from 'moment';
+import TimeInput from 'components/ui/TimeInput'
 
 const validationSchema = Yup.object().shape({
 })
@@ -25,15 +26,47 @@ const TaxAndSurchargeForm = () => {
     const [serverErrorMessage, setServerErrorMessage] = useState(false);
     const [afterHoursAllowed, setAfterHoursAllowed] = useState(false);
     const [percentage, setPercentage] = useState(false);
-    const [afterHoursInMinutes, setAfterHoursInMinutes] = useState(0);
+    // const [afterHoursInMinutes, setAfterHoursInMinutes] = useState(0);
     const [totalMinutes, setTotalMinues] = useState(0);
     const [loading, setLoading] = useState(false);
 
     const userInfo = useSelector((state) => state.auth.user);
 
-
     const { updateAfterHourSurcharge } = useTaxAndSurchageService();
     const { fetchBarberShopDetail } = useBarberService();
+
+    const [timeValue, setTimeValue] = useState(null);
+
+
+    const handleTimeChange = (time) =>  {
+        console.log("Time selected ", time);
+        if (time) {
+            const match = moment(time).format('hh:mm a').match(/(\d+):(\d+)\s*(AM|PM)/i);
+            if(!match) {
+                console.log("Time formate issue ", match);
+                setTotalMinues(0);
+            }
+            else {
+                let [_, hours, minutes, period] = match;
+                hours = parseInt(hours, 10);
+                minutes = parseInt(minutes, 10);
+                // Convert hours to 12-hour format and calculate total minutes
+                if (period.toUpperCase() === 'PM' && hours !== 12) {
+                    hours += 12;
+                } else if (period.toUpperCase() === 'AM' && hours === 12) {
+                    hours = 0;
+                }
+
+                let totalMinutes = hours * 60 + minutes;
+                console.log("Total Minutes setup ", totalMinutes);
+                setTotalMinues(totalMinutes);
+            }
+        } else {
+            setTotalMinues(0);
+        }
+    };
+    
+
 
     const handleAlertClose = () => {
         setServerError(false);
@@ -49,6 +82,13 @@ const TaxAndSurchargeForm = () => {
         setAfterHoursAllowed(checked)
     }
 
+    function setTimeFromMinutes(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        
+        return moment().startOf('day').add({hours: hours, minutes: minutes}); // You might use this return value to set your state or do other operations
+    }
+
     //now we will get the shop details
     const fetchShopDetail = async() =>  {
         setLoading(true);
@@ -61,9 +101,12 @@ const TaxAndSurchargeForm = () => {
             setServerErrorMessage(response.message);
         }
         else {
+            console.log("Fetched new shop data ", new Date(setTimeFromMinutes(response?.afterHourSurcharge?.afterHoursInMinutes)));
             setAfterHoursAllowed(response?.afterHourSurcharge?.afterHoursAllowed);
             setPercentage(response?.afterHourSurcharge?.percentage);
-            setTotalMinues(convertMinutesToMoment(response?.afterHourSurcharge?.afterHoursInMinutes));
+            setTotalMinues(response?.afterHourSurcharge?.afterHoursInMinutes);
+            var newValue = new Date(setTimeFromMinutes(response?.afterHourSurcharge?.afterHoursInMinutes));
+            setTimeValue(newValue);
         }
 
         // now show error or get the detail 
@@ -85,6 +128,8 @@ const TaxAndSurchargeForm = () => {
         }
 
         const response = await updateAfterHourSurcharge(businessDetails);
+
+        console.log("response ", response);
 
         if(response.status === -1) {
             showError(response.message);
@@ -149,28 +194,19 @@ const TaxAndSurchargeForm = () => {
                                     </div>
 
                                         {afterHoursAllowed && (
-                                            <div className="time-input-container">
+                                            <div >
                                                 <FormItem
                                                     label="Your After Hours"
                                                     invalid={errors.afterHours && touched.afterHours}
                                                     errorMessage={errors.afterHours}>
 
                                                     <div className="time-fields">
-                                                    <TimePicker
-                                                        format="HH:mm" 
-                                                        onChange={(time) => {
-
-                                                            console.log(time);
-                                                            if (time) {
-                                                                const [hours, minutes] = time.format('HH:mm').split(':').map(Number);
-                                                                const totalMinutes = (hours * 60) + minutes;
-                                                                setTotalMinues(totalMinutes); // Assuming setStartTime is intended to store time in minutes
-                                                            } else {
-                                                                setTotalMinues(0);
-                                                            }
-                                                        }}  
-                                                        minuteStep={15}
-                                                    />
+                                                        <TimeInput 
+                                                            format="12" 
+                                                            key={timeValue} 
+                                                            defaultValue={timeValue} 
+                                                            onChange={handleTimeChange} clearable={false}  
+                                                        />
                                                     </div>
                                                 </FormItem>
 
