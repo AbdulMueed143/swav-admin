@@ -4,17 +4,15 @@ import  FormItem from 'components/ui/Form/FormItem'
 import FormContainer from 'components/ui/Form/FormContainer'
 import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import Select from 'components/ui/Select';
-import Input from 'components/ui/Input';
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { Alert } from 'components/ui'
-import { Switcher } from 'components/ui'
-import { TimePicker } from 'antd';
+import Input from 'components/ui/Input';
 import useBarberService from 'utils/hooks/CustomServices/useBarberService';
 import { useSelector } from 'react-redux'
 import useTaxAndSurchageService from 'utils/hooks/CustomServices/useTaxAndSurchageService';
 import { Loading } from 'components/shared';
-import moment, { weekdays } from 'moment';
+import useBusinesssService from 'utils/hooks/CustomServices/useBusinessService';
 
 const validationSchema = Yup.object().shape({
 })
@@ -24,14 +22,12 @@ const SchedulingLimitForm = () => {
     //Alert
     const [serverError, setServerError] = useState(false);
     const [serverErrorMessage, setServerErrorMessage] = useState(false);
-    const [afterHoursAllowed, setAfterHoursAllowed] = useState(false);
-    const [percentage, setPercentage] = useState(false);
-    const [afterHoursInMinutes, setAfterHoursInMinutes] = useState(0);
-    const [totalMinutes, setTotalMinues] = useState(0);
+    const [paddingInMinutes, setPaddingInMinutes] = useState(15);
+    const [bookingWindowInWeeks, setBookingWindowInWeeks] = useState(26);
+    const [barberShopDetail, setBarberShopDetail] = useState(null);
+     
     const [loading, setLoading] = useState(false);
-
     const userInfo = useSelector((state) => state.auth.user);
-    const [paddingInMinutes, setPaddingInMinutes] = useState(30);
 
     const options = [ 
         {value: 5, label: '5'},
@@ -45,13 +41,10 @@ const SchedulingLimitForm = () => {
     const handleChange = selectedOption => {
         const matchedIndex = options.findIndex(option => option.value === selectedOption.value);
         setSelectedPaddingOption(options[matchedIndex]);
-        // Perform any additional actions with the selected option
         setPaddingInMinutes(selectedOption.value)
     };
 
-
-
-    const { updateAfterHourSurcharge } = useTaxAndSurchageService();
+    const { updateShopDetail } = useBusinesssService();
     const { fetchBarberShopDetail } = useBarberService();
 
     const handleAlertClose = () => {
@@ -64,28 +57,20 @@ const SchedulingLimitForm = () => {
         setServerErrorMessage(message);
     }
 
-    const onStatusSwitcherToggle = (checked) => {
-        setAfterHoursAllowed(checked)
-    }
-
     //now we will get the shop details
     const fetchShopDetail = async() =>  {
         setLoading(true);
-
         const response = await fetchBarberShopDetail(userInfo.barberShopId);
 
         if(response.status == -1) {
-            //error
             setServerError(true);
             setServerErrorMessage(response.message);
         }
         else {
-            setAfterHoursAllowed(response?.afterHourSurcharge?.afterHoursAllowed);
-            setPercentage(response?.afterHourSurcharge?.percentage);
-            setTotalMinues(convertMinutesToMoment(response?.afterHourSurcharge?.afterHoursInMinutes));
-        }
+            console.log("fetching shop detail response else", response);
 
-        // now show error or get the detail 
+            setBarberShopDetail(response);
+        }
         setLoading(false);
     }
 
@@ -94,35 +79,39 @@ const SchedulingLimitForm = () => {
     }, []);
 
     const handleUpdate = async(values)  => {
-        //we will start load
-        setLoading(true);
 
-        let businessDetails = {
-            afterHoursAllowed : afterHoursAllowed == undefined ? false  :  afterHoursAllowed,
-            percentage: values.percentage,
-            afterHoursInMinutes : totalMinutes
+        console.log("handleUpdate ", values, barberShopDetail);
+
+        if(barberShopDetail != null) {
+            //we will start load
+            setLoading(true);
+
+            let barberShopUpdatedDetails = {
+                barberShopName : barberShopDetail?.name,
+                address: barberShopDetail?.address,
+                phoneNumber : barberShopDetail?.phoneNumber,
+                website: barberShopDetail.website,
+                paddingInMinutes: paddingInMinutes,
+                bookingWindowInWeeks: values?.bookingWindowInWeeks
+            }
+
+            console.log("barberShopUpdatedDetails ", barberShopUpdatedDetails);
+
+            const response = await updateShopDetail(barberShopUpdatedDetails);
+
+            if(response.status === -1) {
+                showError(response.message);
+            }
+            else {
+                fetchShopDetail();
+            }
+
+            setLoading(false);
+
         }
 
-        const response = await updateAfterHourSurcharge(businessDetails);
 
-        if(response.status === -1) {
-            showError(response.message);
-        }
-        else {
-            fetchShopDetail();
-        }
-
-        setLoading(false);
     };
-
-
-    function convertMinutesToMoment(currentMinutes) {
-        const hours = Math.floor(currentMinutes / 60);
-        const minutes = currentMinutes % 60;
-        console.log("totalMinutes ",currentMinutes,"hour ", hours, " minutes ", minutes);
-        return moment().hours(hours).minutes(minutes);
-    }
-    
 
     return (
         <div>
@@ -139,7 +128,8 @@ const SchedulingLimitForm = () => {
             )}
             <Formik
                 initialValues={{
-                    percentage: percentage,
+                    paddingInMinutes: barberShopDetail?.paddingInMinutes,
+                    bookingWindowInWeeks: barberShopDetail?.bookingWindowInWeeks
                 }}
 
                 enableReinitialize
@@ -169,14 +159,20 @@ const SchedulingLimitForm = () => {
                             </FormItem>
 
                             <FormItem label="Booking Window In Weeks" name="bookingWindowInWeeks">
-                            <span>How many weeks in future you want to allow bookings.</span>
 
-                                    <Select
-                                        placeholder="Select Booking Window"
-                                        value={selectedPaddingOption}
-                                        options={options}
-                                        onChange={handleChange}
-                                    ></Select>
+                                <span>How many weeks in future you want to allow bookings.</span>
+                                        <FormItem
+                                            invalid={errors.bookingWindowInWeeks && touched.bookingWindowInWeeks}
+                                            errorMessage={errors.bookingWindowInWeeks}>
+                                            <Field
+                                                type="number"
+                                                name="bookingWindowInWeeks"
+                                                placeholder="1-52"
+                                                component={Input}
+                                                min="1"
+                                                max="52"
+                                            />
+                                        </FormItem>
                             </FormItem>
 
                             <div className='right-column'>
