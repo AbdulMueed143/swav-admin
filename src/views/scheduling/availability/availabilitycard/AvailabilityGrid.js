@@ -6,7 +6,7 @@ import Button  from 'components/ui/Buttons/Button';
 import { Dialog } from 'components/ui';
 import AvailabilityCard from './AvailabilityCard';
 import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
-import UpdateAvailabilityModal from '../modals/UpdateAvailabilityModal';
+import UpdateAvailabilityModalParent from '../modals/UpdateAvailabilityModalParent';
 
 
 const AvailabilityGrid = () => {
@@ -19,15 +19,13 @@ const AvailabilityGrid = () => {
 
     const { getBarbersWithAvailability, updateBarberAvailability  } = useAvailabilityService();
 
-    //End of handling the delete click ...
-
-    // Define a function to fetch and update the services
     const fetchBarbers = async () => {
         if(loading)
             return;
 
         setLoading(true);
         const barbersWithAvailability = await getBarbersWithAvailability();
+
         setBarbers(barbersWithAvailability);
         setLoading(false);
     };
@@ -56,7 +54,6 @@ const AvailabilityGrid = () => {
         setIsUpdateModalOpen(false);
         setSelectedUpdatableBarber(null);
 
-
         fetchBarbers();
     }
 
@@ -67,7 +64,7 @@ const AvailabilityGrid = () => {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search for a barber..."
+                placeholder="ss"
                 className="p-2 border rounded flex-grow"
                 />
             
@@ -76,12 +73,12 @@ const AvailabilityGrid = () => {
             <Loading loading={loading} >
                 <div className="flex gap-4 flex-wrap mt-4"> 
                     {barbers.map((barber, index) => (
-                        <AvailabilityCard currentBarber={barber} onUpdateClick={handleClickToOpenUpdateModal} />
+                        <AvailabilityCard key={barber.barberId} currentBarber={barber} onUpdateClick={handleClickToOpenUpdateModal} />
                     ))}
                 </div>
             </Loading>
 
-            <UpdateAvailabilityModal updateBarber={selectedUpdatableBarber} open={openUpdateModal} handleClose={handleClickToCloseUpdateModal} handleUpdate={handleClickToSaveUpdateModal}  />
+            <UpdateAvailabilityModalParent updateBarber={selectedUpdatableBarber} open={openUpdateModal} handleClose={handleClickToCloseUpdateModal} handleUpdate={handleClickToSaveUpdateModal}  />
 
         </div>
     );

@@ -2,15 +2,9 @@ import {  Avatar, Card } from 'components/ui'
 import { useState, useEffect } from 'react';
 import { FaEdit } from 'react-icons/fa';
 
-
 const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
 
-
-    const { barberId, firstName, lastName, email, phoneNumber, barberAvailability, about, status } = currentBarber;
-    const availabilityList = document.getElementById('availabilityList');
-    var formattedAvailability = null;
-    // Initialize an object with all days of the week
-    const [weekDays, setWeekDays] = useState({
+    const INITIAL_WEEK_DAYS = {
         "MONDAY": [],
         "TUESDAY": [],
         "WEDNESDAY": [],
@@ -18,45 +12,39 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
         "FRIDAY": [],
         "SATURDAY": [],
         "SUNDAY": []
-    });
+    };
 
-    const [overrideDates, setOverrideDates] = useState({});
-
+    const { barberId, firstName, lastName, email, phoneNumber, barberAvailability, about, status } = currentBarber;
+    const [weekDays, setWeekDays] = useState(INITIAL_WEEK_DAYS);
     useEffect(() => {
-        console.log("use effect to calculate values ");
         computeAvailability();
-    }, []); // Empty dependency array means the effect will only run once
+    }, []);
 
     function computeAvailability() {
-
-        console.log("computeAvailability ", currentBarber?.barberAvailability);
+        setWeekDays(INITIAL_WEEK_DAYS);
+        const newWeekDaysState = INITIAL_WEEK_DAYS;
 
         //Only availabilities that have day of the week 
-        const withDayOfWeek = currentBarber?.barberAvailability?.filter(item => 
-            item?.barberAvailabilitiesTemplate?.hasOwnProperty('dayOfWeek'));
-        
-        const withDate = currentBarber?.barberAvailability?.filter(item => 
-            item?.barberAvailabilitiesTemplate?.hasOwnProperty('date'));
-
-
-        console.log("withDayOfWeek ", withDayOfWeek);
+        const withDayOfWeek = currentBarber?.barberAvailability?.filter(item => item?.barberAvailabilitiesTemplate?.hasOwnProperty('dayOfWeek'));
 
         withDayOfWeek?.forEach(availability => {
             const day = availability.barberAvailabilitiesTemplate?.dayOfWeek;
             const slots = availability.barberAvailabilitiesTemplate?.timeSlots;
 
             slots?.forEach(slot => {
-                weekDays[day].push(slotToString(slot));
-
-                const updatedWeekDays = {
-                    ...weekDays,
-                };
-                setWeekDays(updatedWeekDays);
+                //TODO: I am adding this hack we need to check this letter on
+                //Problem, the slots are being repeated, happens because events are fired multiple times, was unable to figure this out right now
+                
+                if(!newWeekDaysState[day].includes(slotToString(slot)))
+                    newWeekDaysState[day].push(slotToString(slot));
             });
-
         });
-    }
 
+        console.log("weekDays ", weekDays);
+        console.log("newWeekDaysState ", newWeekDaysState);
+
+        setWeekDays(newWeekDaysState);
+    }
 
     function slotToString(slot) {
         var startTimeHour = slot.startTime.hour % 12;
@@ -74,7 +62,6 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
     
         return `${startTimeHour}:${startTimeMinute}${startTimeAmPM} - ${endTimeHour}:${endTimeMinute}${endTimeAmPM}`;
     }
-
 
 
     const cardHeader = (
@@ -113,7 +100,7 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
                     <div>
                         {Object.entries(weekDays).map(([day, slots]) => (
                             <div key={day} className="day truncate" style={{textOverflow : 'ellipsis'}}>
-                                <p>{day}:</p>
+                                <p>{day}: </p>
                                     {slots.length > 0 ? (
                                         slots.map((slot, index) => <p key={index} className="slot">{slot}</p>)
                                     ) : (

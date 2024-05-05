@@ -7,6 +7,7 @@ import HolidayGrid from './grids/HolidaysGrid'
 import ShopDetailForm from './forms/ShopDetailForm'
 import TaxAndSurchargeForm from './forms/TaxSurchargeForm'
 import SchedulingLimitForm from './forms/SchedulingLimitForm'
+import VocationGrid from './grids/VocationGrid'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -62,6 +63,7 @@ const Home = () => {
 
                     <TabContent value="tab5">
                         <HolidayGrid />
+                        <VocationGrid />
                     </TabContent>
                 </div>
             </Tabs>
