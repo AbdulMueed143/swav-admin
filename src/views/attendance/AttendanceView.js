@@ -135,7 +135,7 @@ const Home = () => {
        <div class="container">
 
 
-        <div class="left">
+        <div class="left" style={{padding: '10px', background: "white", borderRadius: "20px"}}>
 
         <div className="md:w-[260px] max-w-[260px] mx-auto">
             <Calendar
@@ -169,7 +169,7 @@ const Home = () => {
         
         </div>
 
-            <div class="right">
+            <div class="right" style={{padding: '20px',  borderRadius: "20px"}}>
 
                 <Loading loading={loading} > 
                     {(bookings.length > 0) ? (

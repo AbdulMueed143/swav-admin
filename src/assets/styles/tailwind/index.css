@@ -199,42 +199,32 @@
 }
 
 
-.schedule-container {
-    display: flex;
-    justify-content: space-between;
-    background-color: #f2f2f2;
-    padding: 10px;
-    height: 360px;
-    width: 100%;
-}
-
-.schedule-container > div:not(:last-child) {
-    border-right: 1px solid #ccc; /* Add a vertical line */
-    padding-right: 10px; /* Add some padding to the right of each div */
-    margin-right: 10px; /* Add some margin to the right of each div if needed */
-}
-
-/* If you have a fixed number of divs and you want them to have equal width, you can use the following */
 .schedule-container > div {
-    flex: 1; /* This will make each div take up equal space */
-    padding: 0 10px; /* Add padding on both sides */
+    flex: 1; /* Allows each div to grow equally */
+    padding: 10px 0; /* Adds padding top and bottom */
+    border-bottom: 1px solid #ccc; /* Adds a horizontal line between items */
+}
+
+.schedule-container > div:last-child {
+    border-bottom: none; /* No border for the last item */
 }
 
 .day {
     text-align: center;
-    margin: 0 5px;
-    flex-basis: 14%; /* Divide the space evenly for 7 days */
+    flex-basis: 100%; /* Makes each 'day' take full width of its container */
+    width: 100%; /* Ensures the day fills the width of the container */
 }
 
+/* Update styles for .day if necessary */
 .day.closed h6 {
-    color: red; /* Indicate closed days */
+    color: red; /* Red color for closed days as before */
 }
 
 .add-btn {
     display: block;
-    margin: 10px auto; /* Center button */
+    margin: 10px auto; /* Center button as before */
     padding: 5px 10px;
-    background-color: #4CAF50; /* Green background */
+    background-color: #4caf93; /* Green background as before */
     color: white;
     border: none;
     border-radius: 5px;
@@ -242,11 +232,11 @@
 }
 
 .add-btn:hover {
-    background-color: #45a049;
+    background-color: #7fd0b9;
 }
 
 h6 {
-    margin-bottom: 10px;
+    margin-bottom: 10px; /* Space below the header */
     font-size: 14px;
     font-weight: bold;
 }
@@ -257,21 +247,18 @@ p {
 }
 
 .day {
-    border: 1px solid #ddd; /* Optional: adds a border around each day block */
+    border: 1px solid #ddd; /* Border around each day block */
     padding: 5px;
     margin-bottom: 10px; /* Space between each day block */
-    background-color: #f8f8f8; /* Optional: sets a background color for the day block */
+    background-color: #f8f8f8; /* Background color for the day block */
 }
 
 .day h6 {
-    margin: 0 0 10px 0; /* Adds space below the day name */
-    padding-bottom: 5px; /* Optional: adds some padding below the day name */
-    border-bottom: 1px solid #ddd; /* Optional: adds a separator between the day name and times */
+    margin: 0 0 10px 0; /* Space below the day name */
+    padding-bottom: 5px; /* Padding below the day name */
+    border-bottom: 1px solid #ddd; /* Separator between the day name and times */
 }
 
-.day div p {
-    margin: 2px 0; /* Adds space between the time slots */
-}
 
 
 /* .react-datepicker-popper {
@@ -279,7 +266,7 @@ p {
 } */
 
 
-.slot-container {
+/* .slot-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -288,22 +275,38 @@ p {
     cursor: pointer;
     border: none;
     background: none;
+} */
+
+.slot-container {
+    display: flex;         /* Aligns children (TimeInputRange and button) in a row */
+    align-items: center;   /* Vertically aligns the children in the middle */
+    justify-content: space-between; /* Spreads out the children to use the available space */
+    padding: 5px 0;        /* Adds some vertical padding for spacing */
 }
+
+.slots-delete-icon {
+    margin-left: 5px;      /* Keeps a small space between the TimeInputRange and the delete icon */
+    cursor: pointer;       /* Changes cursor to pointer when hovering over the icon */
+    background: none;      /* Removes any default background styling from the button */
+    border: none;          /* Removes any default border styling from the button */
+    color: inherit;        /* Inherits the color from the parent element, if needed */
+}
+
 
 .slots-delete-icon:hover {
     color: red; /* Example hover effect on the delete icon */
 }
 
 .ant-picker-ok .ant-btn-primary {
-    background-color: #4CAF50; /* New background color */
-    border-color: #4CAF50; /* New border color */
+    background-color: #4caf93; /* New background color */
+    border-color: #4caf93; /* New border color */
     color: #fff; /* Text color */
 }
 
 .ant-picker-ok:hover .ant-btn-primary:hover,
 .ant-picker-ok .ant-btn-primary:focus {
-    background-color: #3E8E41; /* Slightly darker color on hover/focus */
-    border-color: #3E8E41;
+    background-color: #4caf93; /* Slightly darker color on hover/focus */
+    border-color: #4caf93;
 }
 
 .time-picker-container {
@@ -338,4 +341,48 @@ p {
 .right-column {
     margin-right: 1px;
     align-self: flex-end;
+}
+
+
+
+
+  
+
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sidebar {
+    width: 20%;
+}
+
+.main-content {
+    width: 78%;
+}
+
+/* Styles for mobile and small screens */
+@media (max-width: 668px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar, .main-content {
+        width: 100%; /* Full width on small screens */
+    }
+
+    .sidebar {
+        margin-bottom: 20px; /* Add space between the list and main content */
+    }
+}
+
+
+.desktopPaper {
+    min-height: 600px; /* Set minimum height universally */
+}
+
+@media (min-width: 668px) { /* Typical breakpoint for desktop */
+    .desktopPaper {
+        min-width: 800px; /* Minimum width only for desktop */
+    }
 }

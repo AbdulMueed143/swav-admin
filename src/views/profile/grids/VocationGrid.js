@@ -12,9 +12,14 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.module.css';
 import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import useHolidaysService from 'utils/hooks/CustomServices/useHolidayService';
+import useVocationService from 'utils/hooks/CustomServices/useVocationService';
+import VocationCard from './VocationCard';
+import useBookingServices from 'utils/hooks/useBookingService'
+import Select from 'components/ui/Select'
+import { Loading } from 'components/shared';
 
 
-const HolidayGrid = () => {
+const VocationGrid = () => {
     //Alert
     const [serverError, setServerError] = useState(false);
     const [serverErrorMessage, setServerErrorMessage] = useState(false);
@@ -25,27 +30,45 @@ const HolidayGrid = () => {
     }
 
     //Grabbing all the holidays
-    const { getHolidays, addHoliday, deleteHoliday } = useHolidaysService();
-    const [holidays, setHolidays] = useState([]); // Initial state as an empty array
+    const { getBarbers } = useBookingServices();
+    const { getVocations, addVocation, deleteVocation } = useVocationService();
+    const [vocations, setVocations] = useState([]); // Initial state as an empty array
+    const [barbers, setBarbers] = useState([]);
 
-    const fetchHolidays = async () => {
+    const [selectedBarber, setSelectedBarber] = useState(null);
+
+    const fetchVocations = async () => {
         setLoading(true);
-        const response = await getHolidays();
+        const response = await getVocations();
         if(response.status == -1) {
             //error
             setServerError(true);
             setServerErrorMessage(response.message);
         }
         else {
-            setHolidays(response);
+            setVocations(response);
         }
 
         setLoading(false);
     };
+
+    const fetchBarbers = async () => {
+        setLoading(true);
+        const data = await getBarbers();
+        setBarbers(data);
+        setLoading(false);
+    };
+
+    const barbersMap = barbers.map(barber => ({
+        value: barber.firstName + " " + barber.lastName,
+        label: barber.firstName + " " + barber.lastName,
+        barberId: barber.barberId
+    }));
     
     useEffect(() => {
-        fetchHolidays();
-    }, []); // Empty dependency array means the effect will only run once
+        fetchVocations();
+        fetchBarbers();
+    }, []);
 
 
     const [open, setOpen] = useState(false);
@@ -77,13 +100,18 @@ const HolidayGrid = () => {
             year :  endDateAsMoment.year()
         }
 
+        values.barberId = selectedBarber.barberId;
+        values.barberName = selectedBarber.value;
+
+        console.log("sending values ", values);
+
         //lets make call to server
-        const response = await addHoliday(values);
+        const response = await addVocation(values);
         if(response.status === -1) {
             showError(response.message);
         }
         else {
-            fetchHolidays();
+            fetchVocations();
         }
 
         //reset dates
@@ -115,27 +143,27 @@ const HolidayGrid = () => {
 
     //Deleting holiday
     const [deleteDialogIsOpen, setIsDeleteDialogOpen] = useState(false)
-    const [holidayIdSelected, setHolidayIdSelected] = useState(null);
+    const [clientSearchableIdForDeletion, setClientSearchableIdForDeletion] = useState(null);
 
-    const handleDelete = async(holidayId) => {
-        setHolidayIdSelected(holidayId);
+    const handleDelete = async(clientSearchableId) => {
+        setClientSearchableIdForDeletion(clientSearchableId);
         setIsDeleteDialogOpen(true);
     };
 
     const onDeleteDialogClose =() => {
-        setHolidayIdSelected(null);
+        setClientSearchableIdForDeletion(null);
         setIsDeleteDialogOpen(false);
     }
 
     const onDeleteDialogOk = async () => {
         setIsDeleteDialogOpen(false);
-         const response = await deleteHoliday(holidayIdSelected);
+         const response = await deleteVocation(clientSearchableIdForDeletion);
 
         if(response.status === -1) {
             showError(response.message);
         }
         else {
-            fetchHolidays();
+            fetchVocations();
         }
     }
     //Delete method
@@ -153,20 +181,21 @@ const HolidayGrid = () => {
             )}
 
 
-            <div className='right-column' style={{marginRight : '50px'}}>
-                <ButtonWithIcon label="Add Public Holiday" onClick={handleClickToOpen} />
-            </div>
-            
-            <div className="grid-view">
-                {holidays.map((holiday) => (
-                    <HolidayCard 
-                        key={holiday.id} 
-                        holiday={holiday} 
-                        onDelete={handleDelete} 
-                    />
-                ))}
-            </div>
-
+            <Loading loading={loading}> 
+                <div className='right-column' style={{marginRight : '50px'}}>
+                    <ButtonWithIcon label="Add Vocation For Barber" onClick={handleClickToOpen} />
+                </div>
+                
+                <div className="grid-view">
+                    {vocations.map((vocation) => (
+                        <VocationCard 
+                            key={vocation.clientSearchableId} 
+                            vocation={vocation} 
+                            onDelete={handleDelete} 
+                        />
+                    ))}
+                </div>
+            </Loading>
             <div stlye={{}}>
                 <Dialog isOpen={open} onClose={handleToClose} 
                     PaperProps={{
@@ -175,7 +204,7 @@ const HolidayGrid = () => {
                             maxWidth: '600px', // Your desired maximum width
                         },
                     }}> 
-                        <DialogTitle>{"Add Public Holiday"}</DialogTitle>
+                        <DialogTitle>{"Add Vocation"}</DialogTitle>
                         <DialogContent>
 
                             <Formik
@@ -191,14 +220,20 @@ const HolidayGrid = () => {
                                     <div>
                                 <Form>
                                     <FormContainer >
-                                        <FormItem label="Holiday Name">
-                                            <Field
-                                                type="text"
-                                                name="name"
-                                                placeholder="Please enter holiday name."
-                                                component={Input}
-                                            />
-                                        </FormItem>
+                                        
+                                    <FormItem
+                                        label="Select Barber You are adding Vocation For"
+                                        invalid={errors.barbers && touched.barbers}
+                                        errorMessage={errors.barbers}
+                                    >
+                                        <Select
+                                            placeholder="Please Select"
+                                            options={barbersMap}
+                                            onChange={(selectedOption) => {
+                                                setSelectedBarber(selectedOption);
+                                            }}/>
+
+                                    </FormItem>
                                         <DatePicker
                                             selected={startDate}
                                             onChange={(dates) => {
@@ -260,4 +295,4 @@ const HolidayGrid = () => {
     );
 };
 
-export default HolidayGrid;
+export default VocationGrid;

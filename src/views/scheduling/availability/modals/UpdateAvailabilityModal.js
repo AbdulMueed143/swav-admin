@@ -9,14 +9,14 @@ import { TimePicker } from 'antd';
 import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
 
 import { FormItem, FormContainer, Calendar } from 'components/ui'
-import Input from 'components/ui/Input'
+import TimeInput from 'components/ui/TimeInput'
 import { Field, Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import AddShiftDialog from './AddShiftDialog';
+
 // Example with FontAwesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Loading } from 'components/shared';
+import dayjs from 'dayjs';
 
 
 
@@ -24,6 +24,8 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
     const {  updateBarberAvailability , fetchAvailabilityForDate, updateBarberAvailabilityForDate } = useAvailabilityService();
     const [overrideDates, setOverrideDates] = useState({});
+    const { TimeInputRange } = TimeInput
+    const [timeRangeValue, setTimeRangeValue] = useState()
 
     const [loading, setLoading] = useState(false);
     const [loadingSpecificDateSlots, setLoadingSpecificDateSlots] = useState(false);
@@ -36,14 +38,34 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
     }
 
     useEffect(() => {
-        console.log("override dates data ", overrideDates);
-    
         const fetchData = async () => {
-            // We will start the loading ...
-            // we will load the shifts for the selected date ... but only if there aren't already slots for that date
+            setDefaultWeekDays({
+                "MONDAY": [],
+                "TUESDAY": [],
+                "WEDNESDAY": [],
+                "THURSDAY": [],
+                "FRIDAY": [],
+                "SATURDAY": [],
+                "SUNDAY": []
+            });
+
+            setWeekDays(initializeWeekDays());
+
+
+            const withDate = updateBarber?.barberAvailability?.filter(item => item?.barberAvailabilitiesTemplate?.hasOwnProperty('date'));
+
+
+           withDate?.map( barber => {
+                //get all the timeslots 
+                const slots = barber?.barberAvailabilitiesTemplate?.timeSlots;
+                overrideDates[barber?.barberAvailabilitiesTemplate?.date] = slots;
+            });
+
+
+
 
             const dateLookingFor = formatDateAsServerDate(selectedDateToBeOverrided);
-            const foundItem = overrideDates.filter(item => item.barberAvailabilitiesTemplate.date == dateLookingFor);
+            const foundItem = overrideDates?.filter(item => item.barberAvailabilitiesTemplate.date == dateLookingFor);
 
             if (foundItem) {
                 // we already have shifts for this date here ... no need to load again ...
@@ -123,37 +145,37 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
     const [weekDays, setWeekDays] = useState(null);
 
-    useEffect(() => {
-        if (open) {
-            setDefaultWeekDays({
-                "MONDAY": [],
-                "TUESDAY": [],
-                "WEDNESDAY": [],
-                "THURSDAY": [],
-                "FRIDAY": [],
-                "SATURDAY": [],
-                "SUNDAY": []
-            });
-            setWeekDays(initializeWeekDays());
+    // useEffect(() => {
+    //     if (open) {
+    //         setDefaultWeekDays({
+    //             "MONDAY": [],
+    //             "TUESDAY": [],
+    //             "WEDNESDAY": [],
+    //             "THURSDAY": [],
+    //             "FRIDAY": [],
+    //             "SATURDAY": [],
+    //             "SUNDAY": []
+    //         });
+    //         setWeekDays(initializeWeekDays());
 
-            const withDate = updateBarber?.barberAvailability?.filter(item => 
-            item?.barberAvailabilitiesTemplate?.hasOwnProperty('date'));
+    //         const withDate = updateBarber?.barberAvailability?.filter(item => 
+    //         item?.barberAvailabilitiesTemplate?.hasOwnProperty('date'));
 
 
-           withDate?.map( barber => {
-                //get all the timeslots 
-                const slots = barber?.barberAvailabilitiesTemplate?.timeSlots;
-                overrideDates[barber?.barberAvailabilitiesTemplate?.date] = slots;
-            });
+    //        withDate?.map( barber => {
+    //             //get all the timeslots 
+    //             const slots = barber?.barberAvailabilitiesTemplate?.timeSlots;
+    //             overrideDates[barber?.barberAvailabilitiesTemplate?.date] = slots;
+    //         });
 
             
-            // setOverrideDates(result);
-        }
-    }, [open]); // Empty dependency array means the effect will only run once
+    //         // setOverrideDates(result);
+    //     }
+    // }, [open]); // Empty dependency array means the effect will only run once
 
 
-    useEffect(() => {
-    }, [overrideDates]);
+    // useEffect(() => {
+    // }, [overrideDates]);
 
     function slotToString(slot) {
         var startTimeHour = slot.startTime.hour % 12;
@@ -243,40 +265,88 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
     }
 
 
-    const onDialogClose = () => {
-        setIsOpen(false)
-        setStartTime(null);
-        setEndTime(null);
-    }
+    // const onDialogClose = () => {
+    //     setIsOpen(false)
+    //     setStartTime(null);
+    //     setEndTime(null);
+    // }
 
-    const createSlot = (day, selectedStartTime, selectedEndTime) =>{
+    const createEmptySlot = (day) =>{
+
         return {
             attendanceStatus: "TO_BE_MARKED",
             slotName : day,
             startTime : {
-                hour : selectedStartTime.hour(),
-                minute :  selectedStartTime.minute()
+                hour : 0,
+                minute :  0
             },
             endTime : {
-                hour : selectedEndTime.hour(),
-                minute : selectedEndTime.minute()
+                hour : 0,
+                minute :  0
             }
         }
-    }
-
-    const createSlotSD = (day, selectedStartTime, selectedEndTime) =>{
-        return createSlot(formatDate(day), selectedStartTime, selectedEndTime)
     }
 
     const addObjectToDay = (selectedDay, newSlot) => {
 
         for (const day in weekDays) {
-            if(day== selectedDay) {
-                //get all the timeslots 
-                weekDays[selectedDay].push(newSlot);
+            if(day == selectedDay) {
+
+                setWeekDays(prevWeekDays => {
+                    // Clone the entire state
+                    const updatedWeekDays = { ...prevWeekDays };
+                
+                    // Make sure the day array exists
+                    if (!updatedWeekDays[selectedDay]) {
+                      updatedWeekDays[selectedDay] = [];
+                    }
+                
+                    // Add the new slot to the cloned array
+                    updatedWeekDays[selectedDay] = [...updatedWeekDays[selectedDay], newSlot];
+                
+                    // Return the updated state
+                    return updatedWeekDays;
+                  });
             }
         }
+
+        console.log("weekDays " ,  weekDays)
+
     };
+
+    const onAddDay = (day) => {
+        const createdSlot = createEmptySlot(day);
+        addObjectToDay(day, createdSlot);
+    }
+
+    // const createSlot = (day, selectedStartTime, selectedEndTime) =>{
+    //     return {
+    //         attendanceStatus: "TO_BE_MARKED",
+    //         slotName : day,
+    //         startTime : {
+    //             hour : selectedStartTime.hour(),
+    //             minute :  selectedStartTime.minute()
+    //         },
+    //         endTime : {
+    //             hour : selectedEndTime.hour(),
+    //             minute : selectedEndTime.minute()
+    //         }
+    //     }
+    // }
+
+    const createSlotSD = (day, selectedStartTime, selectedEndTime) =>{
+        // return createSlot(formatDate(day), selectedStartTime, selectedEndTime)
+    }
+
+    // const addObjectToDay = (selectedDay, newSlot) => {
+
+    //     for (const day in weekDays) {
+    //         if(day == selectedDay) {
+    //             //get all the timeslots 
+    //             weekDays[selectedDay].push(newSlot);
+    //         }
+    //     }
+    // };
 
     const removeSlotFromDate = (date, index) => {
         setOverrideDates(prevWeekDates => {
@@ -308,58 +378,58 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
         });
     };
     
-    const onDialogOk = () => {
-        setIsOpen(false)
-        const selectedStartTime = moment(startTime, 'hh:mm a');
-        const selectedEndTime = moment(endTime, 'hh:mm a');
+    // const onDialogOk = () => {
+    //     setIsOpen(false)
+    //     const selectedStartTime = moment(startTime, 'hh:mm a');
+    //     const selectedEndTime = moment(endTime, 'hh:mm a');
 
-        if(startTime != endTime) {
-            const createdSlot = createSlot(selectedDay, selectedStartTime, selectedEndTime);
-            addObjectToDay(selectedDay, createdSlot);
+    //     if(startTime != endTime) {
+    //         const createdSlot = createSlot(selectedDay, selectedStartTime, selectedEndTime);
+    //         addObjectToDay(selectedDay, createdSlot);
     
-            setStartTime(null);
-            setEndTime(null);
-        }
-    }
+    //         setStartTime(null);
+    //         setEndTime(null);
+    //     }
+    // }
 
     const save = async () => {
-        //we got to save days for each day 
-        const availabilities =  Object.keys(weekDays).map(day => {
-            return {
-                dayOfWeek: day,
-                timeSlots: weekDays[day]
-            };
-        });
+        // //we got to save days for each day 
+        // const availabilities =  Object.keys(weekDays).map(day => {
+        //     return {
+        //         dayOfWeek: day,
+        //         timeSlots: weekDays[day]
+        //     };
+        // });
 
-        setLoading(true);
-        const result = await updateBarberAvailability(updateBarber.barberId, availabilities);
+        // setLoading(true);
+        // const result = await updateBarberAvailability(updateBarber.barberId, availabilities);
 
-        if(result.status == -1) {
-            console.log("Failed ", );
-        } else {
-            console.log("Succeess", );
-        }
+        // if(result.status == -1) {
+        //     console.log("Failed ", );
+        // } else {
+        //     console.log("Succeess", );
+        // }
 
-        //and we also have to make call for each day we have data for in list of
-        const availabilitiesForDates =  Object.keys(overrideDates).map(dateString => {
-            const timeSlots = overrideDates[dateString]; // This already is the list of slots for that day
-            return {
-                date: formatDateAsServerDate(dateString),
-                timeSlots: timeSlots
-            };
-        });
+        // //and we also have to make call for each day we have data for in list of
+        // const availabilitiesForDates =  Object.keys(overrideDates).map(dateString => {
+        //     const timeSlots = overrideDates[dateString]; // This already is the list of slots for that day
+        //     return {
+        //         date: formatDateAsServerDate(dateString),
+        //         timeSlots: timeSlots
+        //     };
+        // });
 
-        const datesResult = await updateBarberAvailabilityForDate(updateBarber.barberId, availabilitiesForDates);
+        // const datesResult = await updateBarberAvailabilityForDate(updateBarber.barberId, availabilitiesForDates);
 
-        if(datesResult.status == -1) {
-            console.log("Failed ", );
-        } else {
-            console.log("Succeess", );
-        }
+        // if(datesResult.status == -1) {
+        //     console.log("Failed ", );
+        // } else {
+        //     console.log("Succeess", );
+        // }
 
         //close this by calling
-        handleUpdate();
-        setLoading(false);
+        // handleUpdate();
+        // setLoading(false);
         
     }
     
@@ -404,9 +474,14 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                                                     <h6>{day}</h6>
                                                     {slots.length > 0 ? (
                                                         slots.map((slot, index) => (
-                                                            <div key={index} className="slot-container">
-                                                                <p className="slot">{slotToString(slot)}</p>
-                                                                <button className='slots-delete-icon ' onClick={() => removeSlotFromDay(day, index)}>
+                                                            <div key={index} >
+                                                                {/* <p className="slot">{slotToString(slot)}</p> */}
+                                                                <TimeInputRange
+                                                                format="12"
+                                                                value={timeRangeValue}
+                                                                onChange={setTimeRangeValue}
+                                                            />
+                                                                <button className='slots-delete-icon' style={{marginLeft: '5px'}} onClick={() => removeSlotFromDay(day, index)}>
                                                                     <FontAwesomeIcon icon={faTrash} />
                                                                 </button>  
                                                             </div>
@@ -414,7 +489,7 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                                                     ) : (
                                                         <p className="no-availability slot">N/A</p>
                                                     )}
-                                                    <Button className="add-btn"onClick={() => openDialog(day)}>Add</Button>
+                                                    <Button className="add-btn"onClick={() => onAddDay(day)}>Add</Button>
                                                 </div>
                                             ))
                                         )}
@@ -450,7 +525,11 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                                         {overrideDates[formatDateAsServerDate(selectedDateToBeOverrided)]?.length > 0 ? (
                                                     overrideDates[formatDateAsServerDate(selectedDateToBeOverrided)].map((slot, index) => (
                                                         <div key={index} className="slot-container">
-                                                            <p className="slot">{slotToString(slot)}</p>
+                                                            {/* <p className="slot">{slotToString(slot)}</p> */}
+                                                            {/* <TimeInputRange
+                                                                value={timeRangeValue}
+                                                                onChange={setTimeRangeValue}
+                                                            /> */}
                                                             <button className='slots-delete-icon '>
                                                                 <FontAwesomeIcon icon={faTrash} onClick={() => removeSlotFromDate(formatDateAsServerDate(selectedDateToBeOverrided), index)} />
                                                             </button>  
@@ -491,7 +570,7 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
                 
       
-                <Dialog
+                {/* <Dialog
                     open={dialogIsOpen}
                     PaperProps={{
                         style: {
@@ -551,9 +630,7 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
 
                     
                 </Dialog> 
-
-
-
+ */}
 
 
                 <Dialog
@@ -575,23 +652,24 @@ export default function UpdateAvailabilityModal({updateBarber, open, handleClose
                 <div className="time-picker-container">
                     <div className="time-picker-group">
                         <p>Start Time:</p>
-                        <TimePicker 
+                        <TimeInput format="12"  />
+                        {/* <TimePicker 
                             getPopupContainer={(triggerNode) => triggerNode.parentNode.parentNode.parentNode}
                             format="hh:mm a" 
                             onChange={(time) => setStartTimeSD(time ? time.format('hh:mm a') : null)} 
                             minuteStep={15}
                             showNow={false}
-                        />
+                        /> */}
                     </div>
                     <div className="time-picker-group">
                         <p>End Time:</p>
-                        <TimePicker 
+                        {/* <TimePicker 
                             getPopupContainer={(triggerNode) => triggerNode.parentNode}
                             format="hh:mm a"
                             onChange={(time) => setEndTimeSD(time ? time.format('hh:mm a') : null)} 
                             minuteStep={15}
                             showNow={false}
-                        />
+                        /> */}
                     </div>
                 </div>
                 </DialogContent>
