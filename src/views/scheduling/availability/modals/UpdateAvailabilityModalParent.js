@@ -117,7 +117,7 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
                                         </div>
                                     ) : (
                                         <div>
-                                            <OverrideDates updateBarber={updateBarber} />
+                                            <OverrideDates updateBarber={updateBarber} onOverrideDatesUpdate={handleOverrideDatesUpdate} templateInitialState={weekDaysInfo} />
                                         </div>
                                     )}
                                 </div>

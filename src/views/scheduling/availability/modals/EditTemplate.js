@@ -19,7 +19,7 @@ import { Loading } from 'components/shared';
 export default function EditTemplate({updateBarber, onWeekDaysDataUpdate, initialState}) {
 
     const {  updateBarberAvailability , fetchAvailabilityForDate, updateBarberAvailabilityForDate } = useAvailabilityService();
-    const [overrideDates, setOverrideDates] = useState({});
+    const [ overrideDates, setOverrideDates] = useState({});
     const { TimeInputRange } = TimeInput
 
     const [loading, setLoading] = useState(false);
@@ -139,19 +139,15 @@ export default function EditTemplate({updateBarber, onWeekDaysDataUpdate, initia
     }
 
     // ==== ==  = == == = == = = = 
-
     const addObjectToDay = (selectedDay, newSlot) => {
 
         for (const day in weekDays) {
             if(day == selectedDay) {
 
                 setWeekDays(prevWeekDays => {
-                    console.log("prevWeekDays ", prevWeekDays);
                     // Clone the entire state
                     const updatedWeekDays = { ...prevWeekDays };
-                    console.log("prevWeekDays 2 ", prevWeekDays, updatedWeekDays);
 
-                
                     // Make sure the day array exists
                     if (!updatedWeekDays[selectedDay]) {
                       updatedWeekDays[selectedDay] = [];
@@ -177,21 +173,6 @@ export default function EditTemplate({updateBarber, onWeekDaysDataUpdate, initia
         const createdSlot = createEmptySlot(day);
         addObjectToDay(day, createdSlot);
     }
-
-
-    const removeSlotFromDate = (date, index) => {
-        setOverrideDates(prevWeekDates => {
-            const updatedDate = [...prevWeekDates[date]];
-    
-            updatedDate.splice(index, 1);
-    
-            // Return the updated state
-            return {
-                ...prevWeekDates,
-                [date]: updatedDate
-            };
-        });
-    };
 
     const removeSlotFromDay = (day, index) => {
         setWeekDays(prevWeekDays => {

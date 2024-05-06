@@ -1,5 +1,4 @@
 export function slotToStartAndEndDateTimeArray(slot)  {
-
     var startTimeHour = slot.startTime.hour % 12;
     var endTimeHour = slot.endTime.hour % 12;
 
@@ -12,8 +11,6 @@ export function slotToStartAndEndDateTimeArray(slot)  {
 
     var startTimeMinute = slot.startTime.minute < 10 ? `0${slot.startTime.minute}` : slot.startTime.minute;
     var endTimeMinute = slot.endTime.minute < 10 ? `0${slot.endTime.minute}` : slot.endTime.minute;
-
-    console.log("slotToStartAndEndDateTimeArray ", `${startTimeHour}:${startTimeMinute}${startTimeAmPM}`)
 
     return [ parseTimeToTodayDate(`${startTimeHour}:${startTimeMinute}${startTimeAmPM}`),
              parseTimeToTodayDate(`${endTimeHour}:${endTimeMinute}${endTimeAmPM}`)]
