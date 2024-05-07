@@ -5,7 +5,7 @@ import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilitySe
 import { Loading } from 'components/shared';
 import EditTemplate from './EditTemplate';
 import OverrideDates from './OverrideDates';
-import { formatDateAsServerDate } from './utils';
+import { formatDateAsServerDate, isObjectWithAtLeastOneKey } from './utils';
 
 
 export default function UpdateAvailabilityModalParent({updateBarber, open, handleClose, handleUpdate}) {
@@ -36,10 +36,17 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
         setOverrideDates(overrideDatesUpdate);
     };
 
+    const handleCloseEvent = () => {
+        setWeekDaysInfo([]);
+        handleOverrideDatesUpdate([]);
+        handleClose();
+    }
+
     const save = async () => {
         setLoading(true);
 
-        if(weekDaysInfo?.length > 0 ) {
+        if(isObjectWithAtLeastOneKey(weekDaysInfo)) {
+
             const availabilities =  Object.keys(weekDaysInfo).map(day => {
                 return {
                     dayOfWeek: day,
@@ -47,8 +54,6 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
                 };
             });
 
-            console.log("Calling - updateBarberAvailability ", availabilities);
-    
             const result = await updateBarberAvailability(updateBarber.barberId, availabilities);
     
             if(result.status == -1) {
@@ -61,16 +66,21 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
         //Now we will check if override dates has changes
 
                 // //and we also have to make call for each day we have data for in list of
-        // const availabilitiesForDates =  Object.keys(overrideDates).map(dateString => {
-        //     const timeSlots = overrideDates[dateString]; // This already is the list of slots for that day
-        //     return {
-        //         date: formatDateAsServerDate(dateString),
-        //         timeSlots: timeSlots
-        //     };
-        // });
+        const availabilitiesForDates =  Object.keys(overrideDates)
+        .filter(dateString => {
+            // Filter out the items where isChanged is true
+            return overrideDates[dateString].some(slot => slot.isChanged);
+        })
+        .map(dateString => {
+            const timeSlots = overrideDates[dateString]; // This already is the list of slots for that day
+            return {
+                date: formatDateAsServerDate(dateString),
+                timeSlots: timeSlots
+            };
+        });
 
 
-        // console.log("Availabilities for dates ", availabilitiesForDates);
+        console.log("Availabilities for dates ",overrideDates, availabilitiesForDates);
 
         // const datesResult = await updateBarberAvailabilityForDate(updateBarber.barberId, availabilitiesForDates);
 
@@ -82,15 +92,16 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
 
 
         //close this by calling
-        handleUpdate();
+        // handleUpdate();
         setLoading(false);
+        setWeekDaysInfo([]);
     }
     
 
     return (
         <div stlye={{}}>
             <div>
-                <Dialog open={open} onClose={handleClose}  fullWidth={true}
+                <Dialog open={open} onClose={handleCloseEvent}  fullWidth={true}
                     PaperProps={{
                         className: "desktopPaper"
                     }}> 

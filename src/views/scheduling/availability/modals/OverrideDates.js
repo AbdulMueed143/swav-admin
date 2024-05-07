@@ -103,6 +103,7 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
 
                 //add these slots to the override dates now
                 overrideDates[formatDateAsServerDate(new Date(dateLookingFor))] = slotsForSelectedDate;
+                console.log("slotsForSelectedDate ", slotsForSelectedDate, overrideDates);
 
             }
         };
@@ -169,6 +170,7 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
 
     const createSlotWithStartEndDatetime = (selectedDate, startDateTime, endDateTime) =>{
         return {
+            isChanged: true,
             attendanceStatus: "TO_BE_MARKED",
             slotName : selectedDate,
             startTime : {
@@ -201,6 +203,9 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
     const updateSlotTime = (selectedDateKey, index, newTime)  =>  {
         let startTime = moment(newTime[0], 'hh:mm a');
         let endTime = moment(newTime[1], 'hh:mm a');
+
+        console.log("updateSlotTime ", selectedDateKey, overrideDates[selectedDateKey][index], index, overrideDates);
+
         overrideDates[selectedDateKey][index] = createSlotWithStartEndDatetime(selectedDateKey, startTime, endTime);
 
         onOverrideDatesUpdate(overrideDates);
