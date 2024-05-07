@@ -1,13 +1,14 @@
 import React, { useState, useEffect,  useRef, useReducer } from 'react';
 import Button from "@mui/material/Button";
 import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
-import { slotToStartAndEndDateTimeArray, isObjectWithAtLeastOneKey } from './utils';
+import { slotToStartAndEndDateTimeArray, isObjectWithAtLeastOneKey, formatDateAsServerDate } from './utils';
 import { FormItem, FormContainer, Calendar } from 'components/ui'
 import TimeInput from 'components/ui/TimeInput'
 import { Field, Form, Formik } from 'formik'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Loading } from 'components/shared';
+import moment, { weekdays } from 'moment';
 
 export default function OverrideDates({updateBarber, onOverrideDatesUpdate, templateInitialState}) {
 
@@ -57,9 +58,6 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
     };
 
     const handleOverrideDateChange = (event) => {
-
-
-
         setSelectedDateToBeOverrided(event);
     }
 
@@ -151,18 +149,7 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
         return '('+todayDay+') '+day+' '+month+',' + year;
       };
 
-    const formatDateAsServerDate = (date) => {
 
-        const d = new Date(date);
-        let month = '' + (d.getMonth() + 1 );
-        let day = '' + d.getDate();
-        const year = d.getFullYear();
-    
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-    
-        return year + '-'+month + '-'+day;
-    };
 
     const [weekDays, setWeekDays] = useState(null);
     const createEmptySlot = (selectedDate) => {
@@ -176,6 +163,21 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
             endTime : {
                 hour : 0,
                 minute :  0
+            }
+        }
+    }
+
+    const createSlotWithStartEndDatetime = (selectedDate, startDateTime, endDateTime) =>{
+        return {
+            attendanceStatus: "TO_BE_MARKED",
+            slotName : selectedDate,
+            startTime : {
+                hour : startDateTime.hour(),
+                minute :  startDateTime.minute()
+            },
+            endTime : {
+                hour : endDateTime.hour(),
+                minute : endDateTime.minute()
             }
         }
     }
@@ -196,6 +198,13 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
         });
     };
 
+    const updateSlotTime = (selectedDateKey, index, newTime)  =>  {
+        let startTime = moment(newTime[0], 'hh:mm a');
+        let endTime = moment(newTime[1], 'hh:mm a');
+        overrideDates[selectedDateKey][index] = createSlotWithStartEndDatetime(selectedDateKey, startTime, endTime);
+
+        onOverrideDatesUpdate(overrideDates);
+    }
 
     const formIkRef = useRef();
 
@@ -246,6 +255,7 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
                                                                     <TimeInputRange
                                                                         format="12"
                                                                         value={slotToStartAndEndDateTimeArray(slot)}
+                                                                        onChange={(newTime) => updateSlotTime(dateKey, index, newTime)}
                                                                     />
                                                                     <button className='slots-delete-icon'>
                                                                         <FontAwesomeIcon icon={faTrash} onClick={() => removeSlotFromDate(dateKey, index)} />
