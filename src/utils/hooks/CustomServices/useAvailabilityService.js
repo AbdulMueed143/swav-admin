@@ -74,6 +74,8 @@ function useAvailabilityService() {
 
     const updateBarberAvailability = async (barberId, availabilities) => {
         try {
+
+            console.log("BarberId , Availabilities ", barberId, availabilities);
             // Map each availability to a promise of an API call
             const apiCallPromises = availabilities.map(barberAvailability =>
                 apiUpsertAvailabilityTemplate(token, barberId, barberAvailability)

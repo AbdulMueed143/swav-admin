@@ -1,5 +1,4 @@
 import React, { useState, useEffect,  useRef } from 'react';
-import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import moment, { weekdays } from 'moment';
 import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
@@ -7,7 +6,6 @@ import { slotToStartAndEndDateTimeArray, isObjectWithAtLeastOneKey } from './uti
 import { FormItem, FormContainer, Calendar } from 'components/ui'
 import TimeInput from 'components/ui/TimeInput'
 import { Field, Form, Formik } from 'formik'
-import dayjs from 'dayjs'
 
 
 // Example with FontAwesome

@@ -39,10 +39,7 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
                     newWeekDaysState[day].push(slotToString(slot));
             });
         });
-
-        console.log("weekDays ", weekDays);
-        console.log("newWeekDaysState ", newWeekDaysState);
-
+        
         setWeekDays(newWeekDaysState);
     }
 
