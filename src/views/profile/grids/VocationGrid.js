@@ -183,7 +183,7 @@ const VocationGrid = () => {
 
             <Loading loading={loading}> 
                 <div className='right-column' style={{marginRight : '50px'}}>
-                    <ButtonWithIcon label="Add Vocation For Barber" onClick={handleClickToOpen} />
+                    <ButtonWithIcon label="Add Time off" onClick={handleClickToOpen} />
                 </div>
                 
                 <div className="grid-view">
