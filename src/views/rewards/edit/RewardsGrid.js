@@ -216,7 +216,7 @@ const RewardsGrid = () => {
 
             <div className="flex gap-4 flex-wrap mt-4"> 
                 {filteredPackages.map((cpackage, index) => (
-                    <PackagesCard key={index} currentPackage={cpackage} servicesAvailable={services} onUpdateClick={handleClickToOpenUpdateModal} onDeleteClick={handleDeleteClick} />
+                    <PackagesCard key={index} currentPackage={cpackage}  onUpdateClick={handleClickToOpenUpdateModal} onDeleteClick={handleDeleteClick} />
                 ))}
             </div>
 

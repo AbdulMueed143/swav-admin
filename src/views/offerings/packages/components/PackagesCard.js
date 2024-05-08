@@ -2,11 +2,11 @@ import {  Avatar, Card } from 'components/ui'
 import Button  from 'components/ui/Buttons/Button';
 
 
-const PackagesCard = ({currentPackage, servicesAvailable, onUpdateClick, onDeleteClick}) => {
+const PackagesCard = ({currentPackage,  onUpdateClick, onDeleteClick}) => {
 
     const MAX_SERVICES_DISPLAYED = 2;
 
-    const services = servicesAvailable.filter(service => currentPackage.amenitiesIds.includes(service.id));
+    const services = currentPackage.amenities;
 
     const totalCost = services.reduce((total, service) => total + service.price, 0);
     const totalTime = services.reduce((total, service) => total + service.averageTimeInMinutes, 0);
