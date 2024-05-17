@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, useEffect} from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
@@ -36,7 +36,7 @@ const validationSchema = Yup.object().shape({
 })
 
  
-export default function AddRewardDialog({open, handleToClose, handleToSaveReward}) {
+export default function UpdateRewardDialog({open, reward, handleToClose, handleToSaveReward}) {
 
     const formIkRef = useRef();
     const [expiryDate, setExpiryDate] = useState(null);
@@ -56,7 +56,11 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
         { value: 'COUPON', label: 'COUPON' },
     ];
 
-    const rewardSource = [];
+    useEffect(() => {
+        setSelectedRewardSource(rewardSources.find(source => source.value == reward?.source));
+        setSelectedRewardType(rewardTypes.find(type => type.value == reward?.type));
+        setExpiryDate(new Date(reward?.expiryDate));
+    }, [reward]);
 
     return (
         <div stlye={{}}>
@@ -67,20 +71,18 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
                         maxWidth: '600px', // Your desired maximum width
                     },
                 }}> 
-                <DialogTitle>{"Add Reward"}</DialogTitle>
+                <DialogTitle>{"Update Reward"}</DialogTitle>
                 <DialogContent>
 
                 <Formik
                     enableReinitialize
                     initialValues={{
-                        shopName: '',
-                        placeId: '',
-                        description: '',
-                        expiryDate: null,
-                        value: 0,
-                        numberOfVisits: 0,
-                        rewardType: 'CREDITS',
-                        rewardSource: 'EXTERNAL'
+                        shopName: reward?.shopName,
+                        placeId: reward?.placeId,
+                        description: reward?.description,
+                        expiryDate: reward?.expiryDate,
+                        value: reward?.value,
+                        numberOfVisits: reward?.numberOfVisits,
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting }) => {
@@ -103,6 +105,7 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
                                         invalid={errors.rewardType && touched.rewardType}
                                         errorMessage={errors.rewardType}>
                                         <Select
+                                                value={selectedRewardType}
                                                 placeholder="Please Select Reward type"
                                                 options={rewardTypes}
                                                 onChange={(selectedRewardType) => {
@@ -118,6 +121,7 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
                                         invalid={errors.rewardSource && touched.rewardSource}
                                         errorMessage={errors.rewardSource}>
                                         <Select
+                                                value={selectedRewardSource}
                                                 placeholder="Please Select Reward type"
                                                 options={rewardSources}
                                                 onChange={(selectedRewardSource) => {
@@ -133,8 +137,10 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
                                     invalid={errors.expiryDate && touched.expiryDate}
                                     errorMessage={errors.expiryDate}>
                                         <DatePicker 
+                                            value={expiryDate}
                                             name="expiryDate"
                                             onChange={(newDate) => {
+                                                console.log("New date selected ", newDate)
                                                 setExpiryDate(newDate);
                                             }}
                                             placeholder="Pick a date" />
@@ -221,7 +227,7 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
                                 color="primary">
                                 Cancel
                             </Button>
-                            <Button onClick={() => handleToSaveReward(values, selectedRewardType, selectedRewardSource ,expiryDate)}
+                            <Button onClick={() => handleToSaveReward(reward?.id, values, selectedRewardType, selectedRewardSource ,expiryDate)}
                                 color="primary">
                                 Save
                             </Button>

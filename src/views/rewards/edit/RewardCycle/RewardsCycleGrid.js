@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from 'react';
 
-import PackagesCard from './RewardsCard';
 import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import useBookingServices from 'utils/hooks/useBookingService'
 import { Loading } from 'components/shared';
@@ -9,11 +8,8 @@ import { Dialog } from 'components/ui';
 import Alert from 'components/ui/Alert'
 import { useSelector } from 'react-redux'
 import useRewardsService from 'utils/hooks/CustomServices/useRewardsService';
-import AddRewardDialog from './dialog/AddRewardDialog';
-import RewardCard from './RewardsCard';
-import UpdateRewardDialog from './dialog/UpdateRewardDialog';
 
-const RewardsGrid = () => {
+const RewardsCycleGrid = () => {
 
     //Informations about current user
     const userInfo = useSelector((state) => state.auth.user);
@@ -174,7 +170,7 @@ const RewardsGrid = () => {
             {(userInfo && Array.isArray(userInfo.roles) && userInfo.roles.length > 0 && (userInfo.roles[0] == 'OWNER')) ? 
             (
                 <ButtonWithIcon 
-                    label="Add Reward"
+                    label="Add Reward To Cycle"
                     onClick={handleClickToOpen}
                     >
                 </ButtonWithIcon>
@@ -217,20 +213,9 @@ const RewardsGrid = () => {
                 </div>
             </Dialog>
 
-            <Loading loading={loading} > 
-                <div className="flex gap-4 flex-wrap mt-4"> 
-                    {rewards.map((creward, index) => (
-                        <RewardCard key={index} reward={creward}  onUpdateClick={handleClickToOpenUpdateModal} onDeleteClick={handleDeleteClick} />
-                    ))} 
-                </div>
-            </Loading>
-
-            <AddRewardDialog open={isRewardDialogOpen} handleToSaveReward={handleToSave} handleToClose={handleToClose}  />
-                    
-            <UpdateRewardDialog open={isUpdateRewardDialogOpen} reward={selectedRewardForUpdate} handleToSaveReward={handleClickToSaveUpdateModal} handleToClose={handleClickToCloseUpdateModal}  />
 
         </div>
     );
 };
 
-export default RewardsGrid;
+export default RewardsCycleGrid;
