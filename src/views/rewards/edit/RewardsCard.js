@@ -30,9 +30,6 @@ const RewardCard = ({ reward, onUpdateClick, onDeleteClick }) => {
     
     const getRewardTypeAsString = (rewardType) => {
 
-
-        console.log("rewardType ", rewardType)
-
         if(rewardType === 'CREDITS')
             return "$";
 
@@ -65,12 +62,6 @@ const RewardCard = ({ reward, onUpdateClick, onDeleteClick }) => {
 
     Object.freeze(RewardSource);
 
-
-    // const { placeId, shopName, source, rtype, value, numberOfVisits, expiryDate } = reward;
-
-    console.log("I got the reward ", reward);
-
-
     const cardFooter = (
         <div cclassName="flex flex-col items-start">
            <div className="flex items-center mb-2">
@@ -86,10 +77,10 @@ const RewardCard = ({ reward, onUpdateClick, onDeleteClick }) => {
             </div>
 
             <div className="flex">
-                <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick()}>
+                <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick(reward)}>
                     Delete 
                 </Button>
-                <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => onUpdateClick()}>
+                <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => onUpdateClick(reward)}>
                     Update
                 </Button>
             </div>

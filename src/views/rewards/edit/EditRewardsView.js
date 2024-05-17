@@ -7,6 +7,7 @@ import './rewards.css';
 import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon'
 import AddRewardDialog from './dialog/AddRewardDialog'
 import RewardsGrid from './RewardsGrid'
+import RewardsCycleGrid from './RewardCycle/RewardsCycleGrid'
 
 const Home = () => {
 
@@ -20,15 +21,11 @@ const Home = () => {
     <div>
 
     <div id="rewards" class="section">
-    
         <RewardsGrid />
-
-        {/* <AddRewardDialog open={isRewardDialogOpen} /> */}
-
     </div>
-<div id="reward-cycle" class="section">
-    <h2>Reward Cycle</h2>
-</div>
+    <div id="reward-cycle" class="section">
+        <RewardsCycleGrid />
+    </div>
 
     </div>
     </>

@@ -38,7 +38,7 @@ export async function apiToggleRewardStatus( token, data) {
 
 export async function apiUpdateReward( token, data) {
     return ApiService.fetchData({
-        url: '/barber-reward-service/api/v1/reward/' + data.id,
+        url: '/barber-reward-service/api/v1/reward/update/' + data.id,
         method: 'put',
         data,
         headers: {
