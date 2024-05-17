@@ -35,15 +35,12 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
     const [selectedAmenities, setSelectedAmenities] = React.useState([]);
       
     // Map your services array to an array of options
-    const serviceMap = servicesAvailable.map(service => ({
+    const serviceMap = packageData?.amenities?.map(service => ({
         value: service.name,
         label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
     }));
 
-    const selectedServicesMap = servicesAvailable.filter( service => {
-        if(packageData)
-            return packageData.amenitiesIds.includes(service.id);
-    }).map(service => ({
+    const selectedServicesMap = packageData?.amenities.map(service => ({
         value: service.name,
         label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
     }));
@@ -62,10 +59,7 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
         if(selectedAmenities && selectedAmenities.length > 0) {
             currentSelectedAmenities = selectedAmenities;
         } else {
-            currentSelectedAmenities = servicesAvailable.filter( service => {
-                if(packageData)
-                    return packageData.amenitiesIds.includes(service.id);
-            }).map(service => service);
+            currentSelectedAmenities = packageData?.amenitiesIds?.map(service => service);
         }
 
         if(currentSelectedAmenities) {
@@ -114,7 +108,7 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
                         id: packageData == null? '' : packageData.id,
                         discountPercentage : packageData == null? 0 : packageData.discountPercentage,
                         name: packageData == null? '': packageData.name,
-                        amenities: packageData == null ? [] : servicesAvailable.filter( service => packageData.amenitiesIds.includes(service.id)),
+                        amenities: packageData == null ? [] : packageData?.amenities,
                         description: packageData == null? '': packageData.description,
                     }}
                     validationSchema={validationSchema}

@@ -10,6 +10,7 @@ import Alert from 'components/ui/Alert'
 import { useSelector } from 'react-redux'
 import useRewardsService from 'utils/hooks/CustomServices/useRewardsService';
 import AddRewardDialog from './dialog/AddRewardDialog';
+import RewardCard from './RewardsCard';
 
 const RewardsGrid = () => {
 
@@ -26,24 +27,9 @@ const RewardsGrid = () => {
     }
    
 
-    //getting services to be used later on
-    const { getServices } = useBookingServices();
-    const [services, setServices] = useState([]); // Initial state as an empty array
-
-     const fetchServices = async () => {
-        const data = await getServices();
-        setServices(data);
-    };
-
-    useEffect(() => {
-        fetchServices();
-    }, []); 
-
-    ///Ignore above part
-
     // Initialize state for the search input
     const [search, setSearch] = useState('');
-    const [packages, setPackages] = useState([]); // Initial state as an empty array
+    const [rewards, setRewards] = useState([]); // Initial state as an empty array
     const { getRewards, addReward, updateReward, toggleRewardStatus } = useRewardsService();
 
     const handleClickToOpen = () => {
@@ -55,32 +41,36 @@ const RewardsGrid = () => {
     };
 
     //We will be getting all the packages here ...
-    const fetchPackages = async () => {
+    const fetchRewards = async () => {
         const data = await getRewards();
-        setPackages(data);
+        console.log("The reward received ", data);
+        setRewards(data);
     };
 
     useEffect(() => {
         // Call fetchServices on component mount
-        fetchPackages();
+        fetchRewards();
     }, []); // Empty dependency array means the effect will only run once
 
 
-    const handleToSave = async (formValues, selectedAmenities) => {
+    const handleToSave = async (formValues, rewardType, rewardSource, expiryDate) => {
         // Handle the form submission here using formValues
-        formValues.properties = {}
-        formValues.amenitiesIds = selectedAmenities.map(amenity => amenity.id);
+        // formValues.properties = {}
+        formValues.expiryDate = expiryDate;
+        formValues.type = rewardType?.value;
+        formValues.source = rewardSource?.value;
+
+        console.log("Form Values ", formValues);
 
         //lets make call to server
         const data = await addReward(formValues);
         if(data.status === -1) {
             //something went wrong ...
-                  //something went wrong ...
-                  setServerError(true);
-                  setServerErrorMessage(data.message);
+            setServerError(true);
+            setServerErrorMessage(data.message);
         }
         else {
-            fetchPackages();
+            fetchRewards();
         }
 
         setIsRewardDialogOpen(false);
@@ -113,7 +103,7 @@ const RewardsGrid = () => {
         }
         else {
             // Call fetchServices to refresh the services
-            fetchPackages();
+            fetchRewards();
         }
 
         setIsRewardDialogOpen(false);
@@ -152,9 +142,9 @@ const RewardsGrid = () => {
     }
 
     // Filter the packages based on the search input
-    const filteredPackages = packages.filter(cpackage =>
-        cpackage.name.toLowerCase().includes(search.toLowerCase())
-    );
+    // const filteredPackages = packages.filter(cpackage =>
+    //     cpackage.name.toLowerCase().includes(search.toLowerCase())
+    // );
 
     return (
         <div className="w-full">
@@ -215,14 +205,12 @@ const RewardsGrid = () => {
             </Dialog>
 
             <div className="flex gap-4 flex-wrap mt-4"> 
-                {filteredPackages.map((cpackage, index) => (
-                    <PackagesCard key={index} currentPackage={cpackage} servicesAvailable={services} onUpdateClick={handleClickToOpenUpdateModal} onDeleteClick={handleDeleteClick} />
-                ))}
+                {rewards.map((creward, index) => (
+                    <RewardCard key={index} reward={creward}  onUpdateClick={handleClickToOpenUpdateModal} onDeleteClick={handleDeleteClick} />
+                ))} 
             </div>
 
-            <AddRewardDialog open={isRewardDialogOpen} handleToSave={handleToSave} handleToClose={handleToClose}  />
-
-            {/* <UpdatePackageModal packageData={selectedUpdatablePackage} servicesAvailable={services} open={openUpdateModal} handleToClose={handleClickToCloseUpdateModal} handleToSave={handleClickToSaveUpdateModal} /> */}
+            <AddRewardDialog open={isRewardDialogOpen} handleToSaveReward={handleToSave} handleToClose={handleToClose}  />
 
         </div>
     );

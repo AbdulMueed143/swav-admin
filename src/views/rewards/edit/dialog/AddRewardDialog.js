@@ -1,47 +1,64 @@
-import React, {useRef} from "react";
+import React, {useRef, useState} from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Button from "@mui/material/Button";
 import Select from "components/ui/Select";
-
+import DatePicker from 'components/ui/DatePicker'
 import { FormItem, FormContainer } from 'components/ui'
 import Input from 'components/ui/Input'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 
 const validationSchema = Yup.object().shape({
-    name: Yup.string()
+    shopName: Yup.string()
         .min(3, 'Too Short!')
-        .max(20, 'Too Long!')
-        .required('Please input user name 3 to 20 charachters.'),
-    description: Yup.string()
         .max(255, 'Too Long!')
-        .required('Description should be max 255 charachters.'),
-    price: Yup
+        .required('Please input user name 3 to 255 charachters.'),
+
+    // description: Yup.string()
+    //     .min(3, 'Too Short!')
+    //     .max(500, 'Too Long!')
+    //     .required('Please input user name 3 to 500 charachters.'),
+
+    value: Yup
         .number()
-        .required("Price is required")
-        .positive("Price should be greater than 0")
-        .integer("Price should be an integer"),
-    averageTimeInMinutes: Yup
+        .required("Reward Value is required")
+        .positive("Reward Value should be greater than 0")
+        .integer("Reward Value should be an integer"),
+
+    numberOfVisits: Yup
         .number()
-        .required("Duration is required")
-        .positive("Duration should be a greater than 0")
-        .integer("Duration should be an integer"),
+        .required("Number of visits is required")
+        .positive("Number of visits should be greater than 0")
+        .integer("Number of visits should be an integer"),
 })
 
 
  
-export default function AddRewardDialog({open, handleToClose, handleServiceSave}) {
+export default function AddRewardDialog({open, handleToClose, handleToSaveReward}) {
+
+
+    
+
 
     const formIkRef = useRef();
+    const [expiryDate, setExpiryDate] = useState(null);
+    const [selectedRewardSource, setSelectedRewardSource] = useState(null);
+    const [selectedRewardType, setSelectedRewardType] = useState(null);
 
     const rewardTypes = [
-        { value: 'HAIRCUT', label: 'HAIRCUT' },
-        { value: 'ITEM', label: 'ITEM' },
-        { value: 'CREDITS', label: 'CREDITS' },
-        { value: 'DISCOUNT', label: 'DISCOUNT' },
+        // { value: 'HAIRCUT', label: 'HAIRCUT' },
+        // { value: 'ITEM', label: 'ITEM' },
+        { value: 'CREDITS', label: 'CREDITS ($)' },
+        { value: 'DISCOUNT', label: 'DISCOUNT (%)' },
+    ];
+
+    const rewardSources = [
+        { value: 'EXTERNAL', label: 'EXTERNAL' },
+        { value: 'SELF', label: 'SELF' },
+        { value: 'COUPON', label: 'COUPON' },
     ];
 
     const rewardSource = [];
@@ -55,17 +72,20 @@ export default function AddRewardDialog({open, handleToClose, handleServiceSave}
                         maxWidth: '600px', // Your desired maximum width
                     },
                 }}> 
-                <DialogTitle>{"Add Service"}</DialogTitle>
+                <DialogTitle>{"Add Reward"}</DialogTitle>
                 <DialogContent>
 
                 <Formik
                     enableReinitialize
                     initialValues={{
-                        name: '',
+                        shopName: '',
+                        placeId: '',
                         description: '',
-                        price: 0,
-                        averageTimeInMinutes: 0,
-                        properties : {}
+                        expiryDate: null,
+                        value: 0,
+                        numberOfVisits: 0,
+                        rewardType: 'CREDITS',
+                        rewardSource: 'EXTERNAL'
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting }) => {
@@ -81,6 +101,52 @@ export default function AddRewardDialog({open, handleToClose, handleServiceSave}
                 <div>
                         <Form>
                             <FormContainer>
+
+                                <div>
+                                    <FormItem
+                                        label="Reward Type"
+                                        invalid={errors.rewardType && touched.rewardType}
+                                        errorMessage={errors.rewardType}>
+                                        <Select
+                                                placeholder="Please Select Reward type"
+                                                options={rewardTypes}
+                                                onChange={(selectedRewardType) => {
+                                                    setSelectedRewardType(selectedRewardType);
+                                                }}
+                                            ></Select>
+                                    </FormItem>
+                                </div>
+
+                                <div>
+                                    <FormItem
+                                        label="Reward Source"
+                                        invalid={errors.rewardSource && touched.rewardSource}
+                                        errorMessage={errors.rewardSource}>
+                                        <Select
+                                                placeholder="Please Select Reward type"
+                                                options={rewardSources}
+                                                onChange={(selectedRewardSource) => {
+                                                    setSelectedRewardSource(selectedRewardSource);
+                                                }}
+                                            ></Select>
+                                    </FormItem>
+                                </div>
+
+                                <FormItem
+                                    asterisk
+                                    label="Expiry Date (No Expiry Date means it will never expire)"
+                                    invalid={errors.expiryDate && touched.expiryDate}
+                                    errorMessage={errors.expiryDate}>
+                                        <DatePicker 
+                                            name="expiryDate"
+                                            onChange={(newDate) => {
+                                                console.log("newDate ", newDate);
+                                                setExpiryDate(newDate);
+                                            }}
+                                            placeholder="Pick a date" />
+                                </FormItem>
+
+
                                 <FormItem
                                     asterisk
                                     label="Shop Name"
@@ -88,12 +154,15 @@ export default function AddRewardDialog({open, handleToClose, handleServiceSave}
                                     errorMessage={errors.shopName}>
                                     <Field
                                         type="text"
-                                        name="name"
+                                        name="shopName"
                                         placeholder="Shop Name"
                                         component={Input}
                                     />
                                 </FormItem>
+
+
                                 <FormItem
+                                    asterisk
                                     label="Description"
                                     invalid={errors.description && touched.description}
                                     errorMessage={errors.description}>
@@ -105,30 +174,20 @@ export default function AddRewardDialog({open, handleToClose, handleServiceSave}
                                     />
                                 </FormItem>
 
-                                <div>
-                                    <FormItem
-                                        label="Reward Type"
-                                        invalid={errors.rewardType && touched.rewardType}
-                                        errorMessage={errors.rewardType}>
-                                        <Select
-                                                placeholder="Please Select Reward type"
-                                                options={rewardTypes}
-                                            ></Select>
-                                    </FormItem>
-                                </div>
+
 
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingRight: '10px' }}>
                                         <FormItem
                                             asterisk
                                             label="Reward Value"
-                                            invalid={errors.rewardValue && touched.rewardValue}
-                                            errorMessage={errors.rewardValue}
+                                            invalid={errors.value && touched.value}
+                                            errorMessage={errors.value}
                                         >
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <Field
                                                     type="number"
-                                                    name="rewardValue"
+                                                    name="value"
                                                     placeholder="Reward Value"
                                                     component={Input}
                                                     inputMode="numeric"
@@ -136,7 +195,6 @@ export default function AddRewardDialog({open, handleToClose, handleServiceSave}
                                                     step="1" // If you want to allow cents
                                                     style={{ flex: 1 }} // Make the input take as much space as possible
                                                 />
-                                                <span>$</span>
                                             </div>
                                         </FormItem>
                                     </div>
@@ -144,17 +202,17 @@ export default function AddRewardDialog({open, handleToClose, handleServiceSave}
                                         <FormItem
                                             asterisk
                                             label="Visits Required to Receive this reward"
-                                            invalid={errors.visitReward && touched.averageTimeInMinutes}
-                                            errorMessage={errors.averageTimeInMinutes}
+                                            invalid={errors.numberOfVisits && touched.numberOfVisits}
+                                            errorMessage={errors.numberOfVisits}
                                         >
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <Field
                                                     type="number"
-                                                    name="averageTimeInMinutes"
-                                                    placeholder="Duration in minutes"
+                                                    name="numberOfVisits"
+                                                    placeholder=""
                                                     component={Input}
-                                                    step="5" // If you want to allow cents
-                                                    min="5" // Assuming the minimum duration is 1 minute
+                                                    step="1" // If you want to allow cents
+                                                    min="1" // Assuming the minimum duration is 1 minute
                                                     style={{ flex: 1 }} // Make the input take as much space as possible
                                                 />
                                             </div>
@@ -169,7 +227,7 @@ export default function AddRewardDialog({open, handleToClose, handleServiceSave}
                                 color="primary">
                                 Cancel
                             </Button>
-                            <Button onClick={() => handleServiceSave(values)}
+                            <Button onClick={() => handleToSaveReward(values, selectedRewardType, selectedRewardSource ,expiryDate)}
                                 color="primary">
                                 Save
                             </Button>

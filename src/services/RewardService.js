@@ -1,8 +1,9 @@
 import ApiService from './ApiService'
 
+
 export async function apiFetchRewards(token) {
     return ApiService.fetchData({
-        url: '/reward-service/api/v1/shop/rewards/',
+        url: '/barber-reward-service/api/v1/rewards',
         method: 'get',
         headers: {
             Authorization: `Bearer ${token}`
@@ -12,7 +13,7 @@ export async function apiFetchRewards(token) {
 
 export async function apiAddReward(token, data) {
     return ApiService.fetchData({
-        url: '/reward-service/api/v1/shop/package',
+        url: '/barber-reward-service/api/v1/reward',
         method: 'post',
         data,
         headers: {
@@ -21,10 +22,12 @@ export async function apiAddReward(token, data) {
     })
 }
 
+
+
 export async function apiToggleRewardStatus( token, data) {
     //Gotta add the id we want to delete ... 
     return ApiService.fetchData({
-        url: '/reward-service/api/v1/shop/package/' + data.id,
+        url: '/barber-reward-service/api/v1/reward/' + data.id + '/status/' + data.isActive,
         method: 'delete',
         headers: {
             Authorization: `Bearer ${token}`
@@ -32,9 +35,10 @@ export async function apiToggleRewardStatus( token, data) {
     })
 }
 
+
 export async function apiUpdateReward( token, data) {
     return ApiService.fetchData({
-        url: '/reward-service/api/v1/shop/package/' + data.id,
+        url: '/barber-reward-service/api/v1/reward/' + data.id,
         method: 'put',
         data,
         headers: {
