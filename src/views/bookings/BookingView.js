@@ -314,10 +314,8 @@ const Home = () => {
 
         </div>
 
-
-
             <FullCalendar
-              showNonCurrentDates={false}
+                showNonCurrentDates={false}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Include timeGridPlugin
                 initialView='dayGridMonth'
                 events={monthlyBookings}

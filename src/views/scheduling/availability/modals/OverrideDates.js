@@ -14,6 +14,8 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
 
     //Constants to be used
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const [weekDays, setWeekDays] = useState(null);
     const [defaultWeekDays, setDefaultWeekDays] = useState({
         "MONDAY": [],
         "TUESDAY": [],
@@ -23,10 +25,6 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
         "SATURDAY": [],
         "SUNDAY": []
     });
-    const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    // const { barberId, firstName, lastName, email, barberAvailability, about, status } = updateBarber;
-
-    //Variables to be used
 
     //Use state methods to be used
     const { updateBarberAvailability , fetchAvailabilityForDate, updateBarberAvailabilityForDate } = useAvailabilityService();
@@ -36,7 +34,7 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
     const [ loadingSpecificDateSlots, setLoadingSpecificDateSlots] = useState(false);
     const [ selectedDateToBeOverrided, setSelectedDateToBeOverrided] = useState(new Date());
 
-    const initializeWeekDays = () => {
+    function initializeWeekDays() {
         if(isObjectWithAtLeastOneKey(templateInitialState)) {
             return templateInitialState;
         } else { 
@@ -61,55 +59,74 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
         setSelectedDateToBeOverrided(event);
     }
 
+
     useEffect(() => {
-        const fetchData = async () => {
+        setDefaultWeekDays({
+            "MONDAY": [],
+            "TUESDAY": [],
+            "WEDNESDAY": [],
+            "THURSDAY": [],
+            "FRIDAY": [],
+            "SATURDAY": [],
+            "SUNDAY": []
+        });
 
-            setDefaultWeekDays({
-                "MONDAY": [],
-                "TUESDAY": [],
-                "WEDNESDAY": [],
-                "THURSDAY": [],
-                "FRIDAY": [],
-                "SATURDAY": [],
-                "SUNDAY": []
-            });
+        setWeekDays(initializeWeekDays());
+    }, []);
 
-            setWeekDays(initializeWeekDays());
+    useEffect(() => {
+        if(weekDays != null) {
+            console.log("weekDays change", weekDays, selectedDateToBeOverrided);
+
 
             const withDate = updateBarber?.barberAvailability?.filter(item => item?.barberAvailabilitiesTemplate?.hasOwnProperty('date'));
-            const withDayOfWeek = updateBarber?.barberAvailability?.filter(item => item?.barberAvailabilitiesTemplate?.hasOwnProperty('dayOfWeek'));
 
             withDate?.map( barber => {
-                //get all the timeslots 
                 const slots = barber?.barberAvailabilitiesTemplate?.timeSlots;
                 overrideDates[barber?.barberAvailabilitiesTemplate?.date] = slots;
             });
+        }
 
-            const dateLookingFor = formatDateAsServerDate(selectedDateToBeOverrided);
-            let filteredDates = [];
-            if (Array.isArray(overrideDates)) {
-                filteredDates = overrideDates.filter(item => item.barberAvailabilitiesTemplate.date === dateLookingFor);
-            } else {
-                console.log('overrideDates is not an array:', overrideDates);
-            }
-            //we also need to see that if we do not find override items for this date, then we will add shift from template
-            const foundItem =  filteredDates.filter(item => item.barberAvailabilitiesTemplate.date == dateLookingFor);
+    }, [weekDays]);
 
-            if (foundItem?.length > 0) {
-                console.log("we have shifts for this date ", foundItem);
-            } else {
-                let nameOfTheSelectedDate = dayNames[new Date(dateLookingFor).getDay()].toUpperCase();
+    useEffect(() => {
+
+        async function updateData() { 
+
+            if(weekDays != null) {
+                //add these slots to the override dates now .... 
+                //lets first check if there are already items in there? if there are we don't want to replace them
+                let nameOfTheSelectedDate = dayNames[new Date(selectedDateToBeOverrided).getDay()].toUpperCase();
                 let slotsForSelectedDate = weekDays[nameOfTheSelectedDate];
 
-                //add these slots to the override dates now
-                overrideDates[formatDateAsServerDate(new Date(dateLookingFor))] = slotsForSelectedDate;
-                console.log("slotsForSelectedDate ", slotsForSelectedDate, overrideDates);
+                let currentOverrideKey = formatDateAsServerDate(new Date(selectedDateToBeOverrided));
+                console.log("overrideDates ", overrideDates[currentOverrideKey]);
+                console.log("slotsForSelectedDate ", slotsForSelectedDate);
 
+                //Either override dates will have items in it or not
+                //slotsForSelected date only has items that belong to the date based on day of the week
+                //Rule
+                //if date does not have any items, then fill it with the data from slots for selected Date 
+                //if date has items, only show those items
+
+                if(Array.isArray(overrideDates[currentOverrideKey]) && overrideDates[currentOverrideKey].length > 0) {}
+                else {
+                    updateOverrideDatesArray(currentOverrideKey, slotsForSelectedDate);
+                    console.log("overrideDates ", overrideDates[currentOverrideKey]);
+                }
+
+                onOverrideDatesUpdate(overrideDates);
             }
-        };
-    
-        fetchData().catch(console.error); // Call the async function and handle any errors
+        }
+
+        updateData();
+        
     }, [selectedDateToBeOverrided]);
+
+
+    useEffect(() => {
+        onOverrideDatesUpdate(overrideDates);
+    }, [overrideDates]);
 
     function addShift() {
         const createdSlot = createEmptySlot(formatDateAsServerDate(selectedDateToBeOverrided));
@@ -117,9 +134,6 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
     }
 
     function updateOverrideDates(selectedDate, newShift) {
-
-        console.log("Selected Date ", overrideDates, selectedDate, newShift);
-
 
         setOverrideDates(prevDates => {
             const updatedDates = { ...prevDates };
@@ -129,13 +143,21 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
                 updatedDates[selectedDate] = [...updatedDates[selectedDate], newShift];
             } else {
                 console.log("if false ", selectedDate, updatedDates, updatedDates[selectedDate], newShift);
-
                 updatedDates[selectedDate] = [newShift];
             }
     
             return updatedDates;
         });
     };
+
+    const updateOverrideDatesArray = (currentOverrideKey, slotsForSelectedDate) => {
+        // Create a new object with all old keys and the updated/added key
+        setOverrideDates(prevOverrideDates => ({
+            ...prevOverrideDates,
+            [currentOverrideKey]: slotsForSelectedDate
+        }));
+    };
+
 
     const formatDate = (date) => {
         const d = new Date(date);
@@ -152,11 +174,10 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
 
 
 
-    const [weekDays, setWeekDays] = useState(null);
     const createEmptySlot = (selectedDate) => {
         return {
             attendanceStatus: "TO_BE_MARKED",
-            slotName : selectedDate,
+            slotName : dayNames[new Date(selectedDate).getDay()],
             startTime : {
                 hour : 0,
                 minute :  0
@@ -172,7 +193,7 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
         return {
             isChanged: true,
             attendanceStatus: "TO_BE_MARKED",
-            slotName : selectedDate,
+            slotName : dayNames[new Date(selectedDate).getDay()],
             startTime : {
                 hour : startDateTime.hour(),
                 minute :  startDateTime.minute()
@@ -204,11 +225,7 @@ export default function OverrideDates({updateBarber, onOverrideDatesUpdate, temp
         let startTime = moment(newTime[0], 'hh:mm a');
         let endTime = moment(newTime[1], 'hh:mm a');
 
-        console.log("updateSlotTime ", selectedDateKey, overrideDates[selectedDateKey][index], index, overrideDates);
-
         overrideDates[selectedDateKey][index] = createSlotWithStartEndDatetime(selectedDateKey, startTime, endTime);
-
-        onOverrideDatesUpdate(overrideDates);
     }
 
     const formIkRef = useRef();

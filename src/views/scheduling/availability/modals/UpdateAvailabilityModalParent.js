@@ -65,34 +65,32 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
 
         //Now we will check if override dates has changes
 
-                // //and we also have to make call for each day we have data for in list of
+        // //and we also have to make call for each day we have data for in list of
         const availabilitiesForDates =  Object.keys(overrideDates)
-        .filter(dateString => {
-            // Filter out the items where isChanged is true
-            return overrideDates[dateString].some(slot => slot.isChanged);
-        })
-        .map(dateString => {
-            const timeSlots = overrideDates[dateString]; // This already is the list of slots for that day
-            return {
-                date: formatDateAsServerDate(dateString),
-                timeSlots: timeSlots
-            };
-        });
+            .filter(dateString => {
+                // Filter out the items where isChanged is true
+                return overrideDates[dateString].some(slot => slot.isChanged);
+            })
+            .map(dateString => {
+                const timeSlots = overrideDates[dateString]; // This already is the list of slots for that day
+                return {
+                    date: formatDateAsServerDate(dateString),
+                    timeSlots: timeSlots
+                };
+            });
 
 
-        console.log("Availabilities for dates ",overrideDates, availabilitiesForDates);
+        console.log("Availabilities for dates ", availabilitiesForDates);
 
-        // const datesResult = await updateBarberAvailabilityForDate(updateBarber.barberId, availabilitiesForDates);
-
-        // if(datesResult.status == -1) {
-        //     console.log("Failed ", );
-        // } else {
-        //     console.log("Succeess", );
-        // }
-
+        const datesResult = await updateBarberAvailabilityForDate(updateBarber.barberId, availabilitiesForDates);
+        if(datesResult.status == -1) {
+            console.log("Failed ", );
+        } else {
+            console.log("Succeess", );
+        }
 
         //close this by calling
-        // handleUpdate();
+        handleUpdate();
         setLoading(false);
         setWeekDaysInfo([]);
     }
