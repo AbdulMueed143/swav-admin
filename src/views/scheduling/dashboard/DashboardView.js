@@ -284,10 +284,7 @@ const DashboardView = () => {
             </Button>
 
         </div>
-            
-
             <div>
-
             <FullCalendar
               showNonCurrentDates={false}
                 plugins={[dayGridPlugin, timeGridPlugin]} // Include timeGridPlugin
