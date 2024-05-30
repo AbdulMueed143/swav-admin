@@ -36,9 +36,10 @@ const validationSchema = Yup.object().shape({
 })
 
  
-export default function UpdateRewardDialog({open, reward, handleToClose, handleToSaveReward}) {
+export default function UpdateRewardDialog({open, reward, currentBarber, currentShop, handleToClose, handleToSaveReward}) {
 
     const formIkRef = useRef();
+    
     const [expiryDate, setExpiryDate] = useState(null);
     const [selectedRewardSource, setSelectedRewardSource] = useState(null);
     const [selectedRewardType, setSelectedRewardType] = useState(null);
@@ -52,8 +53,7 @@ export default function UpdateRewardDialog({open, reward, handleToClose, handleT
 
     const rewardSources = [
         { value: 'EXTERNAL', label: 'EXTERNAL' },
-        { value: 'SELF', label: 'SELF' },
-        { value: 'COUPON', label: 'COUPON' },
+        { value: 'INTERNAL', label: 'INTERNAL' },
     ];
 
     useEffect(() => {

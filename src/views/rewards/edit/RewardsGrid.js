@@ -12,15 +12,24 @@ import useRewardsService from 'utils/hooks/CustomServices/useRewardsService';
 import AddRewardDialog from './dialog/AddRewardDialog';
 import RewardCard from './RewardsCard';
 import UpdateRewardDialog from './dialog/UpdateRewardDialog';
+import useBarberService from 'utils/hooks/CustomServices/useBarberService';
 
 const RewardsGrid = () => {
 
+
     //Informations about current user
     const userInfo = useSelector((state) => state.auth.user);
+    const { fetchBarberShopDetail } = useBarberService();
+
+    useEffect(() => {
+        fetchShopDetail();
+    }, [userInfo]);
+    
 
     //Dialogs
     const [isRewardDialogOpen, setIsRewardDialogOpen] = useState(false);
     const [isUpdateRewardDialogOpen, setIsUpdateRewardDialogOpen] = useState(false);
+    const [barberShopInfo, setBarberShopInfo] = useState(null);
     
     //Loading
     const [loading, setLoading] = useState(false);
@@ -123,12 +132,30 @@ const RewardsGrid = () => {
         setIsRewardDialogOpen(false);
         handleClickToCloseUpdateModal();
     }
+
+    //The shop things
+    const fetchShopDetail = async() =>  {
+        setLoading(true);
+
+        const response = await fetchBarberShopDetail(userInfo.barberShopId);
+
+        if(response.status == -1) {
+            //error
+            setServerError(true);
+            setServerErrorMessage(response.message);
+        }
+        else {
+            setBarberShopInfo(response);
+        }
+
+        //now show error or get the detail
+        setLoading(false);
+    }
  
 
     //======= End of handling Update Modal
 
     //Delete functionality 
-
     const [deleteDialogIsOpen, setIsDeleteDialogOpen] = useState(false)
     const [selectedId, setSelectedId] = useState(null);
 
@@ -225,9 +252,9 @@ const RewardsGrid = () => {
                 </div>
             </Loading>
 
-            <AddRewardDialog open={isRewardDialogOpen} handleToSaveReward={handleToSave} handleToClose={handleToClose}  />
+            <AddRewardDialog open={isRewardDialogOpen} currentShop={barberShopInfo} handleToSaveReward={handleToSave} handleToClose={handleToClose}  />
                     
-            <UpdateRewardDialog open={isUpdateRewardDialogOpen} reward={selectedRewardForUpdate} handleToSaveReward={handleClickToSaveUpdateModal} handleToClose={handleClickToCloseUpdateModal}  />
+            <UpdateRewardDialog open={isUpdateRewardDialogOpen} currentShop={barberShopInfo} reward={selectedRewardForUpdate} handleToSaveReward={handleClickToSaveUpdateModal} handleToClose={handleClickToCloseUpdateModal}  />
 
         </div>
     );

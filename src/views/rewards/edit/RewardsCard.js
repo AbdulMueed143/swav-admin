@@ -20,7 +20,7 @@ import Button  from 'components/ui/Buttons/Button';
 */
 
 
-const RewardCard = ({ reward, onUpdateClick, onDeleteClick }) => {
+const RewardCard = ({ reward, currentBarber, currentShop, onUpdateClick, onDeleteClick }) => {
 
     const formatDate = (dateObject) => {
         const date = new Date(dateObject);
