@@ -36,12 +36,13 @@ const validationSchema = Yup.object().shape({
 })
 
  
-export default function AddRewardDialog({open, handleToClose, handleToSaveReward}) {
+export default function AddRewardDialog({open, currentShop, handleToClose, handleToSaveReward}) {
 
     const formIkRef = useRef();
     const [expiryDate, setExpiryDate] = useState(null);
     const [selectedRewardSource, setSelectedRewardSource] = useState(null);
     const [selectedRewardType, setSelectedRewardType] = useState(null);
+    const [shopName, setShopName] = useState('');
 
     const rewardTypes = [
         // { value: 'HAIRCUT', label: 'HAIRCUT' },
@@ -52,9 +53,21 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
 
     const rewardSources = [
         { value: 'EXTERNAL', label: 'EXTERNAL' },
-        { value: 'SELF', label: 'SELF' },
-        { value: 'COUPON', label: 'COUPON' },
+        { value: 'INTERNAL', label: 'INTERNAL' },
     ];
+
+
+    const setSelectedRewardSourceType = (source) => {
+        //Based on value we hae to change the value in 
+        console.log(" The value ", source);
+        if (source.value === 'INTERNAL') {
+            setShopName(currentShop.name);
+        } else {
+            setShopName('');
+        }
+
+        setSelectedRewardSource(source);
+    }
 
     const rewardSource = [];
 
@@ -112,64 +125,6 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
                                     </FormItem>
                                 </div>
 
-                                <div>
-                                    <FormItem
-                                        label="Reward Source"
-                                        invalid={errors.rewardSource && touched.rewardSource}
-                                        errorMessage={errors.rewardSource}>
-                                        <Select
-                                                placeholder="Please Select Reward type"
-                                                options={rewardSources}
-                                                onChange={(selectedRewardSource) => {
-                                                    setSelectedRewardSource(selectedRewardSource);
-                                                }}
-                                            ></Select>
-                                    </FormItem>
-                                </div>
-
-                                <FormItem
-                                    asterisk
-                                    label="Expiry Date (No Expiry Date means it will never expire)"
-                                    invalid={errors.expiryDate && touched.expiryDate}
-                                    errorMessage={errors.expiryDate}>
-                                        <DatePicker 
-                                            name="expiryDate"
-                                            onChange={(newDate) => {
-                                                setExpiryDate(newDate);
-                                            }}
-                                            placeholder="Pick a date" />
-                                </FormItem>
-
-
-                                <FormItem
-                                    asterisk
-                                    label="Shop Name"
-                                    invalid={errors.shopName && touched.shopName}
-                                    errorMessage={errors.shopName}>
-                                    <Field
-                                        type="text"
-                                        name="shopName"
-                                        placeholder="Shop Name"
-                                        component={Input}
-                                    />
-                                </FormItem>
-
-
-                                <FormItem
-                                    asterisk
-                                    label="Description"
-                                    invalid={errors.description && touched.description}
-                                    errorMessage={errors.description}>
-                                    <Field
-                                        type="text"
-                                        name="description"
-                                        placeholder="Description"
-                                        component={Input}
-                                    />
-                                </FormItem>
-
-
-
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', flexDirection: 'column', width: '50%', paddingRight: '10px' }}>
                                         <FormItem
@@ -213,6 +168,82 @@ export default function AddRewardDialog({open, handleToClose, handleToSaveReward
                                         </FormItem>
                                     </div>
                                 </div>
+
+                                <div>
+                                    <FormItem
+                                        label="Reward Source"
+                                        invalid={errors.rewardSource && touched.rewardSource}
+                                        errorMessage={errors.rewardSource}>
+                                        <Select
+                                                placeholder="Please Select Reward type"
+                                                options={rewardSources}
+                                                onChange={(selectedRewardSource) => {
+                                                    setSelectedRewardSourceType(selectedRewardSource);
+                                                }}
+                                            ></Select>
+                                    </FormItem>
+                                </div>
+
+                                <FormItem
+                                    asterisk
+                                    label="Expiry Date (No Expiry Date means it will never expire)"
+                                    invalid={errors.expiryDate && touched.expiryDate}
+                                    errorMessage={errors.expiryDate}>
+                                        <DatePicker 
+                                            name="expiryDate"
+                                            onChange={(newDate) => {
+                                                setExpiryDate(newDate);
+                                            }}
+                                            placeholder="Pick a date" />
+                                </FormItem>
+
+
+                                {/* <FormItem
+                                    asterisk
+                                    label="Shop Name"
+                                    invalid={errors.shopName && touched.shopName}
+                                    errorMessage={errors.shopName}
+                                >
+                                    <Field
+                                        type="text"
+                                        name="shopName"
+                                        placeholder="Shop Name"
+                                        component="input"
+                                        value={shopName}
+                                        onChange={(e) => setShopName(e.target.value)}/>
+                                </FormItem> */}
+
+
+                                <FormItem
+                                    asterisk
+                                    label="Shop Name"
+                                    invalid={errors.shopName && touched.shopName}
+                                    errorMessage={errors.shopName}>
+                                    <Field
+                                        type="text"
+                                        name="shopName"
+                                        placeholder="Shop Name"
+                                        component={Input}
+                                        value={shopName}
+                                        onChange={(e) => setShopName(e.target.value)}
+                                    />
+                                </FormItem>
+
+
+                                <FormItem
+                                    asterisk
+                                    label="Description"
+                                    invalid={errors.description && touched.description}
+                                    errorMessage={errors.description}>
+                                    <Field
+                                        type="text"
+                                        name="description"
+                                        placeholder="Description"
+                                        component={Input}
+                                    />
+                                </FormItem>
+
+                               
                             </FormContainer>
                         </Form>
 

@@ -11,7 +11,6 @@ import Alert from 'components/ui/Alert'
 import { useSelector } from 'react-redux'
 
 
-
 const ServicesGrid = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -148,32 +147,29 @@ const ServicesGrid = () => {
     );
 
     return (
-<div className="w-full"> {/* Ensures the container is full width */}
+
+            <div className="w-full">
             <div className="flex justify-end gap-4 items-center">
-            <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search for a service..."
-                className="p-2 border rounded flex-grow" // Add flex-grow to make the input take available space
-            />
 
+                <input
+                    type="text"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search for a service..."
+                    className="p-2 border rounded flex-grow"
+                />
 
-{(userInfo && Array.isArray(userInfo.roles) && userInfo.roles.length > 0 && (userInfo.roles[0] == 'OWNER')) ? 
-            (
-               
-            <ButtonWithIcon 
-            label="Add Service"
-            onClick={handleClickToOpen}
-        />
-            ) : 
-            (
-                <div></div>
-               
-            )}
+                {(userInfo && Array.isArray(userInfo.roles) && userInfo.roles.length > 0 && (userInfo.roles[0] == 'OWNER')) ? 
+                (
+                    <ButtonWithIcon 
+                        label="Add Service"
+                        onClick={handleClickToOpen}/>
+                ) : 
+                (
+                    <div></div>
+                )}
 
             </div>
-
             {serverError && (
              <div>
                 <Alert showIcon onClose={handleAlertClose} type="danger" title="Error!">
@@ -213,9 +209,11 @@ const ServicesGrid = () => {
             </Loading>
 
             <AddServiceModal open={open} handleToClose={handleToClose} handleServiceSave={handleServiceSave} />
-            <UpdateServiceModal updateBarberData={selectedUpdatableBarber} open={openUpdateModal} 
-                handleToClose={handleClickToCloseUpdateModal} handleServiceUpdate={handleClickToSaveUpdateModal}  />
-
+            <UpdateServiceModal 
+                updateBarberData={selectedUpdatableBarber} 
+                open={openUpdateModal} 
+                handleToClose={handleClickToCloseUpdateModal} 
+                handleServiceUpdate={handleClickToSaveUpdateModal}  />
         </div>
     );
 };
