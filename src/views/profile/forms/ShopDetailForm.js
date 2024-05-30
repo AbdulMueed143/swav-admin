@@ -84,6 +84,10 @@ const ShopDetailForm = () => {
         if(response.status === -1) {
             showError(response.message);
         }
+        else {
+            //refresh the page obviously mate!
+            fetchShopDetail();
+        }
         
         setLoading(false);
     };
@@ -115,13 +119,13 @@ const ShopDetailForm = () => {
 
         setShopName(barberShopInfo?.name || "");
         setWebsite(barberShopInfo?.website || "");
-        setAddress(barberShopInfo?.address?.country || "");
+        setAddress(barberShopInfo?.address?.line1 || "");
         setPhoneNumber(barberShopInfo?.phoneNumber || "");
         setState(barberShopInfo?.address?.state || "");
         setCity(barberShopInfo?.address?.city || "");
         setCountry(barberShopInfo?.address?.country || "");
         setPostCode(barberShopInfo?.address?.postalCode || "");
-        setBookingServiceUrl( bookingURL+"/" + barberShopInfo?.id || "");
+        setBookingServiceUrl( bookingURL+"/?shopid=" + barberShopInfo?.id || "");
         setLat(barberShopInfo?.address?.location?.y);
         setLng(barberShopInfo?.address?.location?.x);
                

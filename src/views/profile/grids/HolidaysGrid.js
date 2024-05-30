@@ -12,6 +12,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.module.css';
 import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import useHolidaysService from 'utils/hooks/CustomServices/useHolidayService';
+import { Switcher } from 'components/ui'
 
 
 const HolidayGrid = () => {
@@ -60,6 +61,10 @@ const HolidayGrid = () => {
         setOpen(false);
     };
 
+    const [isShopClosed, setIsShopClosed] = useState(true);
+    const [surharge, setSurcharge] = useState(0.0);
+
+
     const handleToSave = async(values)  => {
 
         const startDateAsMoment = moment(startDate);
@@ -76,6 +81,13 @@ const HolidayGrid = () => {
             month : endDateAsMoment.month() + 1,
             year :  endDateAsMoment.year()
         }
+
+        values.isShopClosed = isShopClosed;
+        if(isShopClosed) {
+            values.surcharge = 0.0;
+        }
+
+        console.log("Submitting Values ", values);
 
         //lets make call to server
         const response = await addHoliday(values);
@@ -140,6 +152,12 @@ const HolidayGrid = () => {
     }
     //Delete method
 
+
+    //Public holiday surcharge system
+    const onPublicHolidayIsClosedToggle = (checked) => {
+        setIsShopClosed(!checked);
+    }
+
     return (
 
         <div>
@@ -180,7 +198,8 @@ const HolidayGrid = () => {
 
                             <Formik
                                 initialValues={{
-                                    name: ''
+                                    name: '',
+                                    surhcarge: 0.0
                                 }}
                                 onSubmit={async (values) => {
                                     // await new Promise((r) => setTimeout(r, 500))
@@ -199,6 +218,29 @@ const HolidayGrid = () => {
                                                 component={Input}
                                             />
                                         </FormItem>
+
+                                        <div className="switcher-container">
+                                            <Switcher  
+                                                checkedContent="Apply Public Holiday Surcharge %"
+                                                unCheckedContent="Shop Closed"
+                                                className="custom-switcher" 
+                                                defaultChecked={!isShopClosed}
+                                                onChange={(checked) => onPublicHolidayIsClosedToggle(checked)} 
+                                            />
+                                        </div>
+
+                                        {(!isShopClosed) && (
+                                            <FormItem label="Surcharge %">
+                                                <Field
+                                                    type="number"
+                                                    name="surcharge"
+                                                    placeholder="Enter Surcharge Value for Public holiday"
+                                                    component={Input}
+                                                /> 
+                                            </FormItem>
+                                        )}
+
+
                                         <DatePicker
                                             selected={startDate}
                                             onChange={(dates) => {
