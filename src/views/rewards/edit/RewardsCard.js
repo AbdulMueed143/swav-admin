@@ -55,7 +55,7 @@ const RewardCard = ({ reward, onUpdateClick, onDeleteClick }) => {
     Object.freeze(RewardType);
 
     const RewardSource = {
-        Self: "SELF", //default source, means shop itself is providing this reward
+        Internal: "INTERNAL", //default source, means shop itself is providing this reward
         External: "EXTERNAL", //some external sßhop
         Online: "ONLINE",
     };

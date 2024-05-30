@@ -11,7 +11,6 @@ import Alert from 'components/ui/Alert'
 import { useSelector } from 'react-redux'
 
 
-
 const ServicesGrid = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
