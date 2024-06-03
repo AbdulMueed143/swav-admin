@@ -1,4 +1,4 @@
-import React,  { useState, useRef } from 'react'
+import React,  { useState, useRef, useEffect } from 'react'
 import { Input, Button, FormItem, FormContainer, Alert } from 'components/ui'
 import { PasswordInput, ActionLink } from 'components/shared'
 import useTimeOutMessage from 'utils/hooks/useTimeOutMessage'
@@ -37,11 +37,19 @@ const SignUpForm = (props) => {
 
     //References
     const formIkRef = useRef();
+    const alertRef = useRef();
 
     //Declaration of variables
     const { disableSubmit = false, className, signInUrl = '/sign-in' } = props
     const { signUp, createAccount } = useAuth()
     const [ message, setMessage ] = useTimeOutMessage()
+
+    // Use useEffect to scroll to the alert when the message changes
+    useEffect(() => {
+        if (message && alertRef.current) {
+            alertRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [message]);
 
 
     const [businessName, setBusinessName] = useState("");
@@ -60,7 +68,7 @@ const SignUpForm = (props) => {
     const onRegisterAccount = async (values, setSubmitting) => {
         formIkRef.current.setSubmitting(true)
 
-        const { ownerFirstName, ownerLastName , shopName, customBusinessName, ownerPhoneNumber, ownerPassword, ownerEmail }  = values
+        const { ownerFirstName, ownerLastName , shopName, ownerPhoneNumber, ownerPassword, ownerEmail }  = values
         
         var currentAddress = ""
         var extraProperties = {}
@@ -140,6 +148,15 @@ const SignUpForm = (props) => {
                         <Form >
                             
                             <FormContainer>
+
+                                {message && 
+                                    <div ref={alertRef}>
+                                        <Alert closable="true" showIcon className="mb-4" type="danger">
+                                            {message}
+                                        </Alert>
+                                    </div>
+                                }   
+
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
 
@@ -404,11 +421,11 @@ const SignUpForm = (props) => {
                                         event.preventDefault(); 
                                         onRegisterAccount(values);
                                     }}
-                                   >
+                                    >
                                     {isSubmitting
                                         ? 'Creating Account...'
                                         : 'Create Account'}
-                                </Button>
+                                    </Button>
 
                                     
                                 <div className="mt-4 text-center">
