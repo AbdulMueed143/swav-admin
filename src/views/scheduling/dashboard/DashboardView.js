@@ -219,7 +219,7 @@ const DashboardView = () => {
         if(type == 'HOLIDAY')
             return new Date(`${year}-${formattedMonth}-${formattedDay}`);
         else {
-         return new Date('YEAR-MONTH-DAYTHOUR:MINUTE:00+11:00'.replace('YEAR', year).replace('MONTH', getAsStringValue(month)).replace('DAY', getAsStringValue(day)).replace('HOUR', getAsStringValue(hour)).replace('MINUTE', getAsStringValue(minute)));
+         return new Date('YEAR-MONTH-DAYTHOUR:MINUTE:00'.replace('YEAR', year).replace('MONTH', getAsStringValue(month)).replace('DAY', getAsStringValue(day)).replace('HOUR', getAsStringValue(hour)).replace('MINUTE', getAsStringValue(minute)));
         }
     }
 
@@ -233,7 +233,6 @@ const DashboardView = () => {
 
     //Filter 
     function applyFilter() {
-        console.log('Checked Barbers:', checkedBarbers);
         fetchMonthlyAvailaibility(checkedBarbers, selectedYear, selectedMonth);
     }
 
