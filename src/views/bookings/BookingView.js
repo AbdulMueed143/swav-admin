@@ -143,6 +143,7 @@ const Home = () => {
         const startDate = moment(eventInfo.event.start).format('MMM DD, YYYY'); // "Dec 04, 2023"
     
         const timeText = endTime ? `${startTime} - ${endTime}` : `${startDate} at ${startTime}`;
+
     
         const timeStyle = {
             display: 'block', // Makes the time text a block-level element
@@ -171,8 +172,13 @@ const Home = () => {
                     <span style={timeStyle}><b>{timeText}</b></span>
                     <span style={titleStyle}>{eventInfo.event.title}</span>
                     <span style={titleStyle}>{eventInfo.event.extendedProps.fullName}</span>
+                    {eventInfo.event?.extendedProps?.serviceNames?.map((serviceName, index) => (
+                        <span key={index} style={titleStyle}>{serviceName}</span>
+                    ))}
                 </div>
             );
+
+            
     };
 
     //Get the bookings
@@ -197,7 +203,6 @@ const Home = () => {
             setCheckedBarbers(barberIds);
 
             const transformed = transformBookingsToCalendarEvents(response.data);
-            console.log("transformed ", transformed);
             setMonthlyBookings(transformed);
         }
 
@@ -205,6 +210,11 @@ const Home = () => {
     }
 
     function transformBookingsToCalendarEvents(bookings) {
+
+        console.log("Transforming ", bookings);
+
+        console.log("Transforming - bookings.amenities", bookings.amenities);
+
         return bookings.map((booking, index) => ({
             id: index.toString(),
             bookingId: booking.id,
@@ -214,6 +224,7 @@ const Home = () => {
             fullName: booking.barber.firstName + " " + booking.barber.lastName,
             allDay: false,
             eventColor : colorMap.get(booking.barberId),
+            serviceNames : booking.amenities?.map(amenity => amenity.name)
         }));
     }
 
