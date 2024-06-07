@@ -117,6 +117,7 @@
   "devDependencies": {
     "@event-calendar/core": "^2.4.1",
     "@event-calendar/time-grid": "^2.4.1",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "autoprefixer": "^10.4.0",
     "cross-env": "^7.0.3",
     "delay-cli": "^2.0.0",
