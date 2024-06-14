@@ -116,16 +116,42 @@ const ServicesGrid = () => {
         formValues.properties = {}
         console.log(formValues)
 
-        //lets make call to server
+        //client side testing for duplicate name
+        const existingServices = await getServices()
+
+        const isDuplicate = existingServices.some(
+            (service) =>
+                formValues.name.toLowerCase() === service.name.toLowerCase()
+        )
+
+        console.log(isDuplicate)
+
+        if (isDuplicate) {
+            return {
+                status: -1,
+                message: 'Service name already exists',
+            }
+        }
+
+        //lets make call to server if duplicate doesn't exist
         const data = await addService(formValues)
+        console.log(data)
+
         if (data.status === -1) {
             //something went wrong ...
+            return {
+                status: -1,
+                message: 'Failed to add service',
+            }
         } else {
             // Call fetchServices to refresh the services
             fetchServices()
+            setOpen(false)
+            return {
+                status: 0,
+                message: 'Service added successfully',
+            }
         }
-
-        setOpen(false)
     }
 
     const handleToClose = () => {
@@ -151,7 +177,7 @@ const ServicesGrid = () => {
                 {userInfo &&
                 Array.isArray(userInfo.roles) &&
                 userInfo.roles.length > 0 &&
-                userInfo.roles[0] == 'OWNER' ? (
+                userInfo.roles[0] === 'OWNER' ? (
                     <ButtonWithIcon
                         label="Add Service"
                         onClick={handleClickToOpen}

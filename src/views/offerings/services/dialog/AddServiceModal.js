@@ -58,8 +58,35 @@ export default function AddServiceModal({
                             properties: {},
                         }}
                         validationSchema={validationSchema}
-                        onSubmit={(values, { setSubmitting }) => {
-                            handleServiceSave(values) // Call handleServiceSave with form values
+                        onSubmit={async (
+                            values,
+                            { setSubmitting, setErrors }
+                        ) => {
+                            try {
+                                const saveResult = await handleServiceSave(
+                                    values
+                                )
+
+                                if (saveResult.status === -1) {
+                                    // If there's an error, display the error message below the name field
+                                    setErrors({ name: saveResult.message })
+                                } else if (saveResult.status === 0) {
+                                    setErrors({})
+                                }
+                            } catch (error) {
+                                // Handle any unexpected errors
+                                console.error(
+                                    'Error while saving service:',
+                                    error
+                                )
+                                alert(
+                                    'An unexpected error occurred while saving the service.'
+                                )
+                            } finally {
+                                setSubmitting(false) // Ensure form is no longer in a submitting state
+                            }
+
+                            // const saveResult = handleServiceSave(values) // Call handleServiceSave with form values
                             //lets validate false
                             // setSubmitting(false)
                         }}
@@ -67,7 +94,7 @@ export default function AddServiceModal({
                     >
                         {({ values, touched, errors, isSubmitting }) => (
                             <div>
-                                <Form>
+                                <Form autoComplete="off">
                                     <FormContainer>
                                         <FormItem
                                             asterisk
