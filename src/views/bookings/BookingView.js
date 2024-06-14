@@ -541,9 +541,9 @@ const Home = () => {
                                         <DatePicker 
                                             name="bookingDate"
                                             minDate={today}
-                                            // onChange={(newDate) => {
-                                            //     // setExpiryDate(newDate);
-                                            // }}
+                                            onChange={(newDate) => {
+                                                //Basically we initialise the loading of timestamps
+                                            }}
                                             placeholder="Pick booking date" />
                                 </FormItem>
 
@@ -556,6 +556,17 @@ const Home = () => {
                                             errors.pickupTime && touched.pickupTime
                                         )}>
 
+                                        <div className="available-time-container">
+                                        {services.map((service) => (
+                                            <label key={service.id} className="available-time-option">
+                                            <Field type="checkbox" name="availableTime" value={service.name} />
+                                            <div className="available-time-content">
+                                                <div className="available-time-title">{service.name}</div>
+                                                <div className="available-time-description">{service.description}</div>
+                                            </div>
+                                            </label>
+                                        ))}
+                                    </div>
                                     </FormItem>
                                 </div>
 

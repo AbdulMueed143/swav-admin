@@ -104,8 +104,6 @@ const SignUpForm = (props) => {
             console.log("Success")
         }
         else {
-            console.log("No success")
-            console.log(result.message)
             setMessage(result.message)
             formIkRef.current.setSubmitting(false)
         }
