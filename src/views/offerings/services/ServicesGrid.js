@@ -25,32 +25,50 @@ const ServicesGrid = () => {
     }
 
     //Handling Update Model
-    const [selectedUpdatableBarber, setSelectedUpdatableBarber] = useState(null)
+    const [selectedService, setSelectedService] = useState(null)
     const [openUpdateModal, setIsUpdateModalOpen] = useState(false)
-    const handleClickToOpenUpdateModal = (updateBarber) => {
-        setSelectedUpdatableBarber(updateBarber)
+    const handleClickToOpenUpdateModal = (service) => {
+        setSelectedService(service)
         setIsUpdateModalOpen(true)
     }
 
     const handleClickToCloseUpdateModal = () => {
         setIsUpdateModalOpen(false)
-        setSelectedUpdatableBarber(null)
+        setSelectedService(null)
     }
 
     const handleClickToSaveUpdateModal = async (values) => {
         // Handle the form submission here using formValues
         console.log(values)
-        //lets make call to server
+
+        //client side check for duplicates
+        const existingServices = await getServices()
+
+        const isDuplicate = existingServices.some(
+            (service) =>
+                values.name.toLowerCase() === service.name.toLowerCase()
+        )
+
+        console.log(isDuplicate)
+
+        if (isDuplicate) {
+            return {
+                status: -1,
+                message: 'Service name already exists',
+            }
+        }
+
+        //lets make call to server if there is no duplicate
         const data = await updateService(values)
         if (data.status === -1) {
             //something went wrong ...
             setServerError(true)
             setServerErrorMessage(data.message)
+            return
         } else {
             // Call fetchServices to refresh the services
             fetchServices()
         }
-
         setOpen(false)
         handleClickToCloseUpdateModal()
     }
@@ -238,7 +256,7 @@ const ServicesGrid = () => {
                 handleServiceSave={handleServiceSave}
             />
             <UpdateServiceModal
-                updateBarberData={selectedUpdatableBarber}
+                selectedService={selectedService}
                 open={openUpdateModal}
                 handleToClose={handleClickToCloseUpdateModal}
                 handleServiceUpdate={handleClickToSaveUpdateModal}
