@@ -20,6 +20,7 @@
     "@mui/styles": "^5.14.14",
     "@popperjs/core": "^2.9.2",
     "@react-icons/all-files": "^4.1.0",
+    "@redux-devtools/extension": "^3.3.0",
     "@reduxjs/toolkit": "^1.8.5",
     "@tailwindcss/forms": "^0.3.2",
     "@tailwindcss/typography": "^0.5.2",
@@ -115,6 +116,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "7.21.11",
     "@event-calendar/core": "^2.4.1",
     "@event-calendar/time-grid": "^2.4.1",
     "autoprefixer": "^10.4.0",

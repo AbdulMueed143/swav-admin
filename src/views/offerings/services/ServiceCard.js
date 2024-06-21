@@ -1,15 +1,13 @@
-import { hide } from '@popperjs/core';
-import {  Avatar, Card } from 'components/ui';
-import Button  from 'components/ui/Buttons/Button';
+import { hide } from '@popperjs/core'
+import { Avatar, Card } from 'components/ui'
+import Button from 'components/ui/Buttons/Button'
 
 const ServiceCard = ({ service, onUpdateClick, onDeleteClick }) => {
-
-    const { id, name, description, price, averageTimeInMinutes } = service;
-
+    const { id, name, description, price, averageTimeInMinutes } = service
 
     const cardFooter = (
         <div cclassName="flex flex-col items-start">
-           <div className="flex items-center mb-2">
+            <div className="flex items-center mb-2">
                 <Avatar
                     size={30}
                     className="mr-2"
@@ -18,15 +16,27 @@ const ServiceCard = ({ service, onUpdateClick, onDeleteClick }) => {
                 />
                 <span>
                     <h6 className="text-sm">Duration</h6>
-                    <span className="text-xs">Takes approx {averageTimeInMinutes} Mint</span>
+                    <span className="text-xs">
+                        Takes approx {averageTimeInMinutes} Mint
+                    </span>
                 </span>
             </div>
 
             <div className="flex">
-                <Button className="mr-2 mb-2" variant="twoTone" color="red-600" onClick={() => onDeleteClick(id)}>
-                    Delete 
+                <Button
+                    className="mr-2 mb-2"
+                    variant="twoTone"
+                    color="red-600"
+                    onClick={() => onDeleteClick(id)}
+                >
+                    Delete
                 </Button>
-                <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => onUpdateClick(service)}>
+                <Button
+                    className="mr-2 mb-2"
+                    variant="twoTone"
+                    color="green-600"
+                    onClick={() => onUpdateClick(service)}
+                >
                     Update
                 </Button>
             </div>
@@ -45,13 +55,10 @@ const ServiceCard = ({ service, onUpdateClick, onDeleteClick }) => {
                     Price {price} AUD
                 </span>
                 <h4 className="font-bold my-3">{name}</h4>
-                <p className="truncate">
-                   {description}
-                </p>
+                <p className="truncate">{description}</p>
             </Card>
         </div>
     )
 }
 
 export default ServiceCard
-

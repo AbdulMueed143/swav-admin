@@ -1,4 +1,4 @@
-import React,  { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Input, Button, FormItem, FormContainer, Alert } from 'components/ui'
 import { PasswordInput, ActionLink } from 'components/shared'
 import useTimeOutMessage from 'utils/hooks/useTimeOutMessage'
@@ -8,9 +8,11 @@ import useAuth from 'utils/hooks/useAuth'
 import AddressAutocomplete from 'components/ui/custom/barbers/AddressAutocomplete'
 import { current } from '@reduxjs/toolkit'
 
-{/* <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB01eSc8cHSkUO3H1HXBiaeGWE8qBJcjoI&libraries=places"></script> */}
+{
+    /* <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB01eSc8cHSkUO3H1HXBiaeGWE8qBJcjoI&libraries=places"></script> */
+}
 
-// We are using following for the auto complete of places api 
+// We are using following for the auto complete of places api
 // https://www.npmjs.com/package/react-google-autocomplete
 
 const signupFormValidationSchema = Yup.object().shape({
@@ -18,51 +20,63 @@ const signupFormValidationSchema = Yup.object().shape({
     ownerLastName: Yup.string().required('Lastname Required'),
     ownerEmail: Yup.string().email().required('Please enter your email'),
     ownerPhoneNumber: Yup.string()
-    .required("Phone number is required")
-    .matches(/^[0-9]{9,}$/, "Phone number must be at least 9 digits"),
+        .required('Phone number is required')
+        .matches(/^[0-9]{9,}$/, 'Phone number must be at least 9 digits'),
     ownerPassword: Yup.string()
-    .required('Please enter your password')
-    .matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$/, "Min 1 uppercase, 1 Number and 6 charachters"),
-confirmPassword: Yup.string()
-    .oneOf(
+        .required('Please enter your password')
+        .matches(
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$/,
+            'Min 1 uppercase, 1 Number and 6 charachters'
+        ),
+    confirmPassword: Yup.string().oneOf(
         [Yup.ref('password'), null],
         'Your passwords do not match'
     ),
-address: Yup.string().required('Please enter your address'),
-
+    address: Yup.string().required('Please enter your address'),
 })
 
-
 const SignUpForm = (props) => {
-
     //References
-    const formIkRef = useRef();
+    const formIkRef = useRef()
+    const alertRef = useRef()
 
     //Declaration of variables
     const { disableSubmit = false, className, signInUrl = '/sign-in' } = props
     const { signUp, createAccount } = useAuth()
-    const [ message, setMessage ] = useTimeOutMessage()
+    const [message, setMessage] = useTimeOutMessage()
 
+    // Use useEffect to scroll to the alert when the message changes
+    useEffect(() => {
+        if (message && alertRef.current) {
+            alertRef.current.scrollIntoView({ behavior: 'smooth' })
+        }
+    }, [message])
 
-    const [businessName, setBusinessName] = useState("");
-    const [website, setWebsite] = useState("");
-    const [placeId, setPlaceId] = useState("");
-    const [googleAddress, setGoogleAddress] = useState("");
-    const [googlePhoneNumber, setGooglePhoneNumber] = useState("");
-    const [openingHours, setOpeningHours] = useState("");
+    const [businessName, setBusinessName] = useState('')
+    const [website, setWebsite] = useState('')
+    const [placeId, setPlaceId] = useState('')
+    const [googleAddress, setGoogleAddress] = useState('')
+    const [googlePhoneNumber, setGooglePhoneNumber] = useState('')
+    const [openingHours, setOpeningHours] = useState('')
 
     //Address type change
-    const [manualEntry, setManualEntry] = useState(false);
-    const toggleManualEntry = () => setManualEntry(!manualEntry);
+    const [manualEntry, setManualEntry] = useState(false)
+    const toggleManualEntry = () => setManualEntry(!manualEntry)
 
-    
     //Breaking the signup processs, use following methods
     const onRegisterAccount = async (values, setSubmitting) => {
         formIkRef.current.setSubmitting(true)
 
-        const { ownerFirstName, ownerLastName , shopName, customBusinessName, ownerPhoneNumber, ownerPassword, ownerEmail }  = values
-        
-        var currentAddress = ""
+        const {
+            ownerFirstName,
+            ownerLastName,
+            shopName,
+            ownerPhoneNumber,
+            ownerPassword,
+            ownerEmail,
+        } = values
+
+        var currentAddress = ''
         var extraProperties = {}
 
         // Map values to API expected variables
@@ -107,13 +121,19 @@ const SignUpForm = (props) => {
             setMessage(result.message)
             formIkRef.current.setSubmitting(false)
         }
-
     }
 
     return (
-        <div className={className} style={{ padding:'10px', display: 'flex', flexDirection: 'column', height: '100vh' }}>
-
-             <div style={{ flex: 6, overflowY: 'auto', padding: '2px'  }}>
+        <div
+            className={className}
+            style={{
+                padding: '10px',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100vh',
+            }}
+        >
+            <div style={{ flex: 6, overflowY: 'auto', padding: '2px' }}>
                 <Formik
                     initialValues={{
                         businessName: '',
@@ -128,40 +148,57 @@ const SignUpForm = (props) => {
                     }}
                     onSubmit={(values) => {
                         // onRegisterAccount(values); // Call onRegisterAccount when form is submitted and valid
-                      }}
-
+                    }}
                     validationSchema={signupFormValidationSchema}
                     innerRef={formIkRef}
                 >
                     {({ touched, errors, isSubmitting, values }) => (
-                        
-                        <Form >
-                            
+                        <Form>
                             <FormContainer>
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-
-
-                                    <FormItem
-                                            
-                                            label="First Name"
-                                            invalid={errors.ownerFirstName && touched.ownerFirstName}
-                                            errorMessage={errors.ownerFirstName}
+                                {message && (
+                                    <div ref={alertRef}>
+                                        <Alert
+                                            closable="true"
+                                            showIcon
+                                            className="mb-4"
+                                            type="danger"
                                         >
+                                            {message}
+                                        </Alert>
+                                    </div>
+                                )}
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    <FormItem
+                                        label="First Name"
+                                        invalid={
+                                            errors.ownerFirstName &&
+                                            touched.ownerFirstName
+                                        }
+                                        errorMessage={errors.ownerFirstName}
+                                    >
                                         <Field
-                                        asterick
+                                            asterick
                                             type="text"
                                             autoComplete="off"
                                             name="ownerFirstName"
                                             placeholder="First Name"
                                             component={Input}
-                                    
                                         />
                                     </FormItem>
-                                    <div style={{width:"10px"}}> </div>
+                                    <div style={{ width: '10px' }}> </div>
                                     <FormItem
-                                    required
+                                        required
                                         label="Last Name"
-                                        invalid={errors.ownerLastName && touched.ownerLastName}
+                                        invalid={
+                                            errors.ownerLastName &&
+                                            touched.ownerLastName
+                                        }
                                         errorMessage={errors.ownerLastName}
                                     >
                                         <Field
@@ -172,38 +209,41 @@ const SignUpForm = (props) => {
                                             component={Input}
                                         />
                                     </FormItem>
+                                </div>
 
-                            </div>
-
-                            <FormItem
+                                <FormItem
                                     label="Shop Name"
-                                    invalid={errors.shopName && touched.shopName}
-                                    errorMessage={errors.shopName}>
-
+                                    invalid={
+                                        errors.shopName && touched.shopName
+                                    }
+                                    errorMessage={errors.shopName}
+                                >
                                     <Field
                                         type="email"
                                         autoComplete="off"
                                         name="shopName"
                                         placeholder="Shop Name"
                                         component={Input}
-                                />
+                                    />
                                 </FormItem>
 
                                 <FormItem
                                     label="Email"
-                                    invalid={errors.ownerEmail && touched.ownerEmail}
-                                    errorMessage={errors.ownerEmail}>
-
+                                    invalid={
+                                        errors.ownerEmail && touched.ownerEmail
+                                    }
+                                    errorMessage={errors.ownerEmail}
+                                >
                                     <Field
                                         type="email"
                                         autoComplete="off"
                                         name="ownerEmail"
                                         placeholder="Email"
                                         component={Input}
-                                />
+                                    />
                                 </FormItem>
 
-                                    {/* <div>
+                                {/* <div>
 
                                     {!manualEntry && (
                                         <FormItem
@@ -318,7 +358,6 @@ const SignUpForm = (props) => {
 
                                     </div> */}
 
-
                                 {/* <FormItem>                    
                                             <button 
                                                 style={{ 
@@ -342,8 +381,12 @@ const SignUpForm = (props) => {
 
                                 <FormItem
                                     label="Phone Number"
-                                    invalid={errors.ownerPhoneNumber && touched.ownerPhoneNumber}
-                                    errorMessage={errors.ownerPhoneNumber}>
+                                    invalid={
+                                        errors.ownerPhoneNumber &&
+                                        touched.ownerPhoneNumber
+                                    }
+                                    errorMessage={errors.ownerPhoneNumber}
+                                >
                                     <Field
                                         type="text"
                                         autoComplete="off"
@@ -355,7 +398,10 @@ const SignUpForm = (props) => {
 
                                 <FormItem
                                     label="Password"
-                                    invalid={errors.ownerPassword && touched.ownerPassword}
+                                    invalid={
+                                        errors.ownerPassword &&
+                                        touched.ownerPassword
+                                    }
                                     errorMessage={errors.ownerPassword}
                                 >
                                     <Field
@@ -368,7 +414,8 @@ const SignUpForm = (props) => {
                                 <FormItem
                                     label="Confirm Password"
                                     invalid={
-                                        errors.ownerConfirmPassword && touched.ownerConfirmPassword
+                                        errors.ownerConfirmPassword &&
+                                        touched.ownerConfirmPassword
                                     }
                                     errorMessage={errors.ownerConfirmPassword}
                                 >
@@ -381,37 +428,38 @@ const SignUpForm = (props) => {
                                 </FormItem>
 
                                 <FormItem
-                                        label="Upload Logo"
-                                        invalid={errors.logo && touched.logo}
-                                        errorMessage={errors.logo}
-                                    >
-                                        <Field
-                                            type="file"
-                                            autoComplete="off"
-                                            name="logo"
-                                            component={Input}
-                                        />
-                                    </FormItem>
+                                    label="Upload Logo"
+                                    invalid={errors.logo && touched.logo}
+                                    errorMessage={errors.logo}
+                                >
+                                    <Field
+                                        type="file"
+                                        autoComplete="off"
+                                        name="logo"
+                                        component={Input}
+                                    />
+                                </FormItem>
 
-                                    <Button
+                                <Button
                                     block
                                     loading={isSubmitting}
                                     variant="solid"
                                     type="submit"
-                                    onClick={(event) => { 
-                                        event.preventDefault(); 
-                                        onRegisterAccount(values);
+                                    onClick={(event) => {
+                                        event.preventDefault()
+                                        onRegisterAccount(values)
                                     }}
-                                   >
+                                >
                                     {isSubmitting
                                         ? 'Creating Account...'
                                         : 'Create Account'}
                                 </Button>
 
-                                    
                                 <div className="mt-4 text-center">
                                     <span>Already have an account? </span>
-                                    <ActionLink to={signInUrl}>Sign in</ActionLink>
+                                    <ActionLink to={signInUrl}>
+                                        Sign in
+                                    </ActionLink>
                                 </div>
                             </FormContainer>
                         </Form>
