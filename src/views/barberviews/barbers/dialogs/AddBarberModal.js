@@ -4,14 +4,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Button from "@mui/material/Button";
-
-import { FormItem, FormContainer } from 'components/ui'
+import { FormItem, FormContainer } from 'components/ui';
 import Input from 'components/ui/Input'
-import { Field, Form, Formik } from 'formik'
-import { useFormikContext } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup'
 import Select from 'components/ui/Select'
-
 import useBookingServices from 'utils/hooks/useBookingService'
 
 const validationSchema = Yup.object().shape({
@@ -159,7 +156,6 @@ export default function AddBarberModal({open, handleToSave, handleToClose}) {
                                     invalid={errors.amenities && touched.amenities}
                                     errorMessage={errors.amenities}
                                 >
-                               
                                     <Select
                                         isMulti
                                         placeholder="Please Select"

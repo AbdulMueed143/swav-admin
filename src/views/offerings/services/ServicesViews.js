@@ -4,13 +4,15 @@ import ServicesGrid from './ServicesGrid'
 
 const Home = () => {
     const userName = useSelector((state) => state.auth.user.userName)
-    return <>
-        <div class="flex flex-col h-full">
-            <div class="flex gap-4">
-                <ServicesGrid />
+    return (
+        <>
+            <div class="flex flex-col h-full">
+                <div class="flex gap-4">
+                    <ServicesGrid />
+                </div>
             </div>
-        </div>
-    </>
+        </>
+    )
 }
 
 export default Home

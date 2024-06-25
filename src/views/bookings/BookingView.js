@@ -1,26 +1,46 @@
-import React, {useState, useEffect, useMemo } from 'react'
-
-import { Loading } from 'components/shared'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
+import React, {useState, useEffect, useMemo, useRef } from 'react'
+import { Loading } from 'components/shared';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid'; // Import for week and day views
 import interactionPlugin from '@fullcalendar/interaction'; // Import for week and day views
 import moment from 'moment';
 import useBookingServices from 'utils/hooks/useBookingService';
 import Checkbox from 'components/ui/Checkbox';
-import { idToColor, hexToRgb } from '../utils/colorCalculator'
+import { idToColor, hexToRgb } from '../utils/colorCalculator';
 import Button  from 'components/ui/Buttons/Button';
-import { hide } from '@popperjs/core';
-import { Dialog } from 'components/ui';
+import { Dialog, FormContainer, FormItem, Segment } from 'components/ui';
 import EditableBookingsListView from './EditableBookingsListView';
+import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
+import Input from 'components/ui/Input';
+import { Field, Form, Formik } from 'formik';
+import { DatePicker, Select } from 'antd';
+import usePackagesService from 'utils/hooks/CustomServices/usePackagesService';
+import { useSelector } from 'react-redux';
+import * as Yup from 'yup';
+import { HiCheckCircle } from 'react-icons/hi';
+
+import './css/booking.css'
+
+
+const validationSchema = Yup.object().shape({
+    barberName: Yup.string()
+        .min(3, 'Too Short!')
+        .required('Please input user name!'),
+});
+
 
 const Home = () => {
 
     //Selected Year and Month from calendar
     const today = new Date();
     const colorMap = new Map();
+    const userInfo = useSelector((state) => state.auth.user);
+    
 
     const { fetchBookings, updateBarberBookings } = useBookingServices();
+    const { getServices } = useBookingServices();
+    const { getPackages } = usePackagesService();
 
     const [currentStartDate, setCurrentStartDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
     const [currentEndDate, setCurrentEndDate] = useState(new Date(today.getFullYear(), today.getMonth() + 1, 0));
@@ -29,7 +49,6 @@ const Home = () => {
     const [isFetchingData, setIsFetchingData] = useState(null);
     const [monthlyBookings, setMonthlyBookings] = useState([]);
 
-   
     const [checkedBarbers, setCheckedBarbers] = useState([]);
 
     const [calendarSettings, setCalendarSettings] = useState({
@@ -37,6 +56,72 @@ const Home = () => {
         eventMaxStack: 3,
         dayMaxEventRows: true
     });
+
+    //Handle Booking
+    const formIkRef = useRef();
+
+    //Network
+    const [services, setServices] = useState([]); // Initial state as an empty array
+    const [packages, setPackages] = useState([]);
+
+    const fetchServices = async () => {
+        const data = await getServices();
+        setServices(data);
+    };
+
+    const fetchPackages = async () => {
+        const data = await getPackages();
+        setPackages(data);
+    };
+    
+    useEffect(() => {
+        fetchServices();
+        fetchPackages();
+    }, []);
+      
+      // Map your services array to an array of options
+    const serviceMap =  [
+        { value: '', label: 'No Selection' },
+         ...services.map(service => ({
+            value: service.name,
+            label: service.name,
+        }))
+    ];
+
+    const packageMap = [
+        { value: '', label: 'No Selection' },
+        ...packages.map(p => ({
+            value: p.name,
+            label: p.name,
+        }))
+    ];
+    //The services ends there
+
+    const [selectedPackage, setSelectedPackage] = useState(null);
+    const [selectedService, setSelectedService] =  React.useState([]);
+    const selectedServicesMap = selectedService?.map(service => ({
+        value: service.name,
+        label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
+    }));
+
+    const [isCreateAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] = useState(false);
+
+    const handleOpenAppointmentDialog = () => {
+        setIsCreateAppointmentDialogOpen(true);
+    }
+
+    const handleOpenAppointmentDialogClose = () => {
+        setIsCreateAppointmentDialogOpen(false);
+    }
+
+    const handleOpenAppointmentDialogOk = () => {
+        setIsCreateAppointmentDialogOpen(false);
+    }
+
+    function validateCreateBookingItems() {
+        //Make sure either 1 service or package is selected
+    }
+
 
     //Handle View Change
     function handleViewChange(viewInfo) {
@@ -210,11 +295,6 @@ const Home = () => {
     }
 
     function transformBookingsToCalendarEvents(bookings) {
-
-        console.log("Transforming ", bookings);
-
-        console.log("Transforming - bookings.amenities", bookings.amenities);
-
         return bookings.map((booking, index) => ({
             id: index.toString(),
             bookingId: booking.id,
@@ -325,6 +405,12 @@ const Home = () => {
 
         </div>
 
+            <div>
+                <ButtonWithIcon 
+                    label="Add Appointment"
+                    onClick={handleOpenAppointmentDialog} />
+            </div>
+
             <FullCalendar
                 showNonCurrentDates={false}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]} // Include timeGridPlugin
@@ -394,6 +480,155 @@ const Home = () => {
                 </div>
             </Dialog>
 
+
+
+
+
+            <Dialog
+                isOpen={isCreateAppointmentDialogOpen}
+                 onClose={handleOpenAppointmentDialogClose}
+                onRequestClose={handleOpenAppointmentDialogClose}
+                style={{ minWidth: '680px', overflow:'auto' }}
+                >
+                <h5 className="mb-4">Create Booking</h5>
+
+
+                <Formik
+                    enableReinitialize
+                    initialValues={{
+                        barberName: userInfo.firstName + ' '+ userInfo.lastName,
+                        bookingDate: new Date(),
+                    }}
+                    validationSchema={validationSchema}
+                    onSubmit={(values, { setSubmitting }) => {
+                        setSubmitting(false);
+                    }}
+                >
+
+            {({ values, touched, errors, resetForm, submitForm }) => (
+                <div>
+
+
+                <Form>
+                            <FormContainer>
+
+                                
+
+                                <div>
+                                        <FormItem
+                                            asterisk
+                                            label="Barber Name"
+                                            invalid={errors.barberName && touched.barberName}
+                                            errorMessage={errors.barberName}
+                                        >
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <Field
+                                                    disabled
+                                                    name="barberName"
+                                                    placeholder="Barber Name"
+                                                    component={Input}
+                                                    style={{ flex: 1 }} // Make the input take as much space as possible
+                                                />
+                                            </div>
+                                        </FormItem>
+                                </div>
+
+                                <FormItem
+                                    asterisk
+                                    label="Booking Date"
+                                    invalid={errors.bookingDate && touched.bookingDate}
+                                    errorMessage={errors.bookingDate}>
+                                        <DatePicker 
+                                            name="bookingDate"
+                                            minDate={today}
+                                            onChange={(newDate) => {
+                                                //Basically we initialise the loading of timestamps
+                                            }}
+                                            placeholder="Pick booking date" />
+                                </FormItem>
+
+
+                                <div>
+                                    <FormItem
+                                        asterisk
+                                        label="Time"
+                                        invalid={Boolean(
+                                            errors.pickupTime && touched.pickupTime
+                                        )}>
+
+                                        <div className="available-time-container">
+                                        {services.map((service) => (
+                                            <label key={service.id} className="available-time-option">
+                                            <Field type="checkbox" name="availableTime" value={service.name} />
+                                            <div className="available-time-content">
+                                                <div className="available-time-title">{service.name}</div>
+                                                <div className="available-time-description">{service.description}</div>
+                                            </div>
+                                            </label>
+                                        ))}
+                                    </div>
+                                    </FormItem>
+                                </div>
+
+                                <div>
+                                    <FormItem
+                                        asterisk
+                                        label="Services"
+                                        invalid={Boolean(
+                                            errors.segment && touched.segment
+                                        )}>
+                                        <div className="segment-container">
+                                        {services.map((service) => (
+                                            <label key={service.id} className="segment-option">
+                                            <Field type="checkbox" name="segment" value={service.name} />
+                                            <div className="segment-content">
+                                                <div className="segment-title">{service.name}</div>
+                                                <div className="segment-description">{service.description}</div>
+                                            </div>
+                                            </label>
+                                        ))}
+                                        </div>
+                                    </FormItem>
+                                </div> 
+
+
+                                <div>
+                                    <FormItem
+                                        label="Package"
+                                        >
+                                        <Select
+                                                isMulti
+                                                placeholder="Please Select Package"
+                                                options={packageMap}
+                                                onChange={(newPackage) => {
+                                                    setSelectedPackage(newPackage);
+                                                }}
+                                            ></Select>
+                                    </FormItem>
+                                </div>
+                               
+                            </FormContainer>
+                </Form>
+
+                
+                <div className="text-right mt-6">
+                     <Button
+                        className="ltr:mr-2 rtl:ml-2"
+                        variant="plain"
+                        onClick={handleOpenAppointmentDialogClose}
+                    >
+                        Cancel
+                    </Button>
+                    <Button variant="solid" onClick={handleOpenAppointmentDialogOk}>
+                        Create Booking
+                    </Button>
+                </div>
+
+                </div>
+                    )}
+                </Formik>
+
+            </Dialog>
 
         </div>
     </>

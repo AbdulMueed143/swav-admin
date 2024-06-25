@@ -11,6 +11,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'; // Import for week and day 
 import moment from 'moment';
 import { idToColor, hexToRgb } from '../../utils/colorCalculator'
 import Button  from 'components/ui/Buttons/Button';
+import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 
 //This is availability dashboard, shows availability of a barber/barbers
 //You can not modify data here, its just for viewing
@@ -34,7 +35,9 @@ const DashboardView = () => {
         eventMaxStack: 3,
         dayMaxEventRows: true
       });
-      
+
+      //Handle etc
+
 
       //Handle Methods
 
@@ -281,8 +284,10 @@ const DashboardView = () => {
             <Button className="mr-2 mb-2" variant="twoTone" color="teal-900" onClick={applyFilter}>
                     Filter
             </Button>
-
+           
         </div>
+
+
             <div>
             <FullCalendar
               showNonCurrentDates={false}

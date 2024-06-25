@@ -58,7 +58,7 @@ export async function apiResetForgotPassword(requestBody) {
 export async function apiRegister(data) {
     return ApiService.fetchData({
         url: '/barber-service/api/v1/barber/shop/business/register',
-        method: 'post',
+        method: 'post', 
         data
     })
 }
