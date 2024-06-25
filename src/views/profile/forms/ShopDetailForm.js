@@ -306,18 +306,23 @@ const ShopDetailForm = () => {
 
                                 </div>
 
-                                <FormItem
-                                    label="Booking Link"
-                                    >
-
+                                {/* <FormItem 
+                                    label="Booking Link">
                                     <Field
                                         type="text"
                                         autoComplete="off"
                                         name="bookingServiceUrl"
                                         component={Input}
                                 />
-                                </FormItem>
+                                </FormItem> */}
 
+                                <div>
+                                    <h4>Booking Information</h4>
+                                    <p>You can provide below link to your customer for making bookings:</p>
+                                    <a href={bookingServiceUrl} target="_blank" rel="noopener noreferrer">
+                                        {bookingServiceUrl}
+                                    </a>
+                                </div>
 
                             
                                 <div className='right-column' style={{marginRight : '1px'}}>
