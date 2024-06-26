@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { apiFetchBarbersWithAvailabilityTemplate, apiUpsertAvailabilityTemplate, apiUpsertAvailabilityTemplateForDate, 
-    fetchBarbersMonthlyAvailability, fetchBarberAvailabilityTemplateForDate } from 'services/BarberAvailabilityService'
+    fetchBarbersMonthlyAvailability, fetchBarberAvailabilityTemplateForDate, 
+    getAvailableSlots} from 'services/BarberAvailabilityService'
 import { useNavigate } from 'react-router-dom'
 import useQuery from '../useQuery'
 
@@ -56,6 +57,22 @@ function useAvailabilityService() {
         }
 
     };
+
+    const fetchAvailabilitySlots = async (payload) => {
+        try {
+            const resp = await getAvailableSlots(token, payload);
+
+            if(resp.status === 200) {
+                return resp.data;
+            }
+            else {
+                return [];
+            }
+
+        } catch(errors) {
+            return [];
+        }
+    }
 
     const fetchAvailabilityForDate = async (barberId, currentDate) => {
         try {
@@ -139,7 +156,8 @@ function useAvailabilityService() {
         updateBarberAvailability,
         getMonthlyAvailability,
         fetchAvailabilityForDate,
-        updateBarberAvailabilityForDate
+        updateBarberAvailabilityForDate,
+        fetchAvailabilitySlots
     }
 }
 

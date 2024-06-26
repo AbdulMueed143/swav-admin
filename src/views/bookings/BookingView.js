@@ -19,8 +19,11 @@ import usePackagesService from 'utils/hooks/CustomServices/usePackagesService';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import { HiCheckCircle } from 'react-icons/hi';
+import { useDispatch } from 'react-redux';
 
 import './css/booking.css'
+import { getAvailableSlots } from 'services/BarberAvailabilityService';
+import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
 
 
 const validationSchema = Yup.object().shape({
@@ -36,6 +39,9 @@ const Home = () => {
     const today = new Date();
     const colorMap = new Map();
     const userInfo = useSelector((state) => state.auth.user);
+    const dispatch = useDispatch();
+
+    console.log("User information, barber information ", userInfo);
     
 
     const { fetchBookings, updateBarberBookings } = useBookingServices();
@@ -63,6 +69,7 @@ const Home = () => {
     //Network
     const [services, setServices] = useState([]); // Initial state as an empty array
     const [packages, setPackages] = useState([]);
+    const [availableTimeSlots, setAvailableTimeSlots] = useState([]); // Initial state as an empty array
 
     const fetchServices = async () => {
         const data = await getServices();
@@ -97,6 +104,7 @@ const Home = () => {
     ];
     //The services ends there
 
+
     const [selectedPackage, setSelectedPackage] = useState(null);
     const [selectedService, setSelectedService] =  React.useState([]);
     const selectedServicesMap = selectedService?.map(service => ({
@@ -115,12 +123,70 @@ const Home = () => {
     }
 
     const handleOpenAppointmentDialogOk = () => {
-        setIsCreateAppointmentDialogOpen(false);
+
+       
+    }
+
+    const handleCreateBookingFormSubmit = async (values) => {
+
+        console.log('Selected Time:', values.availableTime);
+        console.log('Selected Services:', values.segment);
+
+         //need to send request to create the booking ...
+         const payload = {
+            "bookingStartDateTime": values.availableTime,
+            "barberId": userInfo.barberId,
+            "barberShopId": userInfo.barberShopId,
+            "amenitiesIds": services
+                .filter(service => values.segment.includes(service.name))
+                .map(service => service.id),
+            // "packagesIds": selectedPackage.id,
+        }
+
+        console.log("Booking Request ", payload);
+
+        // setIsCreateAppointmentDialogOpen(false);
+
     }
 
     function validateCreateBookingItems() {
         //Make sure either 1 service or package is selected
     }
+
+    const { fetchAvailabilitySlots  } = useAvailabilityService();
+
+
+    const dateFormatOnly = (date) => {
+        const dateObject = new Date(date);
+
+        const day = dateObject.getDate().toString().padStart(2, '0'); // Get day and pad with leading zero if necessary
+        const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Get month (months are zero-based) and pad with leading zero if necessary
+        const year = dateObject.getFullYear();
+
+        const formattedDate = `${year}-${month}-${day}`; // Format the date as DD-MM-YYYY
+        return formattedDate;
+    }
+
+    const handleDateSelect = async (date) => {
+
+        //The barber that is by default selected is the one we are making bookings with
+        //so we want its availabilites on date ...
+        const data = {
+            "date": dateFormatOnly(date),
+            "barberId": userInfo.barberId
+        }
+
+        const availableSlots = await fetchAvailabilitySlots(data);
+
+        console.log("Available Time Slots ", data, availableSlots);
+        setAvailableTimeSlots(availableSlots);
+    }
+
+    const handleSetSelectedPackage  = (event) => {
+
+        console.log("Selected ", event, event.target)
+        setSelectedPackage(event);
+    };
 
 
     //Handle View Change
@@ -498,9 +564,11 @@ const Home = () => {
                     initialValues={{
                         barberName: userInfo.firstName + ' '+ userInfo.lastName,
                         bookingDate: new Date(),
+
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting }) => {
+                        handleCreateBookingFormSubmit(values);
                         setSubmitting(false);
                     }}
                 >
@@ -511,16 +579,13 @@ const Home = () => {
 
                 <Form>
                             <FormContainer>
-
-                                
-
                                 <div>
                                         <FormItem
                                             asterisk
                                             label="Barber Name"
                                             invalid={errors.barberName && touched.barberName}
-                                            errorMessage={errors.barberName}
-                                        >
+                                            errorMessage={errors.barberName}>
+
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <Field
                                                     disabled
@@ -542,29 +607,30 @@ const Home = () => {
                                             name="bookingDate"
                                             minDate={today}
                                             onChange={(newDate) => {
-                                                //Basically we initialise the loading of timestamps
+                                                //Basically we initialise the loading of times
+                                                //for the date get the times .... 
+                                                handleDateSelect(newDate);
                                             }}
                                             placeholder="Pick booking date" />
                                 </FormItem>
 
 
                                 <div>
-                                    <FormItem
-                                        asterisk
-                                        label="Time"
-                                        invalid={Boolean(
-                                            errors.pickupTime && touched.pickupTime
-                                        )}>
-
-                                        <div className="available-time-container">
-                                        {services.map((service) => (
-                                            <label key={service.id} className="available-time-option">
-                                            <Field type="checkbox" name="availableTime" value={service.name} />
+                                <FormItem
+                                    asterisk
+                                    label="Time"
+                                    invalid={Boolean(errors.pickupTime && touched.pickupTime)}
+                                    >
+                                    <div className="available-time-container">
+                                        {availableTimeSlots.map((timeslot) => (
+                                        <label key={timeslot.startDateTime} className="available-time-option">
+                                            <Field type="radio" name="availableTime" value={timeslot.startDateTime} />
                                             <div className="available-time-content">
-                                                <div className="available-time-title">{service.name}</div>
-                                                <div className="available-time-description">{service.description}</div>
+                                            <div className="available-time-title">
+                                                {new Date(timeslot.startDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
                                             </div>
-                                            </label>
+                                            </div>
+                                        </label>
                                         ))}
                                     </div>
                                     </FormItem>
@@ -589,8 +655,7 @@ const Home = () => {
                                         ))}
                                         </div>
                                     </FormItem>
-                                </div> 
-
+                                </div>
 
                                 <div>
                                     <FormItem
@@ -600,9 +665,8 @@ const Home = () => {
                                                 isMulti
                                                 placeholder="Please Select Package"
                                                 options={packageMap}
-                                                onChange={(newPackage) => {
-                                                    setSelectedPackage(newPackage);
-                                                }}
+                                                value={selectedPackage}
+                                                onChange={handleSetSelectedPackage}
                                             ></Select>
                                     </FormItem>
                                 </div>
@@ -619,7 +683,7 @@ const Home = () => {
                     >
                         Cancel
                     </Button>
-                    <Button variant="solid" onClick={handleOpenAppointmentDialogOk}>
+                    <Button variant="solid" onClick={submitForm}>
                         Create Booking
                     </Button>
                 </div>
