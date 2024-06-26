@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
 const ShopDetailForm = () => {
 
     // const bookingURL = process.env.REACT_APP_BARBER_BOOKING_SERVICE_URL;
-    const bookingUrl = "https://swav-booking-frontend-hk57lvgnsq-ts.a.run.app"
+    const bookingURL = "https://swav-booking-frontend-hk57lvgnsq-ts.a.run.app";
 
     const [bookingServiceUrl, setBookingServiceUrl] = useState("");
 

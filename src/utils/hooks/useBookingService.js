@@ -1,7 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { apiGetServices, apiAddService, apiDeleteService, apiUpdateService, 
     apiAddBarber, apiGetBarbers, apiDisableBarber, apiFetchBookings, 
-    apiUpdateBooking, apiFetchBookingsForDate, apiFetchBookingAvailabilityForRange } from 'services/BookingService'
+    apiUpdateBooking, apiFetchBookingsForDate, apiFetchBookingAvailabilityForRange, 
+    apiCreateBooking} from 'services/BookingService'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
 import { values } from 'lodash'
@@ -180,6 +181,28 @@ function useBookingServices() {
         }
     }
 
+    const createBooking = async (payload) => {
+        try
+        {
+            const resp = await apiCreateBooking(token, payload)
+
+            if(resp.status === 200) {
+                return resp;
+            }
+            else {
+                return {
+                    status: -1,
+                    message: resp,
+                }    
+            }
+        } catch (errors) {
+            return {
+                status: -1,
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
+
     const fetchBookingsForDate = async (bookingDate) => {
         try
         {
@@ -267,7 +290,8 @@ function useBookingServices() {
         fetchBookings,
         updateBarberBookings,
         fetchBookingAvailabilityForRange,
-        fetchBookingsForDate
+        fetchBookingsForDate,
+        createBooking
         // addBarberAvailability
     }
 }

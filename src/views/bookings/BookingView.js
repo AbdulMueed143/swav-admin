@@ -67,6 +67,14 @@ const Home = () => {
     const formIkRef = useRef();
 
     //Network
+
+    //Users will be people
+    //Lets ask phone number of the user, if user already exists, we will associate booking with them
+    //If user does not exists in the system, we will create them, saying barber has created your account
+    //Please use phone number to login
+
+    const [users, setUsers] = useState([]);
+
     const [services, setServices] = useState([]); // Initial state as an empty array
     const [packages, setPackages] = useState([]);
     const [availableTimeSlots, setAvailableTimeSlots] = useState([]); // Initial state as an empty array
@@ -122,15 +130,14 @@ const Home = () => {
         setIsCreateAppointmentDialogOpen(false);
     }
 
-    const handleOpenAppointmentDialogOk = () => {
-
-       
-    }
+    const { createBooking } = useBookingServices();
 
     const handleCreateBookingFormSubmit = async (values) => {
 
         console.log('Selected Time:', values.availableTime);
         console.log('Selected Services:', values.segment);
+        console.log('Selected Values:', values);
+
 
          //need to send request to create the booking ...
          const payload = {
@@ -140,10 +147,26 @@ const Home = () => {
             "amenitiesIds": services
                 .filter(service => values.segment.includes(service.name))
                 .map(service => service.id),
+            "userMobileNumber": values.userMobileNumber,
             // "packagesIds": selectedPackage.id,
         }
 
         console.log("Booking Request ", payload);
+
+        //send request to create the booking .... 
+
+        //now se send the request to mark bookings as completed
+        const response = await createBooking(payload);
+
+        console.log("Server responses ", response);
+
+        if(response.status == -1) {
+            //failed 
+        }
+        else {
+            //otherwise
+            //reload
+        }
 
         // setIsCreateAppointmentDialogOpen(false);
 
@@ -235,7 +258,6 @@ const Home = () => {
             //reload
             fetchBookingsForMonth(checkedBarbers, currentStartDate, currentEndDate);
         }
-
     }
 
     const onHandleBabarberStatusChange = (bookingId, newStatus) => {
@@ -564,6 +586,7 @@ const Home = () => {
                     initialValues={{
                         barberName: userInfo.firstName + ' '+ userInfo.lastName,
                         bookingDate: new Date(),
+                        userMobileNumber: '',
 
                     }}
                     validationSchema={validationSchema}
@@ -575,7 +598,6 @@ const Home = () => {
 
             {({ values, touched, errors, resetForm, submitForm }) => (
                 <div>
-
 
                 <Form>
                             <FormContainer>
@@ -598,6 +620,23 @@ const Home = () => {
                                         </FormItem>
                                 </div>
 
+                                <div>
+
+                                    <FormItem 
+                                        label="User (Mobile Number)">
+                                            <div>Please make sure your add correct mobile number.</div>
+                                            <Select
+                                                placeholder="User Mobile Number (0413 XXX XXX)"
+                                                asterick
+                                                type="text"
+                                                autoComplete="off"
+                                                name="userMobileNumber"
+                                                component={Input}
+                                            >
+                                        </Select>
+                                    </FormItem>
+                                </div>
+
                                 <FormItem
                                     asterisk
                                     label="Booking Date"
@@ -613,7 +652,6 @@ const Home = () => {
                                             }}
                                             placeholder="Pick booking date" />
                                 </FormItem>
-
 
                                 <div>
                                 <FormItem

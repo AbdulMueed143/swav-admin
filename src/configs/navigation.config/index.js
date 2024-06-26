@@ -5,16 +5,16 @@ import {
 } from 'constants/navigation.constant'
 
 const navigationConfig = [
-    {
-        key: 'home',
-        path: '/home',
-        title: 'Home',
-        translateKey: 'nav.home',
-        icon: 'home',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
-        subMenu: [],
-    },
+    // {
+    //     key: 'home',
+    //     path: '/home',
+    //     title: 'Home',
+    //     translateKey: 'nav.home',
+    //     icon: 'home',
+    //     type: NAV_ITEM_TYPE_ITEM,
+    //     authority: [],
+    //     subMenu: [],
+    // },
 
     {
         key: 'bookings',
