@@ -105,3 +105,14 @@ async function fetchBarberAvailabilityTemplate(barberId, token) {
 }
 
 
+export async function getAvailableSlots(token, payload) {
+
+    return await ApiService.fetchData({
+        url: `barber-availability-service/api/v1/availabilities/barber`,
+        method: 'post',
+        data: payload,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+    });
+}

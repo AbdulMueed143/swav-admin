@@ -132,3 +132,15 @@ export async function apiFetchBookingAvailabilityForRange(token, fromDate, toDat
         }
     });
 }
+
+
+export async function apiCreateBooking(token, payload) {
+    return ApiService.fetchData({
+        url: '/barber-service/api/v1/barber/shop/booking/confirm',
+        method: 'post',
+        data: payload,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
