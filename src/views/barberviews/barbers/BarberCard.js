@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Avatar, Card } from 'components/ui'
 import Button from 'components/ui/Buttons/Button'
 import Switcher from 'components/ui/Switcher'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min'
 
 const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
     const {
@@ -17,7 +19,7 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
     } = barber
 
     const cardFooter = (
-        <div cclassName="flex flex-col items-start">
+        <div className="flex flex-col items-start" style={{ overflow: 'auto' }}>
             <div className="flex items-center mb-2">
                 <Avatar
                     size={30}
@@ -62,7 +64,7 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
     const cardHeader = (
         <div
             className="rounded-tl-lg rounded-tr-lg overflow-hidden relative"
-            style={{ height: '250px', width: '300px' }}
+            style={{ height: '15em', width: '100%' }}
         >
             <img
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -79,12 +81,12 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
 
     return (
         <div
-            className="max-w-xs"
-            style={{ width: '300px', minHeight: '500px' }}
+            className="col-sm-6 col-md-4"
+            /* style={{ width: '300px', minHeight: '500px' }} */
         >
             <Card
                 clickable
-                className="hover:shadow-lg transition duration-150 ease-in-out dark:border dark:border-gray-600 dark:border-solid"
+                className="hover:shadow-lg transition duration-150 ease-in-out dark:border dark:border-gray-600 dark:border-solid overflow-hidden"
                 header={cardHeader}
                 footer={cardFooter}
                 headerClass="p-0"

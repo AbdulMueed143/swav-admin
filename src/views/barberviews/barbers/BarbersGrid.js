@@ -8,6 +8,8 @@ import { Loading } from 'components/shared'
 import Button from 'components/ui/Buttons/Button'
 import { Dialog } from 'components/ui'
 import { useSelector } from 'react-redux'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min'
 
 const BarbersGrid = () => {
     // Initialize state for the search input
@@ -143,16 +145,17 @@ const BarbersGrid = () => {
             </Dialog>
 
             <Loading loading={loading}>
-                <div className="flex gap-4 flex-wrap mt-4">
-                    {filteredBarbers.map((barber, index) => (
-                        <BarberCard
-                            key={index}
-                            barber={barber}
-                            onSettingsClicked={onBarberSettingClicked}
-                            onStatusSwitcherToggle={onStatusSwitcherToggle}
-                            className="flex"
-                        />
-                    ))}
+                <div className="container mt-4">
+                    <div className="row gy-3">
+                        {filteredBarbers.map((barber, index) => (
+                            <BarberCard
+                                key={index}
+                                barber={barber}
+                                onSettingsClicked={onBarberSettingClicked}
+                                onStatusSwitcherToggle={onStatusSwitcherToggle}
+                            />
+                        ))}
+                    </div>
                 </div>
             </Loading>
 
@@ -160,6 +163,7 @@ const BarbersGrid = () => {
                 open={open}
                 handleToSave={handleBarberSave}
                 handleToClose={handleToClose}
+                barbers={barbers}
             />
         </div>
     )
