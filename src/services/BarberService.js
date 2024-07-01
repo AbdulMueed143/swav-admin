@@ -1,10 +1,10 @@
 import ApiService from './ApiService'
 
-export async function apiGetAllBarbers(data) {
+export async function apiGetAllBarbers(payload) {
     return ApiService.fetchData({
         url: '/api/v1/auth/barber',
         method: 'post',
-        data,
+        payload,
     })
 }
 
@@ -24,6 +24,18 @@ export async function apiFetchBarberShopDetail(barberId, token) {
     return response.data;
 }
 
+export async function apiUpdateBarberShopCancellationPolicies(payload, token) {
+    const url = `/barber-service/api/v1/shop/policy/cancellation`;
+
+    return ApiService.fetchData({
+        url: url,
+        method: 'put',
+        data: payload,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
 
 export async function apiUpdateBarberShopDetail(shopDetail, token) {
     // Replace this URL with the actual endpoint and modify parameters as needed

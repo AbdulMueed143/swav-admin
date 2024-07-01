@@ -8,6 +8,7 @@ import ShopDetailForm from './forms/ShopDetailForm'
 import TaxAndSurchargeForm from './forms/TaxSurchargeForm'
 import SchedulingLimitForm from './forms/SchedulingLimitForm'
 import VocationGrid from './grids/VocationGrid'
+import CancellationPolicyForm from './forms/CancellationPolicyForm'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -34,6 +35,9 @@ const Home = () => {
                     </TabNav>
                     <TabNav value="tab5" icon={<HiOutlineSun />}>
                         Holidays
+                    </TabNav>
+                    <TabNav value="tab6" icon={<HiOutlineSun />}>
+                        Privacy Policy
                     </TabNav>
                 </TabList>
                 <div className="p-4">
@@ -65,6 +69,11 @@ const Home = () => {
                         <HolidayGrid />
                         <VocationGrid />
                     </TabContent>
+
+                    <TabContent value="tab6">
+                        <CancellationPolicyForm />
+                    </TabContent>
+
                 </div>
             </Tabs>
         </div>

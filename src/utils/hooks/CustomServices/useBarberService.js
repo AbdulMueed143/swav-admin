@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import useQuery from '../useQuery'
-import { apiFetchBarberShopDetail } from 'services/BarberService'
+import { apiFetchBarberShopDetail, apiUpdateBarberShopCancellationPolicies } from 'services/BarberService'
 
 function useBarberService() {
     const dispatch = useDispatch()
@@ -36,8 +36,34 @@ function useBarberService() {
     }
 
 
+    const updateBarberShopCancellationPolicies = async (payload) => {
+        try {
+
+            const resp = await apiUpdateBarberShopCancellationPolicies(payload, token);
+
+            if(resp.status === 200) {
+                return resp;
+            }
+            else {
+                //add some kind of error 
+                return {
+                    status: -1,
+                    message: resp,
+                }
+            }
+
+        } catch (errors) {
+            return {
+                status: -1,
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
+    }
+
+
     return {
         fetchBarberShopDetail,
+        updateBarberShopCancellationPolicies
     }
 }
 

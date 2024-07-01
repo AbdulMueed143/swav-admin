@@ -52,7 +52,7 @@ const ProfileForm = () => {
                 validationSchema={validationSchema}
                 onSubmit={(values, { resetForm, setSubmitting }) => {
                     setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2))
+                        // alert(JSON.stringify(values, null, 2))
                         setSubmitting(false)
                         resetForm()
                     }, 400)
