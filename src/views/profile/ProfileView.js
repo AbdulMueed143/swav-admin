@@ -8,6 +8,7 @@ import ShopDetailForm from './forms/ShopDetailForm'
 import TaxAndSurchargeForm from './forms/TaxSurchargeForm'
 import SchedulingLimitForm from './forms/SchedulingLimitForm'
 import VocationGrid from './grids/VocationGrid'
+import CancellationPolicyForm from './forms/CancellationPolicyForm'
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -35,6 +36,9 @@ const Home = () => {
                     <TabNav value="tab5" icon={<HiOutlineSun />}>
                         Holidays
                     </TabNav>
+                    <TabNav value="tab6" icon={<HiOutlineSun />}>
+                        Privacy Policy
+                    </TabNav>
                 </TabList>
                 <div className="p-4">
                     <TabContent value="tab1">
@@ -43,11 +47,7 @@ const Home = () => {
 
                     </TabContent>
                     <TabContent value="tab2">
-                        <div>
-                            <p>
-                                You have to add your gps location, so that users can find you on mobile application as nearby barber.
-                            </p>
-                        </div>
+                       
 
                         <ShopDetailForm />
 
@@ -65,6 +65,11 @@ const Home = () => {
                         <HolidayGrid />
                         <VocationGrid />
                     </TabContent>
+
+                    <TabContent value="tab6">
+                        <CancellationPolicyForm />
+                    </TabContent>
+
                 </div>
             </Tabs>
         </div>
