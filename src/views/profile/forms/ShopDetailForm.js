@@ -23,7 +23,6 @@ const ShopDetailForm = () => {
     const bookingURL = "https://swav-booking-frontend-hk57lvgnsq-ts.a.run.app";
 
     const [bookingServiceUrl, setBookingServiceUrl] = useState("");
-
     const [shopName, setShopName] = useState("");
     const [website, setWebsite] = useState("");
     const [placeId, setPlaceId] = useState("");
@@ -136,8 +135,57 @@ const ShopDetailForm = () => {
 
     }, [barberShopInfo]);
 
+    const [copyFeedback, setCopyFeedback] = useState('');
+
+
+    const copyToClipboard = () => {
+        // Create a temporary input element to hold the URL
+        const tempInput = document.createElement('input');
+        tempInput.value = bookingServiceUrl;
+        document.body.appendChild(tempInput);
+        
+        // Select the text in the input element
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); // For mobile devices
+        
+        // Copy the text to the clipboard
+        document.execCommand('copy');
+        
+        // Remove the temporary input element from the document
+        document.body.removeChild(tempInput);
+
+        // Provide feedback to the user
+        setCopyFeedback('Copied!');
+        
+        // Remove feedback after 2 seconds
+        setTimeout(() => {
+            setCopyFeedback('');
+        }, 2000);
+    };
+
     return (
         <div>
+
+            <div>
+                <h4>Booking Information</h4>
+                <p>You can provide below link to your customer for making bookings:</p>
+                <a href={bookingServiceUrl} target="_blank" rel="noopener noreferrer">
+                    {bookingServiceUrl}
+                </a>
+
+                <button 
+                    onClick={copyToClipboard} 
+                    style={{ marginLeft: '10px', padding: '5px', cursor: 'pointer' }}
+                >
+                    Copy
+                </button>
+
+                {copyFeedback && <span style={{ marginLeft: '10px', color: 'green' }}>{copyFeedback}</span>}
+
+            </div>
+
+            <div style={{padding: '10px'}}></div>
+
             <Formik
                  initialValues={{
                     businessName: shopName,
@@ -307,23 +355,7 @@ const ShopDetailForm = () => {
 
                                 </div>
 
-                                {/* <FormItem 
-                                    label="Booking Link">
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="bookingServiceUrl"
-                                        component={Input}
-                                />
-                                </FormItem> */}
 
-                                <div>
-                                    <h4>Booking Information</h4>
-                                    <p>You can provide below link to your customer for making bookings:</p>
-                                    <a href={bookingServiceUrl} target="_blank" rel="noopener noreferrer">
-                                        {bookingServiceUrl}
-                                    </a>
-                                </div>
 
                             
                                 <div className='right-column' style={{marginRight : '1px'}}>
