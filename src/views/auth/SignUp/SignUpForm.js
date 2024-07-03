@@ -68,7 +68,26 @@ const SignUpForm = (props) => {
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
-        setSelectedFile(selectedFile);
+        setMessage('');
+
+        if (!selectedFile) {
+            setMessage('No file selected.');
+            return;
+        }
+
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxFileSize = 5 * 1024 * 1024;
+
+        if (!validTypes.includes(selectedFile.type)) {
+            setMessage('Invalid file type. Only JPEG, PNG, and GIF are allowed.');
+            setSelectedFile(null); // Reset the selected file
+        } else if (selectedFile.size > maxFileSize) {
+            setMessage("File size should be less than 5 MB.");
+            setSelectedFile(null);
+        } else {
+            setSelectedFile(selectedFile);
+        }
     };
 
     //Breaking the signup processs, use following methods
