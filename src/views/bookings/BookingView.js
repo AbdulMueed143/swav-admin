@@ -122,6 +122,8 @@ const Home = () => {
 
     const [isCreateAppointmentDialogOpen, setIsCreateAppointmentDialogOpen] = useState(false);
 
+    const [loadingBookingCreate, setLoadingBookingCreate] = useState(false);
+
     const handleOpenAppointmentDialog = () => {
         setIsCreateAppointmentDialogOpen(true);
     }
@@ -134,9 +136,10 @@ const Home = () => {
 
     const handleCreateBookingFormSubmit = async (values) => {
 
-        console.log('Selected Time:', values.availableTime);
-        console.log('Selected Services:', values.segment);
-        console.log('Selected Values:', values);
+        setLoadingBookingCreate(true);
+        // console.log('Selected Time:', values.availableTime);
+        // console.log('Selected Services:', values.segment);
+        // console.log('Selected Values:', values);
 
 
          //need to send request to create the booking ...
@@ -145,7 +148,7 @@ const Home = () => {
             "barberId": userInfo.barberId,
             "barberShopId": userInfo.barberShopId,
             "amenitiesIds": services
-                .filter(service => values.segment.includes(service.name))
+                .filter(service => values?.segment?.includes(service.name))
                 .map(service => service.id),
             "userMobileNumber": values.userMobileNumber,
             // "packagesIds": selectedPackage.id,
@@ -162,13 +165,17 @@ const Home = () => {
 
         if(response.status == -1) {
             //failed 
+            setLoadingBookingCreate(false);
+
         }
         else {
             //otherwise
             //reload
+
+            setLoadingBookingCreate(false);
         }
 
-        // setIsCreateAppointmentDialogOpen(false);
+        setIsCreateAppointmentDialogOpen(false);
 
     }
 
@@ -488,7 +495,7 @@ const Home = () => {
 
 
             <Button className="mr-2 mb-2" variant="twoTone" color="teal-900" onClick={applyFilter}>
-                    Filter
+                    Find Bookings
             </Button>
 
         </div>
@@ -570,8 +577,6 @@ const Home = () => {
 
 
 
-
-
             <Dialog
                 isOpen={isCreateAppointmentDialogOpen}
                  onClose={handleOpenAppointmentDialogClose}
@@ -625,15 +630,14 @@ const Home = () => {
                                     <FormItem 
                                         label="User (Mobile Number)">
                                             <div>Please make sure your add correct mobile number.</div>
-                                            <Select
+                                            <Field
                                                 placeholder="User Mobile Number (0413 XXX XXX)"
                                                 asterick
                                                 type="text"
                                                 autoComplete="off"
                                                 name="userMobileNumber"
                                                 component={Input}
-                                            >
-                                        </Select>
+                                           / >
                                     </FormItem>
                                 </div>
 
@@ -644,10 +648,7 @@ const Home = () => {
                                     errorMessage={errors.bookingDate}>
                                         <DatePicker 
                                             name="bookingDate"
-                                            minDate={today}
                                             onChange={(newDate) => {
-                                                //Basically we initialise the loading of times
-                                                //for the date get the times .... 
                                                 handleDateSelect(newDate);
                                             }}
                                             placeholder="Pick booking date" />
@@ -657,8 +658,8 @@ const Home = () => {
                                 <FormItem
                                     asterisk
                                     label="Time"
-                                    invalid={Boolean(errors.pickupTime && touched.pickupTime)}
-                                    >
+                                    invalid={Boolean(errors.pickupTime && touched.pickupTime)}>
+                                    
                                     <div className="available-time-container">
                                         {availableTimeSlots.map((timeslot) => (
                                         <label key={timeslot.startDateTime} className="available-time-option">
@@ -671,6 +672,7 @@ const Home = () => {
                                         </label>
                                         ))}
                                     </div>
+
                                     </FormItem>
                                 </div>
 
@@ -714,16 +716,25 @@ const Home = () => {
 
                 
                 <div className="text-right mt-6">
-                     <Button
-                        className="ltr:mr-2 rtl:ml-2"
-                        variant="plain"
-                        onClick={handleOpenAppointmentDialogClose}
-                    >
-                        Cancel
-                    </Button>
-                    <Button variant="solid" onClick={submitForm}>
-                        Create Booking
-                    </Button>
+                    
+
+                    <Loading loading={loadingBookingCreate} >
+
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            variant="plain"
+                            onClick={handleOpenAppointmentDialogClose}
+                        >
+                            Cancel
+                        </Button>
+
+
+                        <Button variant="solid" onClick={submitForm}>
+                            Create Booking
+                        </Button>
+                    </Loading>
+
+                    
                 </div>
 
                 </div>

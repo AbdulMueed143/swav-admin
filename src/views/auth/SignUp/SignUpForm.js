@@ -63,10 +63,36 @@ const SignUpForm = (props) => {
     const [manualEntry, setManualEntry] = useState(false)
     const toggleManualEntry = () => setManualEntry(!manualEntry)
 
-    //Breaking the signup processs, use following methods
-    const onRegisterAccount = async (values, setSubmitting) => {
-        formIkRef.current.setSubmitting(true)
+    // Logo file
+    const [selectedFile, setSelectedFile] = useState(null);
 
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setMessage('');
+
+        if (!selectedFile) {
+            setMessage('No file selected.');
+            return;
+        }
+
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxFileSize = 5 * 1024 * 1024;
+
+        if (!validTypes.includes(selectedFile.type)) {
+            setMessage('Invalid file type. Only JPEG, PNG, and GIF are allowed.');
+            setSelectedFile(null); // Reset the selected file
+        } else if (selectedFile.size > maxFileSize) {
+            setMessage("File size should be less than 5 MB.");
+            setSelectedFile(null);
+        } else {
+            setSelectedFile(selectedFile);
+        }
+    };
+
+    //Breaking the signup processs, use following methods
+    const onRegisterAccount = async (values, logo, setSubmitting) => {
+        formIkRef.current.setSubmitting(true)
         const {
             ownerFirstName,
             ownerLastName,
@@ -74,6 +100,7 @@ const SignUpForm = (props) => {
             ownerPhoneNumber,
             ownerPassword,
             ownerEmail,
+            properties,
         } = values
 
         var currentAddress = ''
@@ -88,7 +115,10 @@ const SignUpForm = (props) => {
             ownerEmail: ownerEmail,
             ownerPhoneNumber: ownerPhoneNumber,
             ownerPassword: ownerPassword,
-        }
+            properties: {
+                shopLogoImage: logo
+            }
+        };
 
         // Expected payload
         // {
@@ -133,7 +163,7 @@ const SignUpForm = (props) => {
                 height: '100vh',
             }}
         >
-            <div style={{ flex: 6, overflowY: 'auto', padding: '2px' }}>
+            <div style={{ flex: 6, padding: '2px' }}>
                 <Formik
                     initialValues={{
                         businessName: '',
@@ -437,6 +467,7 @@ const SignUpForm = (props) => {
                                         autoComplete="off"
                                         name="logo"
                                         component={Input}
+                                        onChange={handleFileChange}
                                     />
                                 </FormItem>
 
@@ -447,7 +478,7 @@ const SignUpForm = (props) => {
                                     type="submit"
                                     onClick={(event) => {
                                         event.preventDefault()
-                                        onRegisterAccount(values)
+                                        onRegisterAccount(values, selectedFile)
                                     }}
                                 >
                                     {isSubmitting
