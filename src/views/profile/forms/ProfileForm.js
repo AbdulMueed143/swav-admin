@@ -28,6 +28,8 @@ const validationSchema = Yup.object().shape({
 
 const ProfileForm = () => {
 
+    
+
     const userInfo = useSelector((state) => state.auth.user);
 
     console.log(userInfo);

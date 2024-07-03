@@ -47,11 +47,7 @@ const Home = () => {
 
                     </TabContent>
                     <TabContent value="tab2">
-                        <div>
-                            <p>
-                                You have to add your gps location, so that users can find you on mobile application as nearby barber.
-                            </p>
-                        </div>
+                       
 
                         <ShopDetailForm />
 
