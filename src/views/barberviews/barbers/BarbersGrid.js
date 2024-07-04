@@ -8,8 +8,9 @@ import { Loading } from 'components/shared'
 import Button from 'components/ui/Buttons/Button'
 import { Dialog } from 'components/ui'
 import { useSelector } from 'react-redux'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min'
+//import 'bootstrap'
+//import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap-grid.css'
 
 const BarbersGrid = () => {
     // Initialize state for the search input

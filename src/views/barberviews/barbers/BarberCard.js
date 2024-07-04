@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Avatar, Card } from 'components/ui'
 import Button from 'components/ui/Buttons/Button'
 import Switcher from 'components/ui/Switcher'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min'
+//import 'bootstrap'
+//import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/css/bootstrap-grid.css'
 
 const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
     const {
@@ -81,7 +82,7 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
 
     return (
         <div
-            className="col-sm-6 col-md-4"
+            className="col-sm-6 col-lg-4"
             /* style={{ width: '300px', minHeight: '500px' }} */
         >
             <Card
