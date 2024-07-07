@@ -16,6 +16,7 @@ const AvailabilityGrid = () => {
     const { getBarbers, addBarbers, disableBarber } = useBookingServices();
     const [barbers, setBarbers] = useState([]); // Initial state as an empty array
     const [search, setSearch] = useState('');
+    const [updateCounter, setUpdateCounter] = useState(0); // Added to force re-render
 
     const { getBarbersWithAvailability, updateBarberAvailability  } = useAvailabilityService();
 
@@ -27,6 +28,9 @@ const AvailabilityGrid = () => {
         const barbersWithAvailability = await getBarbersWithAvailability();
 
         setBarbers(barbersWithAvailability);
+        console.log(barbers);
+
+        console.log("barbersWithAvailability ", barbersWithAvailability);
         setLoading(false);
     };
 
@@ -54,7 +58,9 @@ const AvailabilityGrid = () => {
         setIsUpdateModalOpen(false);
         setSelectedUpdatableBarber(null);
 
-        fetchBarbers();
+        await fetchBarbers();
+        setUpdateCounter(prev => prev + 1); // Increment counter to force re-render
+
     }
 
     return (

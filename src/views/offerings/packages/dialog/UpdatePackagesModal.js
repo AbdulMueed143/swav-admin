@@ -10,6 +10,7 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import useBookingServices from 'utils/hooks/useBookingService'
 import Select from 'components/ui/Select'
+import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 
 const validationSchema = Yup.object().shape({
     // input: Yup.string()
@@ -28,11 +29,13 @@ const validationSchema = Yup.object().shape({
     //     .integer("Duration should be an integer"),
 })
  
-export default function UpdatePackageModal({packageData, servicesAvailable, open,handleToSave, handleToClose}) {
+export default function UpdatePackageModal({packageData, servicesAvailable, open, handleToSave, handleToClose}) {
     const formIkRef = useRef();
 
+    console.log("Selected Data ", packageData, servicesAvailable);
+
     const { getServices } = useBookingServices();
-    const [selectedAmenities, setSelectedAmenities] = React.useState([]);
+    const [selectedAmenities, setSelectedAmenities] = React.useState(packageData?.amenities);
       
     // Map your services array to an array of options
     const serviceMap = packageData?.amenities?.map(service => ({
@@ -86,7 +89,6 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
             return totalCost * (discountPercentage/100);
         }    
     }
-
 
     return (
         <div stlye={{}}>
@@ -180,7 +182,7 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
                                 invalid={errors.discountPercentage && touched.discountPercentage}
                                 errorMessage={errors.discountPercentage}
                                 >
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',   }}>
                                     <Field
                                     type="number"
                                     name="discountPercentage"
@@ -189,12 +191,11 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
                                     inputMode="numeric"
                                     min="0"
                                     max="100"
-                                    style={{ flex: 1 }}
+                                    style={{ flex: 1, marginRight: '10px' }}
                                     />
-                                    <span>%</span>
-                                    <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => handleChange(values)}>
+                                    <ButtonWithIcon label="Add Discount" icon={null}  onClick={() => handleChange(values)}>
                                         Add Discount
-                                    </Button>
+                                    </ButtonWithIcon>
                                 </div>
                             </FormItem>
 

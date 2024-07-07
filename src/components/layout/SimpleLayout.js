@@ -7,6 +7,7 @@ import MobileNav from 'components/template/MobileNav'
 import HorizontalNav from 'components/template/HorizontalNav'
 import View from 'views'
 
+//Not Used
 const HeaderActionsStart = () => {
     return (
         <>
@@ -19,6 +20,7 @@ const HeaderActionsStart = () => {
 const HeaderActionsEnd = () => {
     return (
         <>
+        
             <SidePanel />
             <UserDropdown hoverable={false} />
         </>

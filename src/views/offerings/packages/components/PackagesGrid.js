@@ -112,6 +112,8 @@ const PackagesGrid = () => {
         //lets make call to server
         values.amenitiesIds = selectedAmenities.map(amenity => amenity.id);
 
+        console.log("creating request with following values ", values, selectedAmenities);
+
         const data = await updatePackage(values);
         if(data.status === -1) {
             //something went wrong ...

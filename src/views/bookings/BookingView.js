@@ -346,6 +346,8 @@ const Home = () => {
                 minHeight: '65px',
                 boxSizing: 'border-box', // Include padding in the element's total width and height
             };
+
+            console.log("Event Information ", eventInfo.event?.extendedProps);
     
             return (
                 <div style={style}>
@@ -382,6 +384,8 @@ const Home = () => {
             const barberIds = response.data.map(booking => booking.barberId);
             setCheckedBarbers(barberIds);
 
+            console.log("Booing response ", response);
+
             const transformed = transformBookingsToCalendarEvents(response.data);
             setMonthlyBookings(transformed);
         }
@@ -390,6 +394,9 @@ const Home = () => {
     }
 
     function transformBookingsToCalendarEvents(bookings) {
+
+        console.log("transforming booking ", bookings);
+
         return bookings.map((booking, index) => ({
             id: index.toString(),
             bookingId: booking.id,
@@ -453,6 +460,12 @@ const Home = () => {
     return <>
         <div class="flex flex-col h-full">
 
+        <div style={{ marginBottom: '5px', display : 'flex', justifyContent: 'flex-end' }} >
+                <ButtonWithIcon 
+                    label="Add Appointment"
+                    onClick={handleOpenAppointmentDialog} />
+            </div>
+
             <Loading loading={loading} >
 
             <Loading
@@ -500,11 +513,7 @@ const Home = () => {
 
         </div>
 
-            <div>
-                <ButtonWithIcon 
-                    label="Add Appointment"
-                    onClick={handleOpenAppointmentDialog} />
-            </div>
+          
 
             <FullCalendar
                 showNonCurrentDates={false}
