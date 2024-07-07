@@ -384,6 +384,8 @@ const Home = () => {
             const barberIds = response.data.map(booking => booking.barberId);
             setCheckedBarbers(barberIds);
 
+            console.log("Booing response ", response);
+
             const transformed = transformBookingsToCalendarEvents(response.data);
             setMonthlyBookings(transformed);
         }

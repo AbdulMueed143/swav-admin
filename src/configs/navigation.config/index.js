@@ -84,40 +84,40 @@ const navigationConfig = [
     },
 
 
-    {
-        key: 'rewards',
-        path: '/rewards',
-        title: 'Rewards',
-        translateKey: 'nav.rewards.rewardsviews',
-        icon: 'rewards',
-        type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [],
-        subMenu: [
-            {
-                key: 'rewards.edit',
-                path: '/reward/edit',
-                title: 'Edit Rewards',
-                translateKey: 'nav.rewards.edit.editrewardview',
-                icon: '',
-                type: NAV_ITEM_TYPE_ITEM,
-                icon: 'edit',
-                authority: [],
-                subMenu: [],
-            },
-            {
-                key: 'rewards.redeemable',
-                path: '/reward/redeemable',
-                title: 'Redeemable Rewards',
-                translateKey: 'nav.rewards.redeemable.redeemableview',
-                icon: '',
-                type: NAV_ITEM_TYPE_ITEM,
-                icon: 'edit',
-                authority: [],
-                subMenu: [],
-            }
-        ],
+    // {
+    //     key: 'rewards',
+    //     path: '/rewards',
+    //     title: 'Rewards',
+    //     translateKey: 'nav.rewards.rewardsviews',
+    //     icon: 'rewards',
+    //     type: NAV_ITEM_TYPE_COLLAPSE,
+    //     authority: [],
+    //     subMenu: [
+    //         {
+    //             key: 'rewards.edit',
+    //             path: '/reward/edit',
+    //             title: 'Edit Rewards',
+    //             translateKey: 'nav.rewards.edit.editrewardview',
+    //             icon: '',
+    //             type: NAV_ITEM_TYPE_ITEM,
+    //             icon: 'edit',
+    //             authority: [],
+    //             subMenu: [],
+    //         },
+    //         {
+    //             key: 'rewards.redeemable',
+    //             path: '/reward/redeemable',
+    //             title: 'Redeemable Rewards',
+    //             translateKey: 'nav.rewards.redeemable.redeemableview',
+    //             icon: '',
+    //             type: NAV_ITEM_TYPE_ITEM,
+    //             icon: 'edit',
+    //             authority: [],
+    //             subMenu: [],
+    //         }
+    //     ],
         
-    },
+    // },
 
     {
         key: 'services.catalogue',
@@ -153,16 +153,16 @@ const navigationConfig = [
     },
 
     
-    {
-        key: 'subscriptions',
-        path: '/subscriptions',
-        title: 'Subscriptions',
-        translateKey: 'nav.subscriptions.subscriptionsview',
-        icon: 'rewards',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
-        subMenu: [],
-    },
+    // {
+    //     key: 'subscriptions',
+    //     path: '/subscriptions',
+    //     title: 'Subscriptions',
+    //     translateKey: 'nav.subscriptions.subscriptionsview',
+    //     icon: 'rewards',
+    //     type: NAV_ITEM_TYPE_ITEM,
+    //     authority: [],
+    //     subMenu: [],
+    // },
 
     
     {
