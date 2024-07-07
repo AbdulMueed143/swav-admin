@@ -96,9 +96,6 @@ export default function UpdateServiceModal({
                                     'Error while saving sevice:',
                                     error
                                 )
-                                alert(
-                                    'An Unexpected error ocurred while saving the service.'
-                                )
                             } finally {
                                 setSubmitting(false)
                             }
@@ -204,7 +201,7 @@ export default function UpdateServiceModal({
                                             >
                                                 <FormItem
                                                     asterisk
-                                                    label="Duration"
+                                                    label="Duration (Increment of 5)"
                                                     invalid={
                                                         errors.averageTimeInMinutes &&
                                                         touched.averageTimeInMinutes
