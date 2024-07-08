@@ -1,0 +1,50 @@
+.copyLinkButton {
+    margin-left: 10px;
+    color: white;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: teal;
+    transition: background-color 0.3s ease;
+}
+
+.copyLinkButton:hover {
+    background-color: darkslategray;
+}
+
+
+.booking-info-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.booking-info-container h4 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.booking-info-container p {
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.booking-info-container a {
+    color: #1e90ff;
+    text-decoration: none;
+    font-weight: bold;
+    word-break: break-all;
+}
+
+.booking-info-container a:hover {
+    text-decoration: underline;
+}
+
+.booking-info-container a:focus {
+    outline: none;
+    text-decoration: underline;
+}
