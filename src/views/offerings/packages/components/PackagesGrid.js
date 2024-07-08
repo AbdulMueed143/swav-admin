@@ -56,11 +56,11 @@ const PackagesGrid = () => {
         setOpen(false);
     };
 
-        //We will be getting all the packages here ...
-        const fetchPackages = async () => {
-            const data = await getPackages();
-            setPackages(data);
-        };
+    //We will be getting all the packages here ...
+    const fetchPackages = async () => {
+        const data = await getPackages();
+        setPackages(data);
+    };
 
     useEffect(() => {
         // Call fetchServices on component mount
@@ -111,8 +111,6 @@ const PackagesGrid = () => {
 
         //lets make call to server
         values.amenitiesIds = selectedAmenities.map(amenity => amenity.id);
-
-        console.log("creating request with following values ", values, selectedAmenities);
 
         const data = await updatePackage(values);
         if(data.status === -1) {

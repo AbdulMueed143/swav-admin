@@ -63,7 +63,7 @@ const ProfileForm = () => {
                 {({ touched, errors }) => (
                     <Form>
                         <FormContainer>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex'}}>
                             <FormItem
                                     
                                     label="First Name"
