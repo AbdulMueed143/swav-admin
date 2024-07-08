@@ -13,6 +13,9 @@ import AddressAutocomplete from 'components/ui/custom/barbers/AddressAutocomplet
 import { values } from 'lodash';
 import useBarberService from 'utils/hooks/CustomServices/useBarberService';
 import useBusinesssService from 'utils/hooks/CustomServices/useBusinessService';
+import './shopdetail.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 
 const validationSchema = Yup.object().shape({
 })
@@ -166,23 +169,27 @@ const ShopDetailForm = () => {
     return (
         <div>
 
-            <div>
-                <h4>Booking Information</h4>
-                <p>You can provide below link to your customer for making bookings:</p>
-                <a href={bookingServiceUrl} target="_blank" rel="noopener noreferrer">
-                    {bookingServiceUrl}
-                </a>
+                <div className="booking-info-container">
+                    <h4>Booking Information</h4>
+                    <p>You can provide the below link to your customer for making bookings:</p>
+                    <a href={bookingServiceUrl} target="_blank" rel="noopener noreferrer">
+                        {bookingServiceUrl}
+                    </a>
 
-                <button 
-                    onClick={copyToClipboard} 
-                    style={{ marginLeft: '10px', padding: '5px', cursor: 'pointer' }}
-                >
-                    Copy
-                </button>
+                    <button 
+                        onClick={copyToClipboard} 
+                        className='copyLinkButton'
+                    >
+                        <FontAwesomeIcon icon={faClipboard} />
+                    </button>
 
-                {copyFeedback && <span style={{ marginLeft: '10px', color: 'green' }}>{copyFeedback}</span>}
+                    {copyFeedback && <span style={{ marginLeft: '10px', color: 'green' }}>{copyFeedback}</span>}
 
-            </div>
+                </div>
+
+               
+
+
 
             <div style={{padding: '10px'}}></div>
 

@@ -30,15 +30,20 @@ const validationSchema = Yup.object().shape({
 })
  
 export default function UpdatePackageModal({packageData, servicesAvailable, open, handleToSave, handleToClose}) {
+
+    //First of all the selected options should have all the options as options 
+    //So the list of options should be based on services available
     const formIkRef = useRef();
-
-    console.log("Selected Data ", packageData, servicesAvailable);
-
-    const { getServices } = useBookingServices();
     const [selectedAmenities, setSelectedAmenities] = React.useState(packageData?.amenities);
-      
-    // Map your services array to an array of options
-    const serviceMap = packageData?.amenities?.map(service => ({
+    const [totalTime, setTotalTime] = useState(0);
+    const [totalCost, setTotalCost] = useState(0);
+    const [discountedCost, setDiscountedCost] = useState(0);
+
+    console.log("packageData ", packageData);
+
+
+    // The available services, they are not selected onces
+    const serviceMap = servicesAvailable?.map(service => ({
         value: service.name,
         label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
     }));
@@ -48,14 +53,14 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
         label: service.name + " ( " + service.price + " AUD, " +service.averageTimeInMinutes + " Minutes ) ",
     }));
 
-    const [totalTime, setTotalTime] = useState(0);
-    const [totalCost, setTotalCost] = useState(0);
-    const [discountedCost, setDiscountedCost] = useState(0);
 
     useEffect(() => {
-        setSelectedAmenities(servicesAvailable.filter( service => packageData?.amenitiesIds?.includes(service.id)));
-    },[]);
+        // const currentSelectedServices = servicesAvailable.filter( service => packageData?.amenitiesIds?.includes(service.id));
+        setSelectedAmenities(packageData?.amenities);
+        givenSelectedAmenitiesSettotals(packageData?.amenities);
+    },[packageData]);
 
+    //Whenever there is change is selected amenities
     useEffect(() => {
         let currentSelectedAmenities =  [];
 
@@ -65,6 +70,12 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
             currentSelectedAmenities = packageData?.amenitiesIds?.map(service => service);
         }
 
+        givenSelectedAmenitiesSettotals(currentSelectedAmenities);
+
+    }, [selectedAmenities, open]);
+
+
+    function givenSelectedAmenitiesSettotals(currentSelectedAmenities) {
         if(currentSelectedAmenities) {
             let time = currentSelectedAmenities.map(service => service.averageTimeInMinutes).reduce((a, b) => a + b, 0);
             let total = currentSelectedAmenities.map(service => service.price).reduce((a, b) => a + b, 0);
@@ -75,9 +86,10 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
             let currentDiscountP = (packageData == null? 0 : packageData?.discountPercentage);
             const discount = total * ( currentDiscountP / 100);
             setDiscountedCost(total - discount);
-        }
 
-    }, [selectedAmenities, open]);
+            console.log("Setting up total time, cost and discount");
+        }
+    }
 
     const handleChange = (values) => {
         console.log("Changing Discount ", values.discountPercentage, totalCost, getDiscountValue(values.discountPercentage));
@@ -168,6 +180,8 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
                                         options={serviceMap}
                                         onChange={(selectedOptions) => {
                                             // Get selected amenities from services list using the selected names
+
+                                            console.log("Selected Options ", selectedOptions);
                                             const selectedAmenities = selectedOptions.map(option => {
                                                 return servicesAvailable.find(service => service.name === option.value);
                                             });
