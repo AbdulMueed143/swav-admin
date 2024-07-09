@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
@@ -28,198 +28,239 @@ const validationSchema = Yup.object().shape({
         .integer("Duration should be an integer"),
 })
 
- 
-export default function AddBarberModal({open, handleToSave, handleToClose}) {
+
+export default function AddBarberModal({ open, handleToSave, handleToClose }) {
 
     const { getServices } = useBookingServices();
     const [services, setServices] = useState([]); // Initial state as an empty array
     const [selectedAmenities, setSelectedAmenities] = React.useState([]);
     // const { setFieldValue } = useFormikContext();
+    // Logo file
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [fileErrorMessage, setFileErrorMessage] = useState(''); // State for file error message
 
-    
+
     // Define a function to fetch and update the services
     const fetchServices = async () => {
         const data = await getServices();
         setServices(data);
         setSelectedAmenities(data);
     };
-    
+
     useEffect(() => {
         // Call fetchServices on component mount
         fetchServices();
-      }, []); // Empty dependency array means the effect will only run once
-      
-      // Map your services array to an array of options
+    }, []); // Empty dependency array means the effect will only run once
+
+    // Map your services array to an array of options
     const serviceMap = services.map(service => ({
         value: service.name,
         label: service.name,
     }));
 
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        setFileErrorMessage('');
+
+        if (!selectedFile) {
+            setFileErrorMessage('No file selected.');
+            return;
+        }
+
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxFileSize = 5 * 1024 * 1024;
+
+        if (!validTypes.includes(selectedFile.type)) {
+            setFileErrorMessage('Invalid file type. Only JPEG, PNG, and GIF are allowed.');
+            setSelectedFile(null); // Reset the selected file
+        } else if (selectedFile.size > maxFileSize) {
+            setFileErrorMessage("File size should be less than 5 MB.");
+            setSelectedFile(null);
+        } else {
+            setSelectedFile(selectedFile);
+        }
+    };
+
     return (
         <div stlye={{}}>
-            <Dialog open={open} onClose={handleToClose}  fullWidth={true}
-            PaperProps={{
-                style: {
-                    minWidth: '400px', // Your desired minimum width
-                    maxWidth: '600px', // Your desired maximum width
-                },
-            }}> 
+            <Dialog open={open} onClose={handleToClose} fullWidth={true}
+                PaperProps={{
+                    style: {
+                        minWidth: '400px', // Your desired minimum width
+                        maxWidth: '600px', // Your desired maximum width
+                    },
+                }}>
                 <DialogTitle>{"Add Barber"}</DialogTitle>
                 <DialogContent>
 
-            <Formik
-                enableReinitialize
-                initialValues={{
-                    firstName: '',
-                    lastName: '',
-                    phoneNumber: '',
-                    email: '',
-                    bookingWindowInWeeks: '2',
-                    amenities: services,
-                    about: '',
-                }}
-                validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                    setSubmitting(false);
-                }}
-            >
-                {({ values, touched, errors, resetForm}) => (
+                    <Formik
+                        enableReinitialize
+                        initialValues={{
+                            firstName: '',
+                            lastName: '',
+                            phoneNumber: '',
+                            email: '',
+                            bookingWindowInWeeks: '2',
+                            amenities: services,
+                            about: '',
+                        }}
+                        validationSchema={validationSchema}
+                        onSubmit={(values, { setSubmitting }) => {
+                            setSubmitting(false);
+                        }}
+                    >
+                        {({ values, touched, errors, resetForm }) => (
 
-                    <div>
-                        <Form>
-                            <FormContainer>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormItem
-                                        
-                                        label="First Name"
-                                        invalid={errors.firstName && touched.firstName}
-                                        errorMessage={errors.firstName}
-                                    >
-                                    <Field
-                                    asterick
-                                        type="text"
-                                        autoComplete="off"
-                                        name="firstName"
-                                        placeholder="First Name"
-                                        component={Input}
+                            <div>
+                                <Form>
+                                    <FormContainer>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <FormItem
 
-                                    />
-                                </FormItem>
-                                <div style={{width:"10px"}}> </div>
-                                <FormItem
-                                required
-                                    label="Last Name"
-                                    invalid={errors.lastName && touched.lastName}
-                                    errorMessage={errors.lastName}
-                                >
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="lastName"
-                                        placeholder="Last Name"
-                                        component={Input}
-                                    />
-                                </FormItem>
+                                                label="First Name"
+                                                invalid={errors.firstName && touched.firstName}
+                                                errorMessage={errors.firstName}
+                                            >
+                                                <Field
+                                                    asterick
+                                                    type="text"
+                                                    autoComplete="off"
+                                                    name="firstName"
+                                                    placeholder="First Name"
+                                                    component={Input}
 
-                                </div>
+                                                />
+                                            </FormItem>
+                                            <div style={{ width: "10px" }}> </div>
+                                            <FormItem
+                                                required
+                                                label="Last Name"
+                                                invalid={errors.lastName && touched.lastName}
+                                                errorMessage={errors.lastName}
+                                            >
+                                                <Field
+                                                    type="text"
+                                                    autoComplete="off"
+                                                    name="lastName"
+                                                    placeholder="Last Name"
+                                                    component={Input}
+                                                />
+                                            </FormItem>
 
-                                <FormItem
-                                    asterisk
-                                    label="Email"
-                                    invalid={errors.email && touched.email}
-                                    errorMessage={errors.email}
-                                >
-                                    <Field
-                                        type="text"
-                                        name="email"
-                                        placeholder="Email"
-                                        component={Input}
-                                    />
-                                </FormItem>
+                                        </div>
 
-                                <FormItem
-                                    asterisk
-                                    label="Phone Number"
-                                    invalid={errors.phoneNumber && touched.phoneNumber}
-                                    errorMessage={errors.phoneNumber}
-                                >
-                                    <Field
-                                        type="text"
-                                        name="phoneNumber"
-                                        placeholder="Phone Number"
-                                        component={Input}
-                                    />
-                                </FormItem>
+                                        <FormItem
+                                            asterisk
+                                            label="Email"
+                                            invalid={errors.email && touched.email}
+                                            errorMessage={errors.email}
+                                        >
+                                            <Field
+                                                type="text"
+                                                name="email"
+                                                placeholder="Email"
+                                                component={Input}
+                                            />
+                                        </FormItem>
 
-                                <FormItem
-                                    label="Services"
-                                    invalid={errors.amenities && touched.amenities}
-                                    errorMessage={errors.amenities}
-                                >
-                                    <Select
-                                        isMulti
-                                        placeholder="Please Select"
-                                        defaultValue={serviceMap}
-                                        options={serviceMap}
-                                        onChange={(selectedOptions) => {
-                                            // Get selected amenities from services list using the selected names
-                                            const selectedAmenities = selectedOptions.map(option => {
-                                                return services.find(service => service.name === option.value);
-                                            });
+                                        <FormItem
+                                            asterisk
+                                            label="Phone Number"
+                                            invalid={errors.phoneNumber && touched.phoneNumber}
+                                            errorMessage={errors.phoneNumber}
+                                        >
+                                            <Field
+                                                type="text"
+                                                name="phoneNumber"
+                                                placeholder="Phone Number"
+                                                component={Input}
+                                            />
+                                        </FormItem>
 
-                                            setSelectedAmenities(selectedAmenities);
-                                    
-                                        }}
-                                    />
-                                </FormItem>
+                                        <FormItem
+                                            label="Services"
+                                            invalid={errors.amenities && touched.amenities}
+                                            errorMessage={errors.amenities}
+                                        >
+                                            <Select
+                                                isMulti
+                                                placeholder="Please Select"
+                                                defaultValue={serviceMap}
+                                                options={serviceMap}
+                                                onChange={(selectedOptions) => {
+                                                    // Get selected amenities from services list using the selected names
+                                                    const selectedAmenities = selectedOptions.map(option => {
+                                                        return services.find(service => service.name === option.value);
+                                                    });
 
-                                <FormItem
-                                    label="Advance Booking Window in Weeks (1-52)"
-                                    invalid={errors.bookingWindowInWeeks && touched.bookingWindowInWeeks}
-                                    errorMessage={errors.bookingWindowInWeeks}
-                                >
-                                    <Field
-                                        type="number" // Change the type to 'number' to allow only numeric inputs
-                                        name="bookingWindowInWeeks" // Make sure the 'name' attribute corresponds to your data model
-                                        placeholder="Enter weeks (1-52)"
-                                        component={Input}
-                                        min="1"  // Set the minimum value to 1
-                                        max="52" // Set the maximum value to 52
-                                    />
-                                </FormItem>
+                                                    setSelectedAmenities(selectedAmenities);
 
-                                <FormItem
-                                    label="About"
-                                    invalid={errors.amenities && touched.about}
-                                    errorMessage={errors.about}
-                                >
-                                    <Field
-                                        type="text"
-                                        name="about"
-                                        placeholder="About Barber"
-                                        component={Input}
-                                    />
-                                </FormItem>
+                                                }}
+                                            />
+                                        </FormItem>
+
+                                        <FormItem
+                                            label="Advance Booking Window in Weeks (1-52)"
+                                            invalid={errors.bookingWindowInWeeks && touched.bookingWindowInWeeks}
+                                            errorMessage={errors.bookingWindowInWeeks}
+                                        >
+                                            <Field
+                                                type="number" // Change the type to 'number' to allow only numeric inputs
+                                                name="bookingWindowInWeeks" // Make sure the 'name' attribute corresponds to your data model
+                                                placeholder="Enter weeks (1-52)"
+                                                component={Input}
+                                                min="1"  // Set the minimum value to 1
+                                                max="52" // Set the maximum value to 52
+                                            />
+                                        </FormItem>
+                                        {fileErrorMessage && <div style={{ color: 'red' }}>{fileErrorMessage}</div>}
+                                        <FormItem
+                                            label="Upload Logo"
+                                            invalid={errors.logo && touched.logo}
+                                            errorMessage={errors.logo}
+                                        >
+                                            <Field
+                                                type="file"
+                                                autoComplete="off"
+                                                name="logo"
+                                                component={Input}
+                                                onChange={handleFileChange}
+                                            />
+                                        </FormItem>
+
+                                        <FormItem
+                                            label="About"
+                                            invalid={errors.amenities && touched.about}
+                                            errorMessage={errors.about}
+                                        >
+                                            <Field
+                                                type="text"
+                                                name="about"
+                                                placeholder="About Barber"
+                                                component={Input}
+                                            />
+                                        </FormItem>
 
 
-                            </FormContainer>
-                        </Form>
+                                    </FormContainer>
+                                </Form>
 
-                        <DialogActions>
-                            <Button onClick={handleToClose} color="primary">
-                                Cancel
-                            </Button>
-                            <Button  onClick={() => handleToSave(values, selectedAmenities)} color="primary">
-                                Save
-                            </Button>
+                                <DialogActions>
+                                    <Button onClick={handleToClose} color="primary">
+                                        Cancel
+                                    </Button>
+                                    <Button onClick={() => handleToSave(values, selectedAmenities)} color="primary">
+                                        Save
+                                    </Button>
 
-                        </DialogActions>
-                    </div>
-                )}
-            </Formik>
+                                </DialogActions>
+                            </div>
+                        )}
+                    </Formik>
 
                 </DialogContent>
-               
+
             </Dialog>
         </div>
     );
