@@ -35,7 +35,7 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
     const [services, setServices] = useState([]); // Initial state as an empty array
     const [selectedAmenities, setSelectedAmenities] = React.useState([]);
     // const { setFieldValue } = useFormikContext();
-    // Logo file
+    // photo file
     const [selectedFile, setSelectedFile] = useState(null);
     const [fileErrorMessage, setFileErrorMessage] = useState(''); // State for file error message
 
@@ -216,14 +216,14 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                         </FormItem>
                                         {fileErrorMessage && <div style={{ color: 'red' }}>{fileErrorMessage}</div>}
                                         <FormItem
-                                            label="Upload Logo"
-                                            invalid={errors.logo && touched.logo}
-                                            errorMessage={errors.logo}
+                                            label="Upload picture"
+                                            invalid={errors.photo && touched.photo}
+                                            errorMessage={errors.photo}
                                         >
                                             <Field
                                                 type="file"
                                                 autoComplete="off"
-                                                name="logo"
+                                                name="photo"
                                                 component={Input}
                                                 onChange={handleFileChange}
                                             />
