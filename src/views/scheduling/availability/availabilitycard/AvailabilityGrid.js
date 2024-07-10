@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import React from 'react'
 import useBookingServices from 'utils/hooks/useBookingService'
 import { Loading } from 'components/shared';
@@ -8,29 +8,28 @@ import AvailabilityCard from './AvailabilityCard';
 import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
 import UpdateAvailabilityModalParent from '../modals/UpdateAvailabilityModalParent';
 
+const useForceUpdate = () => {
+    const [value, setValue] = useState(0); // integer state
+    return useCallback(() => setValue(value => value + 1), []); // update the state to force render
+}
+
 
 const AvailabilityGrid = () => {
     // Initialize state for the search input
     const [loading, setLoading] = useState(false);
-
     const { getBarbers, addBarbers, disableBarber } = useBookingServices();
     const [barbers, setBarbers] = useState([]); // Initial state as an empty array
     const [search, setSearch] = useState('');
-    const [updateCounter, setUpdateCounter] = useState(0); // Added to force re-render
 
     const { getBarbersWithAvailability, updateBarberAvailability  } = useAvailabilityService();
 
-    const fetchBarbers = async () => {
-        if(loading)
-            return;
+    async function fetchBarbers()  {
 
         setLoading(true);
         const barbersWithAvailability = await getBarbersWithAvailability();
 
         setBarbers(barbersWithAvailability);
-        console.log(barbers);
 
-        console.log("barbersWithAvailability ", barbersWithAvailability);
         setLoading(false);
     };
 
@@ -59,8 +58,6 @@ const AvailabilityGrid = () => {
         setSelectedUpdatableBarber(null);
 
         await fetchBarbers();
-        setUpdateCounter(prev => prev + 1); // Increment counter to force re-render
-
     }
 
     return (
@@ -70,7 +67,7 @@ const AvailabilityGrid = () => {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="ss"
+                placeholder="Search for Barber"
                 className="p-2 border rounded flex-grow"
                 />
             
@@ -79,7 +76,7 @@ const AvailabilityGrid = () => {
             <Loading loading={loading} >
                 <div className="flex gap-4 flex-wrap mt-4"> 
                     {barbers.map((barber, index) => (
-                        <AvailabilityCard key={barber.barberId} currentBarber={barber} onUpdateClick={handleClickToOpenUpdateModal} />
+                        <AvailabilityCard currentBarber={barber} onUpdateClick={handleClickToOpenUpdateModal} />
                     ))}
                 </div>
             </Loading>

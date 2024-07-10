@@ -4,6 +4,8 @@ import { FaEdit } from 'react-icons/fa';
 
 const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
 
+    console.log("Rendering Information ", currentBarber);
+
     const INITIAL_WEEK_DAYS = {
         "MONDAY": [],
         "TUESDAY": [],
@@ -16,11 +18,23 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
 
     const { barberId, firstName, lastName, email, phoneNumber, barberAvailability, about, status } = currentBarber;
     const [weekDays, setWeekDays] = useState(INITIAL_WEEK_DAYS);
+
+    const updateWeekDays = (newDay, newSlots) => {
+        setWeekDays(prevWeekDays => ({
+          ...prevWeekDays,
+          [newDay]: newSlots
+        }));
+      };
+
+
     useEffect(() => {
         computeAvailability();
-    }, []);
+    }, [currentBarber]);
 
     function computeAvailability() {
+
+        console.log("Computing Availability Again ", currentBarber);
+
         setWeekDays(INITIAL_WEEK_DAYS);
         const newWeekDaysState = INITIAL_WEEK_DAYS;
 
@@ -39,6 +53,8 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
                     newWeekDaysState[day].push(slotToString(slot));
             });
         });
+
+        console.log("newWeekDaysState ", newWeekDaysState);
         
         setWeekDays(newWeekDaysState);
     }
@@ -59,7 +75,6 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
     
         return `${startTimeHour}:${startTimeMinute}${startTimeAmPM} - ${endTimeHour}:${endTimeMinute}${endTimeAmPM}`;
     }
-
 
     const cardHeader = (
         <div className="flex items-center justify-between" style={{ padding: '10px' }}> {/* Flexbox adjustments */}
@@ -114,4 +129,3 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
 }
 
 export default AvailabilityCard
-
