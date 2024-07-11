@@ -382,11 +382,6 @@ const Home = () => {
             //show error ...
         }
         else {
-            //save the barbers in variable ...
-            // const barberIds = response.data.map(booking => booking.barberId);
-            // setCheckedBarbers(barberIds);
-
-            // console.log("Booking response ", response);
 
             const transformed = transformBookingsToCalendarEvents(response.data);
             setMonthlyBookings(transformed);
@@ -464,10 +459,15 @@ const Home = () => {
         <div class="flex flex-col h-full">
 
         <div style={{ marginBottom: '5px', display : 'flex', justifyContent: 'flex-end' }} >
-                <ButtonWithIcon 
-                    label="Add Appointment"
-                    onClick={handleOpenAppointmentDialog} />
-            </div>
+            <button 
+                className="mr-2 mb-2"
+                variant="twoTone" 
+                color="teal-900" 
+                style={{ width: '155px', backgroundColor: '#134E4A', fontSize : '13px', marginRight : '20px' }}
+                onClick={handleOpenAppointmentDialog}>
+                Add Appointment
+            </button>
+        </div>
 
             <Loading loading={loading} >
 
