@@ -151,7 +151,8 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
                         </Button>
 
                         <Button 
-                            className="ltr:mr-2 rtl:ml-2" 
+                            backgroundColor="teal"
+                            className="ltr:mr-2 rtl:ml-2 " 
                             onClick={() => save()}> 
                                 Save Updates
                         </Button> 
