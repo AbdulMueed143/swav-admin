@@ -22,6 +22,13 @@ const ServiceCard = ({ service, onUpdateClick, onDeleteClick }) => {
                 </span>
             </div>
 
+            <div className="flex items-center mb-2">
+                <span>
+                    <h6 className="text-sm">Price</h6>
+                    {price} AUD
+                </span>
+            </div>
+
             <div className="flex">
                 <Button
                     className="mr-2 mb-2"
@@ -51,11 +58,10 @@ const ServiceCard = ({ service, onUpdateClick, onDeleteClick }) => {
                 footer={cardFooter}
                 footerBorder={false}
             >
-                <span className="text-emerald-600 font-semibold">
-                    Price {price} AUD
-                </span>
+               
                 <h4 className="font-bold my-3">{name}</h4>
                 <p className="truncate">{description}</p>
+                
             </Card>
         </div>
     )

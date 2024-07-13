@@ -67,6 +67,18 @@ export async function apiAddBarber(token, data) {
     })
 }
 
+export async function apiUpdateBarber(token, id, data) {
+    return ApiService.fetchData({
+        url: `/barber-service/api/v1/shop/barber/${id}`,
+        method: 'put',
+        data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+
 export async function apiDisableBarber(token, barberId, status) {
     return ApiService.fetchData({
         url: `/barber-service/api/v1/shop/barber/disable/${barberId}/${status}`,

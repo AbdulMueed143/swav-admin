@@ -12,30 +12,16 @@ import Select from 'components/ui/Select'
 import useBookingServices from 'utils/hooks/useBookingService'
 
 const validationSchema = Yup.object().shape({
-    input: Yup.string()
-        .min(3, 'Too Short!')
-        .max(20, 'Too Long!')
-        .required('Please input user name!'),
-    cost: Yup
-        .number()
-        .required("Cost is required")
-        .positive("Cost should be a positive number")
-        .integer("Cost should be an integer"),
-    duration: Yup
-        .number()
-        .required("Duration is required")
-        .positive("Duration should be a positive number")
-        .integer("Duration should be an integer"),
-})
 
+})
  
-export default function AddBarberModal({open, handleToSave, handleToClose}) {
+export default function UpdateBarberModal({open, selectedBarber, handleToSave, handleToClose}) {
+
+    console.log(" selectedBarber ", selectedBarber);
 
     const { getServices } = useBookingServices();
-    const [services, setServices] = useState([]); // Initial state as an empty array
+    const [services, setServices] = useState(selectedBarber?.amenitiesIds ?? []); // Initial state as an empty array
     const [selectedAmenities, setSelectedAmenities] = React.useState([]);
-    // const { setFieldValue } = useFormikContext();
-
     
     // Define a function to fetch and update the services
     const fetchServices = async () => {
@@ -64,19 +50,19 @@ export default function AddBarberModal({open, handleToSave, handleToClose}) {
                     maxWidth: '600px', // Your desired maximum width
                 },
             }}> 
-                <DialogTitle>{"Add Barber"}</DialogTitle>
+                <DialogTitle>{"Update Barber"}</DialogTitle>
                 <DialogContent>
 
             <Formik
                 enableReinitialize
                 initialValues={{
-                    firstName: '',
-                    lastName: '',
-                    phoneNumber: '',
-                    email: '',
-                    bookingWindowInWeeks: '2',
-                    amenities: services,
-                    about: '',
+                    id: selectedBarber?.barberId,
+                    firstName: selectedBarber?.firstName,
+                    lastName: selectedBarber?.lastName,
+                    phoneNumber: selectedBarber?.phoneNumber,
+                    email: selectedBarber?.email,
+                    // amenities: services,
+                    about: selectedBarber?.about,
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -172,7 +158,6 @@ export default function AddBarberModal({open, handleToSave, handleToClose}) {
                                         }}
                                     />
                                 </FormItem> */}
-
 
                                 <FormItem
                                     label="About"

@@ -12,7 +12,7 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
     const cardFooter = (
         <div cclassName="flex flex-col items-start">
            <div className="flex items-center mb-2">
-            <Avatar
+            {/* <Avatar
                 size={30}
                 className="mr-2"
                 shape="circle"
@@ -29,7 +29,7 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
                         <div >No services available</div>
                     )}
                 </div>
-            </span>
+            </span> */}
         </div>
 
         <div className="flex items-center mb-2">
@@ -61,7 +61,7 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
                 src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
                 alt="card header"
             />
-            <FontAwesomeIcon icon={faCog} className="absolute top-0 right-0 m-2 text-white" onClick={() => onSettingsClicked(barberId) } />
+            <FontAwesomeIcon icon={faCog} className="absolute top-0 right-0 m-2 text-white" onClick={() => onSettingsClicked(barber) } />
         </div>
     );
     

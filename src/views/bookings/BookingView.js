@@ -11,18 +11,14 @@ import { idToColor, hexToRgb } from '../utils/colorCalculator';
 import Button  from 'components/ui/Buttons/Button';
 import { Dialog, FormContainer, FormItem, Segment } from 'components/ui';
 import EditableBookingsListView from './EditableBookingsListView';
-import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import Input from 'components/ui/Input';
 import { Field, Form, Formik } from 'formik';
 import { DatePicker, Select } from 'antd';
 import usePackagesService from 'utils/hooks/CustomServices/usePackagesService';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { HiCheckCircle } from 'react-icons/hi';
 import { useDispatch } from 'react-redux';
-
 import './css/booking.css'
-import { getAvailableSlots } from 'services/BarberAvailabilityService';
 import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
 
 
@@ -31,7 +27,6 @@ const validationSchema = Yup.object().shape({
         .min(3, 'Too Short!')
         .required('Please input user name!'),
 });
-
 
 const Home = () => {
 
@@ -463,7 +458,7 @@ const Home = () => {
                 className="mr-2 mb-2"
                 variant="twoTone" 
                 color="teal-900" 
-                style={{ width: '155px', backgroundColor: '#134E4A', fontSize : '13px', marginRight : '20px' }}
+                style={{ width: '155px', padding: '10px', backgroundColor: '#134E4A', fontSize : '13px', marginRight : '20px' }}
                 onClick={handleOpenAppointmentDialog}>
                 Add Appointment
             </button>

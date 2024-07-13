@@ -8,15 +8,18 @@ import { Loading } from 'components/shared';
 import Button  from 'components/ui/Buttons/Button';
 import { Dialog } from 'components/ui';
 import { useSelector } from 'react-redux'
+import UpdateBarberModal from './dialogs/UpdateBarberModal';
 
 
 const BarbersGrid = () => {
     // Initialize state for the search input
     const [open, setOpen] = useState(false);
+    const [isBarberUpdateOpen, setIsBarberUpdateOpen] = useState(false);
+
     const [loading, setLoading] = useState(false);
     const userInfo = useSelector((state) => state.auth.user);
 
-    const { getBarbers, addBarbers, disableBarber } = useBookingServices();
+    const { getBarbers, addBarbers, disableBarber, updateBarber } = useBookingServices();
     const [barbers, setBarbers] = useState([]); // Initial state as an empty array
     const [search, setSearch] = useState('');
 
@@ -24,10 +27,13 @@ const BarbersGrid = () => {
     const [disableDialogIsOpen, setIsDisableDialogOpen] = useState(false)
     const [selectedId, setSelectedId] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState(null);
+    const [currentSelectedBarber, setCurrentSelectedBarber] = useState(null);
 
 
-    const onBarberSettingClicked = (barberId) => {
-
+    const onBarberSettingClicked = (barberClicked) => {
+        console.log("Clicked the setting button");
+        setCurrentSelectedBarber(barberClicked);
+        setIsBarberUpdateOpen(true);
     }
 
     const onStatusSwitcherToggle = (checked, id) => {
@@ -60,6 +66,8 @@ const BarbersGrid = () => {
     const fetchBarbers = async () => {
         setLoading(true);
         const data = await getBarbers();
+
+        console.log("BArbers ", data);
         setBarbers(data);
         setLoading(false);
     };
@@ -73,9 +81,37 @@ const BarbersGrid = () => {
         setOpen(true);
     };
  
+    //Closes barber add dialog
     const handleToClose = () => {
         setOpen(false);
     };
+    
+    //Closes barber update dialog
+    const handleBarberUpdateClose = () => {
+        setIsBarberUpdateOpen(false);
+        setCurrentSelectedBarber(null);
+    }
+
+    const handleBarberUpdateSave = async (formValues, amenities) => {
+        formValues.properties = {}
+        // formValues.amenities = amenities;
+        // formValues.amenitiesIds = amenities.map(amenity => amenity.id);
+
+        // console.log("formValues ", formValues);
+
+        //lets make call to server
+        const data = await updateBarber(formValues.id, formValues);
+        if(data.status === -1) {
+            //something went wrong ...
+        }
+        else {
+              // Call fetchServices to refresh the services
+            fetchBarbers();
+        }
+
+        setIsBarberUpdateOpen(false);
+        setCurrentSelectedBarber(null);
+    }
 
 
     const handleBarberSave = async (formValues, amenities) => {
@@ -153,12 +189,13 @@ const BarbersGrid = () => {
                 <Loading loading={loading} >
                     <div className="flex gap-4 flex-wrap mt-4"> 
                         {filteredBarbers.map((barber, index) => (
-                            <BarberCard key={index} barber={barber} onSettingsClicked={onBarberSettingClicked} onStatusSwitcherToggle={onStatusSwitcherToggle} />
+                            <BarberCard key={index} barber={barber}  onSettingsClicked={() => onBarberSettingClicked(barber)} onStatusSwitcherToggle={onStatusSwitcherToggle} />
                         ))}
                     </div>
                 </Loading>
 
                 <AddBarberModal open={open} handleToSave={handleBarberSave} handleToClose={handleToClose} />
+                <UpdateBarberModal open={isBarberUpdateOpen} selectedBarber={currentSelectedBarber} handleToSave={handleBarberUpdateSave} handleToClose={handleBarberUpdateClose} />
             </div>
     );
 };
