@@ -11,7 +11,11 @@ const unauthorizedCode = [401]
 const BaseService = axios.create({
     timeout: 60000,
     // baseURL: "https://tst01-api-barber.swav.app/web-gateway/"
-    baseURL: "http://127.0.0.1:9090/web-gateway/"
+
+    // baseURL: "http://127.0.0.1:9090/web-gateway/"
+
+    //Prod Link
+    baseURL: "https://barber-web-gateway-g5rygwptmq-uc.a.run.app/web-gateway/"
 })
 
 BaseService.interceptors.request.use(
