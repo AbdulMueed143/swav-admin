@@ -130,12 +130,13 @@ function useAvailabilityService() {
     
             // Wait for all API calls to resolve
             const responses = await Promise.all(apiCallPromises);
-    
+            console.log("API Responses:", responses);
             // Check if all responses are successful
             const allSuccessful = responses.every(resp => resp.status === 200);
     
             if (allSuccessful) {
                 // Assuming you want to return all data from successful responses
+                console.log("responses", responses);
                 return responses.map(resp => resp.data);
             } else {
                 return {
