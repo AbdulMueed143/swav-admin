@@ -10,6 +10,7 @@ import { Field, Form, Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup'
 import Select from 'components/ui/Select'
 import useBookingServices from 'utils/hooks/useBookingService'
+// import { co } from "@fullcalendar/core/internal-common";
 
 const addBarberFormValidationSchema = Yup.object().shape({
     barberFirstName: Yup.string().required('Firstname Required'),
@@ -20,16 +21,23 @@ const addBarberFormValidationSchema = Yup.object().shape({
         .matches(/^[0-9]{9,}$/, 'Phone number must be at least 9 digits'),
     photo: Yup
         .mixed()
-        .required("Required")
+        .required("A photo is required")
         .test("is-valid-type", "Not a valid image type",
             value => isValidFileType(value && value.name.toLowerCase(), "image"))
         .test("is-valid-size", "Max allowed size is 100KB",
             value => value && value.size <= MAX_FILE_SIZE)
 });
 
+const allowedExts = ".jpeg, .jpg, .png, .gif";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
 const isValidFileType = (fileName, fileType) => {
-    const allowedExtensions = ["jpeg", "jpg", "png", "gif"];
-    const fileExtension = fileName.split(".").pop();
+    const allowedExtensions = allowedExts.replace(/[\s.]/g, '').split(',');
+    const fileExtension = fileName.split(".").pop().toLowerCase();
+    console.log("File Extension: ", fileExtension);
+    console.log("Allowed Extensions: ", allowedExtensions);
+    console.log("File Type: ", fileType);
     return allowedExtensions.includes(fileExtension) && fileType === "image";
 };
 
@@ -50,14 +58,12 @@ const PreviewFile = ({ file, width, height }) => {
     return (
         <div className='preview-container'>
             <img src={preview} className='preview' alt="Preview" width={width} height={height} />
-            <label>{file.name}</label>
+            {/* <label>{file.name}</label> */}
         </div>
     )
 }
 
-const allowedExts = ".jpeg, .jpg, .png, .gif";
 
-const MAX_FILE_SIZE = 102400;
 
 export default function AddBarberModal({ open, handleToSave, handleToClose }) {
 
@@ -141,7 +147,7 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                             setSubmitting(false);
                         }}
                     >
-                        {({ formik, values, touched, errors, resetForm }) => (
+                        {({ setFieldValue, values, touched, errors, resetForm }) => (
 
                             <div>
                                 <Form>
@@ -209,7 +215,7 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                             />
                                         </FormItem>
 
-                                {/* <FormItem
+                                        {/* <FormItem
                                     label="Services"
                                     invalid={errors.amenities && touched.amenities}
                                     errorMessage={errors.amenities}
@@ -231,7 +237,7 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                             />
                                         </FormItem> */}
 
-                                        
+
                                         {/* {fileErrorMessage && <div style={{ color: 'red' }}>{fileErrorMessage}</div>} */}
                                         {/* <FormItem
                                             label="Upload picture"
@@ -247,26 +253,28 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                             />
                                         </FormItem> */}
                                         <>
-                                            <div className="button-wrap">
+                                            <div className="button-wrap flex flex-col">
                                                 <label className="button label" htmlFor="photo">
                                                     <span>Upload photo</span>
-                                                    <span className="ext">[{allowedExts}]</span>
                                                 </label>
                                                 <input
                                                     id="photo"
+                                                    className="input input-md h-11 focus:ring-teal-500 focus-within:ring-teal-500 focus-within:border-teal-500 focus:border-teal-500 mb-5"
                                                     name="photo"
                                                     type="file"
                                                     accept={allowedExts}
                                                     onChange={(event) => {
-                                                        formik.setFieldValue('photo', event.target.files[0]);
+                                                        if (event.target.files != undefined && event.target.files.length > 0) {
+                                                            setFieldValue('photo', event.target.files[0]);
+                                                        }
                                                     }}
                                                 />
-                                                {formik.values["photo"] ? (
-                                                    <PreviewFile className={{ margin: 'auto' }} width={50} height={"auto"} file={formik.values["photo"]} />
+                                                {values["photo"] ? (
+                                                    <PreviewFile className={{ margin: 'auto' }} width={150} height={"auto"} file={values["photo"]} />
                                                 ) : null}
                                             </div>
-                                            <div className="error">
-                                                <ErrorMessage name="photo" />
+                                            <div className="error mb-2">
+                                                <p className="text-[rgb(239 68 68)] text-sm text-red-500"><ErrorMessage name="photo"/></p>
                                             </div>
                                         </>
 
@@ -282,6 +290,7 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                                 component={Input}
                                             />
                                         </FormItem>
+                                        <button type="submit">Test submit</button>
 
 
                                     </FormContainer>
