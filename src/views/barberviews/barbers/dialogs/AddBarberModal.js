@@ -6,28 +6,58 @@ import DialogContent from "@mui/material/DialogContent";
 import Button from "@mui/material/Button";
 import { FormItem, FormContainer } from 'components/ui';
 import Input from 'components/ui/Input'
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup'
 import Select from 'components/ui/Select'
 import useBookingServices from 'utils/hooks/useBookingService'
 
-const validationSchema = Yup.object().shape({
-    input: Yup.string()
-        .min(3, 'Too Short!')
-        .max(20, 'Too Long!')
-        .required('Please input user name!'),
-    cost: Yup
-        .number()
-        .required("Cost is required")
-        .positive("Cost should be a positive number")
-        .integer("Cost should be an integer"),
-    duration: Yup
-        .number()
-        .required("Duration is required")
-        .positive("Duration should be a positive number")
-        .integer("Duration should be an integer"),
-})
+const addBarberFormValidationSchema = Yup.object().shape({
+    barberFirstName: Yup.string().required('Firstname Required'),
+    barberLastName: Yup.string().required('Lastname Required'),
+    barberEmail: Yup.string().email().required('Please enter your email'),
+    barberPhoneNumber: Yup.string()
+        .required('Phone number is required')
+        .matches(/^[0-9]{9,}$/, 'Phone number must be at least 9 digits'),
+    photo: Yup
+        .mixed()
+        .required("Required")
+        .test("is-valid-type", "Not a valid image type",
+            value => isValidFileType(value && value.name.toLowerCase(), "image"))
+        .test("is-valid-size", "Max allowed size is 100KB",
+            value => value && value.size <= MAX_FILE_SIZE)
+});
 
+const isValidFileType = (fileName, fileType) => {
+    const allowedExtensions = ["jpeg", "jpg", "png", "gif"];
+    const fileExtension = fileName.split(".").pop();
+    return allowedExtensions.includes(fileExtension) && fileType === "image";
+};
+
+const PreviewFile = ({ file, width, height }) => {
+
+    const [preview, setPreview] = React.useState(null);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    function isFileImage(file) {
+        return file && file['type'].split('/')[0] === 'image';
+    }
+
+    reader.onload = () => {
+        setPreview(isFileImage(file) ? reader.result : "/default.svg");
+    };
+
+    return (
+        <div className='preview-container'>
+            <img src={preview} className='preview' alt="Preview" width={width} height={height} />
+            <label>{file.name}</label>
+        </div>
+    )
+}
+
+const allowedExts = ".jpeg, .jpg, .png, .gif";
+
+const MAX_FILE_SIZE = 102400;
 
 export default function AddBarberModal({ open, handleToSave, handleToClose }) {
 
@@ -69,7 +99,7 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
 
         // Validate file type
         const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        const maxFileSize = 5 * 1024 * 1024;
+        const maxFileSize = 5 * 1024;
 
         if (!validTypes.includes(selectedFile.type)) {
             setFileErrorMessage('Invalid file type. Only JPEG, PNG, and GIF are allowed.');
@@ -103,14 +133,15 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                             email: '',
                             bookingWindowInWeeks: '2',
                             amenities: services,
+                            photo: '',
                             about: '',
                         }}
-                        validationSchema={validationSchema}
+                        validationSchema={addBarberFormValidationSchema}
                         onSubmit={(values, { setSubmitting }) => {
                             setSubmitting(false);
                         }}
                     >
-                        {({ values, touched, errors, resetForm }) => (
+                        {({ formik, values, touched, errors, resetForm }) => (
 
                             <div>
                                 <Form>
@@ -119,14 +150,14 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                             <FormItem
 
                                                 label="First Name"
-                                                invalid={errors.firstName && touched.firstName}
-                                                errorMessage={errors.firstName}
+                                                invalid={errors.barberFirstName && touched.barberFirstName}
+                                                errorMessage={errors.barberFirstName}
                                             >
                                                 <Field
                                                     asterick
                                                     type="text"
                                                     autoComplete="off"
-                                                    name="firstName"
+                                                    name="barberFirstName"
                                                     placeholder="First Name"
                                                     component={Input}
 
@@ -136,13 +167,13 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                             <FormItem
                                                 required
                                                 label="Last Name"
-                                                invalid={errors.lastName && touched.lastName}
-                                                errorMessage={errors.lastName}
+                                                invalid={errors.barberLastName && touched.barberLastName}
+                                                errorMessage={errors.barberLastName}
                                             >
                                                 <Field
                                                     type="text"
                                                     autoComplete="off"
-                                                    name="lastName"
+                                                    name="barberLastName"
                                                     placeholder="Last Name"
                                                     component={Input}
                                                 />
@@ -153,12 +184,12 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                         <FormItem
                                             asterisk
                                             label="Email"
-                                            invalid={errors.email && touched.email}
-                                            errorMessage={errors.email}
+                                            invalid={errors.barberEmail && touched.barberEmail}
+                                            errorMessage={errors.barberEmail}
                                         >
                                             <Field
                                                 type="text"
-                                                name="email"
+                                                name="barberEmail"
                                                 placeholder="Email"
                                                 component={Input}
                                             />
@@ -167,12 +198,12 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                         <FormItem
                                             asterisk
                                             label="Phone Number"
-                                            invalid={errors.phoneNumber && touched.phoneNumber}
-                                            errorMessage={errors.phoneNumber}
+                                            invalid={errors.barberPhoneNumber && touched.barberPhoneNumber}
+                                            errorMessage={errors.barberPhoneNumber}
                                         >
                                             <Field
                                                 type="text"
-                                                name="phoneNumber"
+                                                name="barberPhoneNumber"
                                                 placeholder="Phone Number"
                                                 component={Input}
                                             />
@@ -214,8 +245,8 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                                 max="52" // Set the maximum value to 52
                                             />
                                         </FormItem>
-                                        {fileErrorMessage && <div style={{ color: 'red' }}>{fileErrorMessage}</div>}
-                                        <FormItem
+                                        {/* {fileErrorMessage && <div style={{ color: 'red' }}>{fileErrorMessage}</div>} */}
+                                        {/* <FormItem
                                             label="Upload picture"
                                             invalid={errors.photo && touched.photo}
                                             errorMessage={errors.photo}
@@ -225,9 +256,32 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                                 autoComplete="off"
                                                 name="photo"
                                                 component={Input}
-                                                onChange={handleFileChange}
+                                            // onChange={handleFileChange}
                                             />
-                                        </FormItem>
+                                        </FormItem> */}
+                                        <>
+                                            <div className="button-wrap">
+                                                <label className="button label" htmlFor="photo">
+                                                    <span>Upload photo</span>
+                                                    <span className="ext">[{allowedExts}]</span>
+                                                </label>
+                                                <input
+                                                    id="photo"
+                                                    name="photo"
+                                                    type="file"
+                                                    accept={allowedExts}
+                                                    onChange={(event) => {
+                                                        formik.setFieldValue('photo', event.target.files[0]);
+                                                    }}
+                                                />
+                                                {formik.values["photo"] ? (
+                                                    <PreviewFile className={{ margin: 'auto' }} width={50} height={"auto"} file={formik.values["photo"]} />
+                                                ) : null}
+                                            </div>
+                                            <div className="error">
+                                                <ErrorMessage name="photo" />
+                                            </div>
+                                        </>
 
                                         <FormItem
                                             label="About"
