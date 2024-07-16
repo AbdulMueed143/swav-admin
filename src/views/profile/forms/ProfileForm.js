@@ -28,6 +28,8 @@ const validationSchema = Yup.object().shape({
 
 const ProfileForm = () => {
 
+    
+
     const userInfo = useSelector((state) => state.auth.user);
 
     console.log(userInfo);
@@ -61,7 +63,7 @@ const ProfileForm = () => {
                 {({ touched, errors }) => (
                     <Form>
                         <FormContainer>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex'}}>
                             <FormItem
                                     
                                     label="First Name"

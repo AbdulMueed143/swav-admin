@@ -56,11 +56,11 @@ const PackagesGrid = () => {
         setOpen(false);
     };
 
-        //We will be getting all the packages here ...
-        const fetchPackages = async () => {
-            const data = await getPackages();
-            setPackages(data);
-        };
+    //We will be getting all the packages here ...
+    const fetchPackages = async () => {
+        const data = await getPackages();
+        setPackages(data);
+    };
 
     useEffect(() => {
         // Call fetchServices on component mount

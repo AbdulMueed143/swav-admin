@@ -44,6 +44,7 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
 
     const save = async () => {
         setLoading(true);
+        setWeekDaysInfo([]);
 
         if(isObjectWithAtLeastOneKey(weekDaysInfo)) {
 
@@ -86,13 +87,12 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
         if(datesResult.status == -1) {
             console.log("Failed ", );
         } else {
-            console.log("Succeess", );
+            console.log("Succeess", datesResult);
         }
 
         //close this by calling
         handleUpdate();
         setLoading(false);
-        setWeekDaysInfo([]);
     }
     
 
@@ -151,7 +151,8 @@ export default function UpdateAvailabilityModalParent({updateBarber, open, handl
                         </Button>
 
                         <Button 
-                            className="ltr:mr-2 rtl:ml-2" 
+                            backgroundColor="teal"
+                            className="ltr:mr-2 rtl:ml-2 " 
                             onClick={() => save()}> 
                                 Save Updates
                         </Button> 

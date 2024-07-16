@@ -42,23 +42,6 @@ const ServicesGrid = () => {
         // Handle the form submission here using formValues
         console.log(values)
 
-        //client side check for duplicates
-        const existingServices = await getServices()
-
-        const isDuplicate = existingServices.some(
-            (service) =>
-                values.name.toLowerCase() === service.name.toLowerCase()
-        )
-
-        console.log(isDuplicate)
-
-        if (isDuplicate) {
-            return {
-                status: -1,
-                message: 'Service name already exists',
-            }
-        }
-
         //lets make call to server if there is no duplicate
         const data = await updateService(values)
         if (data.status === -1) {

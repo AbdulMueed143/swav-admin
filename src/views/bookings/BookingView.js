@@ -11,18 +11,14 @@ import { idToColor, hexToRgb } from '../utils/colorCalculator';
 import Button  from 'components/ui/Buttons/Button';
 import { Dialog, FormContainer, FormItem, Segment } from 'components/ui';
 import EditableBookingsListView from './EditableBookingsListView';
-import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 import Input from 'components/ui/Input';
 import { Field, Form, Formik } from 'formik';
 import { DatePicker, Select } from 'antd';
 import usePackagesService from 'utils/hooks/CustomServices/usePackagesService';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
-import { HiCheckCircle } from 'react-icons/hi';
 import { useDispatch } from 'react-redux';
-
 import './css/booking.css'
-import { getAvailableSlots } from 'services/BarberAvailabilityService';
 import useAvailabilityService from 'utils/hooks/CustomServices/useAvailabilityService';
 
 
@@ -31,7 +27,6 @@ const validationSchema = Yup.object().shape({
         .min(3, 'Too Short!')
         .required('Please input user name!'),
 });
-
 
 const Home = () => {
 
@@ -295,9 +290,9 @@ const Home = () => {
     function handleDateChange(arg) {
         if (arg.view.type === 'dayGridMonth') {
             setCalendarSettings({
-            dayMaxEvents: 3,
-            eventMaxStack: 3,
-            dayMaxEventRows: true
+                dayMaxEvents: 3,
+                eventMaxStack: 3,
+                dayMaxEventRows: true
             });
         } 
 
@@ -313,14 +308,15 @@ const Home = () => {
         setCurrentStartDate(new Date(today.getFullYear(), today.getMonth(), 1));
         setCurrentEndDate(new Date(today.getFullYear(), today.getMonth() + 1, 0));
         
+        fetchBookingsForMonth(checkedBarbers, currentStartDate, currentEndDate);
     }
 
     const renderEventContent = (eventInfo) => {
 
         // Format start and end times
-        const startTime = moment(eventInfo.event.start).format('h:mma'); // "1:00am"
-        const endTime = eventInfo.event.end ? moment(eventInfo.event.end).format('h:mma') : ''; // "2:00pm"
-        const startDate = moment(eventInfo.event.start).format('MMM DD, YYYY'); // "Dec 04, 2023"
+        const startTime = moment(eventInfo.event.start).format('h:mma');
+        const endTime = eventInfo.event.end ? moment(eventInfo.event.end).format('h:mma') : ''; 
+        const startDate = moment(eventInfo.event.start).format('MMM DD, YYYY');
     
         const timeText = endTime ? `${startTime} - ${endTime}` : `${startDate} at ${startTime}`;
 
@@ -346,12 +342,15 @@ const Home = () => {
                 minHeight: '65px',
                 boxSizing: 'border-box', // Include padding in the element's total width and height
             };
+
+            console.log("Event Information ", eventInfo.event?.extendedProps);
     
             return (
                 <div style={style}>
                     <span style={timeStyle}><b>{timeText}</b></span>
                     <span style={titleStyle}>{eventInfo.event.title}</span>
                     <span style={titleStyle}>{eventInfo.event.extendedProps.fullName}</span>
+                    <span style={titleStyle}>{eventInfo.event.extendedProps.userFullName}</span>
                     {eventInfo.event?.extendedProps?.serviceNames?.map((serviceName, index) => (
                         <span key={index} style={titleStyle}>{serviceName}</span>
                     ))}
@@ -378,9 +377,6 @@ const Home = () => {
             //show error ...
         }
         else {
-            //save the barbers in variable ...
-            const barberIds = response.data.map(booking => booking.barberId);
-            setCheckedBarbers(barberIds);
 
             const transformed = transformBookingsToCalendarEvents(response.data);
             setMonthlyBookings(transformed);
@@ -390,6 +386,9 @@ const Home = () => {
     }
 
     function transformBookingsToCalendarEvents(bookings) {
+
+        console.log("transforming booking ", bookings);
+
         return bookings.map((booking, index) => ({
             id: index.toString(),
             bookingId: booking.id,
@@ -397,6 +396,7 @@ const Home = () => {
             start: booking.startTime,
             end: booking.endTime,
             fullName: booking.barber.firstName + " " + booking.barber.lastName,
+            userFullName: booking.user.firstName + " " + booking.user.lastName,
             allDay: false,
             eventColor : colorMap.get(booking.barberId),
             serviceNames : booking.amenities?.map(amenity => amenity.name)
@@ -419,7 +419,7 @@ const Home = () => {
     const [barbers, setBarbers] = useState([]); // Initial state as an empty array
     
     function applyFilter() {
-        // fetchMonthlyAvailaibility(checkedBarbers, selectedYear, selectedMonth);
+        fetchBookingsForMonth(checkedBarbers, currentStartDate, currentEndDate);
     }
 
     const fetchBarbers = async () => {
@@ -452,6 +452,17 @@ const Home = () => {
 
     return <>
         <div class="flex flex-col h-full">
+
+        <div style={{ marginBottom: '5px', display : 'flex', justifyContent: 'flex-end' }} >
+            <button 
+                className="mr-2 mb-2"
+                variant="twoTone" 
+                color="teal-900" 
+                style={{ width: '155px', padding: '10px', backgroundColor: '#134E4A', fontSize : '13px', marginRight : '20px' }}
+                onClick={handleOpenAppointmentDialog}>
+                Add Appointment
+            </button>
+        </div>
 
             <Loading loading={loading} >
 
@@ -500,11 +511,7 @@ const Home = () => {
 
         </div>
 
-            <div>
-                <ButtonWithIcon 
-                    label="Add Appointment"
-                    onClick={handleOpenAppointmentDialog} />
-            </div>
+          
 
             <FullCalendar
                 showNonCurrentDates={false}

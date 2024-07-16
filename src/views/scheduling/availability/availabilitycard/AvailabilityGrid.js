@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import React from 'react'
 import useBookingServices from 'utils/hooks/useBookingService'
 import { Loading } from 'components/shared';
@@ -12,24 +12,73 @@ import UpdateAvailabilityModalParent from '../modals/UpdateAvailabilityModalPare
 const AvailabilityGrid = () => {
     // Initialize state for the search input
     const [loading, setLoading] = useState(false);
-
     const { getBarbers, addBarbers, disableBarber } = useBookingServices();
     const [barbers, setBarbers] = useState([]); // Initial state as an empty array
     const [search, setSearch] = useState('');
 
+    const barbersWithAvailability = barbers;
+
     const { getBarbersWithAvailability, updateBarberAvailability  } = useAvailabilityService();
 
-    const fetchBarbers = async () => {
-        if(loading)
-            return;
+    async function fetchBarbers()  {
 
         setLoading(true);
+        setBarbers([]);
+
         const barbersWithAvailability = await getBarbersWithAvailability();
 
         setBarbers(barbersWithAvailability);
+
         setLoading(false);
     };
 
+
+        //===============
+        const INITIAL_WEEK_DAYS = {
+            "MONDAY": [],
+            "TUESDAY": [],
+            "WEDNESDAY": [],
+            "THURSDAY": [],
+            "FRIDAY": [],
+            "SATURDAY": [],
+            "SUNDAY": []
+        };
+    
+        function computeAvailability(availabilities) {
+            const newWeekDaysState = JSON.parse(JSON.stringify(INITIAL_WEEK_DAYS));;
+            const withDayOfWeek = availabilities?.filter(item => item?.barberAvailabilitiesTemplate?.hasOwnProperty('dayOfWeek'));
+
+            withDayOfWeek?.forEach(availability => {
+                const day = availability.barberAvailabilitiesTemplate?.dayOfWeek;
+                const slots = availability.barberAvailabilitiesTemplate?.timeSlots;
+    
+                slots?.forEach(slot => {
+                        newWeekDaysState[day].push(slotToString(slot));
+                });
+            });
+    
+            return newWeekDaysState;
+        }
+    
+
+        function slotToString(slot) {
+            var startTimeHour = slot.startTime.hour % 12;
+            var endTimeHour = slot.endTime.hour % 12;
+        
+            // Convert 0 hour to 12 (for 12 AM and 12 PM)
+            startTimeHour = startTimeHour ? startTimeHour : 12;
+            endTimeHour = endTimeHour ? endTimeHour : 12;
+        
+            var startTimeAmPM = slot.startTime.hour >= 12 ? "pm" : "am";
+            var endTimeAmPM = slot.endTime.hour >= 12 ? "pm" : "am";
+        
+            var startTimeMinute = slot.startTime.minute < 10 ? `0${slot.startTime.minute}` : slot.startTime.minute;
+            var endTimeMinute = slot.endTime.minute < 10 ? `0${slot.endTime.minute}` : slot.endTime.minute;
+        
+            return `${startTimeHour}:${startTimeMinute}${startTimeAmPM} - ${endTimeHour}:${endTimeMinute}${endTimeAmPM}`;
+        }
+        /// ====================================
+    
     useEffect(() => {
         fetchBarbers();
     }, []); // Empty dependency array means the effect will only run once
@@ -54,7 +103,7 @@ const AvailabilityGrid = () => {
         setIsUpdateModalOpen(false);
         setSelectedUpdatableBarber(null);
 
-        fetchBarbers();
+        await fetchBarbers();
     }
 
     return (
@@ -64,7 +113,7 @@ const AvailabilityGrid = () => {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="ss"
+                placeholder="Search for Barber"
                 className="p-2 border rounded flex-grow"
                 />
             
@@ -72,8 +121,8 @@ const AvailabilityGrid = () => {
 
             <Loading loading={loading} >
                 <div className="flex gap-4 flex-wrap mt-4"> 
-                    {barbers.map((barber, index) => (
-                        <AvailabilityCard key={barber.barberId} currentBarber={barber} onUpdateClick={handleClickToOpenUpdateModal} />
+                    {barbersWithAvailability.map((barber, index) => (
+                        <AvailabilityCard currentBarber={barber} weekDays={computeAvailability(barber.barberAvailability)} onUpdateClick={handleClickToOpenUpdateModal} />
                     ))}
                 </div>
             </Loading>

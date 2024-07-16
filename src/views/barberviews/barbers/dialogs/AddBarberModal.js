@@ -209,42 +209,29 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                             />
                                         </FormItem>
 
-                                        <FormItem
-                                            label="Services"
-                                            invalid={errors.amenities && touched.amenities}
-                                            errorMessage={errors.amenities}
-                                        >
-                                            <Select
-                                                isMulti
-                                                placeholder="Please Select"
-                                                defaultValue={serviceMap}
-                                                options={serviceMap}
-                                                onChange={(selectedOptions) => {
-                                                    // Get selected amenities from services list using the selected names
-                                                    const selectedAmenities = selectedOptions.map(option => {
-                                                        return services.find(service => service.name === option.value);
-                                                    });
+                                {/* <FormItem
+                                    label="Services"
+                                    invalid={errors.amenities && touched.amenities}
+                                    errorMessage={errors.amenities}
+                                >
+                                    <Select
+                                        isMulti
+                                        placeholder="Please Select"
+                                        defaultValue={serviceMap}
+                                        options={serviceMap}
+                                        onChange={(selectedOptions) => {
+                                            // Get selected amenities from services list using the selected names
+                                            const selectedAmenities = selectedOptions.map(option => {
+                                                return services.find(service => service.name === option.value);
+                                            });
 
                                                     setSelectedAmenities(selectedAmenities);
 
                                                 }}
                                             />
-                                        </FormItem>
+                                        </FormItem> */}
 
-                                        <FormItem
-                                            label="Advance Booking Window in Weeks (1-52)"
-                                            invalid={errors.bookingWindowInWeeks && touched.bookingWindowInWeeks}
-                                            errorMessage={errors.bookingWindowInWeeks}
-                                        >
-                                            <Field
-                                                type="number" // Change the type to 'number' to allow only numeric inputs
-                                                name="bookingWindowInWeeks" // Make sure the 'name' attribute corresponds to your data model
-                                                placeholder="Enter weeks (1-52)"
-                                                component={Input}
-                                                min="1"  // Set the minimum value to 1
-                                                max="52" // Set the maximum value to 52
-                                            />
-                                        </FormItem>
+                                        
                                         {/* {fileErrorMessage && <div style={{ color: 'red' }}>{fileErrorMessage}</div>} */}
                                         {/* <FormItem
                                             label="Upload picture"

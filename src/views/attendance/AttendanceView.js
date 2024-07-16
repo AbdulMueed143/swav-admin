@@ -139,6 +139,7 @@ const Home = () => {
 
         <div className="md:w-[260px] max-w-[260px] mx-auto">
             <Calendar
+                style={{backgroundColor: 'white', padding: '0px'}}
                 onChange={handleDateClick}
                 onMonthChange={handleActiveStartDateChange}
                 value={value}

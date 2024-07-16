@@ -341,7 +341,6 @@ p {
 
 
 
-
   
 
 .container {
@@ -381,4 +380,26 @@ p {
     .desktopPaper {
         min-width: 800px; /* Minimum width only for desktop */
     }
+}
+
+
+/* Define the teal colors */
+:root {
+    --teal-700: #00796b; /* Teal 700 */
+    --teal-800: #004d40; /* Darker teal for hover effect */
+}
+
+/* Themed button class */
+.custom-themed-button {
+    background-color: var(--teal-700);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-themed-button:hover {
+    background-color: var(--teal-800);
 }

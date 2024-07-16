@@ -2,64 +2,7 @@ import {  Avatar, Card } from 'components/ui'
 import { useState, useEffect } from 'react';
 import { FaEdit } from 'react-icons/fa';
 
-const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
-
-    const INITIAL_WEEK_DAYS = {
-        "MONDAY": [],
-        "TUESDAY": [],
-        "WEDNESDAY": [],
-        "THURSDAY": [],
-        "FRIDAY": [],
-        "SATURDAY": [],
-        "SUNDAY": []
-    };
-
-    const { barberId, firstName, lastName, email, phoneNumber, barberAvailability, about, status } = currentBarber;
-    const [weekDays, setWeekDays] = useState(INITIAL_WEEK_DAYS);
-    useEffect(() => {
-        computeAvailability();
-    }, []);
-
-    function computeAvailability() {
-        setWeekDays(INITIAL_WEEK_DAYS);
-        const newWeekDaysState = INITIAL_WEEK_DAYS;
-
-        //Only availabilities that have day of the week 
-        const withDayOfWeek = currentBarber?.barberAvailability?.filter(item => item?.barberAvailabilitiesTemplate?.hasOwnProperty('dayOfWeek'));
-
-        withDayOfWeek?.forEach(availability => {
-            const day = availability.barberAvailabilitiesTemplate?.dayOfWeek;
-            const slots = availability.barberAvailabilitiesTemplate?.timeSlots;
-
-            slots?.forEach(slot => {
-                //TODO: I am adding this hack we need to check this letter on
-                //Problem, the slots are being repeated, happens because events are fired multiple times, was unable to figure this out right now
-                
-                if(!newWeekDaysState[day].includes(slotToString(slot)))
-                    newWeekDaysState[day].push(slotToString(slot));
-            });
-        });
-        
-        setWeekDays(newWeekDaysState);
-    }
-
-    function slotToString(slot) {
-        var startTimeHour = slot.startTime.hour % 12;
-        var endTimeHour = slot.endTime.hour % 12;
-    
-        // Convert 0 hour to 12 (for 12 AM and 12 PM)
-        startTimeHour = startTimeHour ? startTimeHour : 12;
-        endTimeHour = endTimeHour ? endTimeHour : 12;
-    
-        var startTimeAmPM = slot.startTime.hour >= 12 ? "pm" : "am";
-        var endTimeAmPM = slot.endTime.hour >= 12 ? "pm" : "am";
-    
-        var startTimeMinute = slot.startTime.minute < 10 ? `0${slot.startTime.minute}` : slot.startTime.minute;
-        var endTimeMinute = slot.endTime.minute < 10 ? `0${slot.endTime.minute}` : slot.endTime.minute;
-    
-        return `${startTimeHour}:${startTimeMinute}${startTimeAmPM} - ${endTimeHour}:${endTimeMinute}${endTimeAmPM}`;
-    }
-
+const AvailabilityCard = ({ currentBarber, weekDays, onUpdateClick }) => {
 
     const cardHeader = (
         <div className="flex items-center justify-between" style={{ padding: '10px' }}> {/* Flexbox adjustments */}
@@ -72,7 +15,7 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
                 />
                 <span>
                     <h5 className="font-bold my-1" style={{ fontSize: '16px', lineHeight: '1.2' }}>
-                        {firstName} {lastName}
+                        {currentBarber?.firstName} {currentBarber?.lastName}
                     </h5> 
                 </span>
             </div>
@@ -82,7 +25,6 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
             </div>
         </div>
     );
-    
     
     return (
         <div className="max-w-xs" style={{ width: '300px', height: '430px' }}>
@@ -107,11 +49,9 @@ const AvailabilityCard = ({ currentBarber, onUpdateClick }) => {
                         ))}
                     </div>
                 </div>
-
             </Card>
         </div>
     )
 }
 
 export default AvailabilityCard
-
