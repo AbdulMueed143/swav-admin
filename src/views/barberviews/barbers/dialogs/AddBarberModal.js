@@ -290,9 +290,6 @@ export default function AddBarberModal({ open, handleToSave, handleToClose }) {
                                                 component={Input}
                                             />
                                         </FormItem>
-                                        <button type="submit">Test submit</button>
-
-
                                     </FormContainer>
                                 </Form>
 
