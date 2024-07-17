@@ -1,4 +1,4 @@
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  Avatar, Card } from 'components/ui'
 import Button  from 'components/ui/Buttons/Button';
@@ -61,7 +61,11 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
                 src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
                 alt="card header"
             />
-            <FontAwesomeIcon icon={faCog} className="absolute top-0 right-0 m-2 text-white" onClick={() => onSettingsClicked(barber) } />
+            <FontAwesomeIcon 
+                icon={faEdit} 
+                className="absolute top-0 right-0 m-2 text-white" 
+                style={{width:'20px', height: '20px'}}
+                onClick={() => onSettingsClicked(barber) } />
         </div>
     );
     
@@ -69,6 +73,7 @@ const BarberCard = ({ barber, onStatusSwitcherToggle, onSettingsClicked }) => {
         <div className="max-w-xs" style={{ width: '300px', height: '500px' }}>
             <Card
                 clickable
+                onClick={() => onSettingsClicked(barber) }
                 className="hover:shadow-lg transition duration-150 ease-in-out dark:border dark:border-gray-600 dark:border-solid"
                 header={cardHeader}
                 footer={cardFooter}

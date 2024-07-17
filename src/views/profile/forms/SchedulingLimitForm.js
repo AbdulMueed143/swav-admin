@@ -70,6 +70,9 @@ const SchedulingLimitForm = () => {
             console.log("fetching shop detail response else", response);
 
             setBarberShopDetail(response);
+            console.log("Selected ", response)
+            const matchedIndex = options.findIndex(option => option.value === response.paddingInMinutes);
+            setSelectedPaddingOption(options[matchedIndex]);
         }
         setLoading(false);
     }
