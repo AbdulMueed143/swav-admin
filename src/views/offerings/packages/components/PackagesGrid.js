@@ -177,9 +177,9 @@ const PackagesGrid = () => {
             {(userInfo && Array.isArray(userInfo.roles) && userInfo.roles.length > 0 && (userInfo.roles[0] == 'OWNER')) ? 
             (
                 <ButtonWithIcon 
-                label="Add Package"
-                onClick={handleClickToOpen}
-                >
+                    label="Add Package"
+                    onClick={handleClickToOpen}
+                    >
                 </ButtonWithIcon>
             ) : 
             (
@@ -203,9 +203,9 @@ const PackagesGrid = () => {
                 onClose={onDeleteDialogClose}
                 onRequestClose={onDeleteDialogClose}
             >
-                <h5 className="mb-4">Deleting Service</h5>
+                <h5 className="mb-4">Deleting Package</h5>
                 <p>
-                    Are you sure you want to delete this service?
+                    Are you sure you want to delete this package?
                 </p>
                 <div className="text-right mt-6">
                     <Button
