@@ -25,7 +25,7 @@ export async function apiAddPackage(token, data) {
 export async function apiDeletePackage( token,data) {
     //Gotta add the id we want to delete ... 
     return ApiService.fetchData({
-        url: '/barber-service/api/v1/shop/package/' + data.id,
+        url: '/barber-service/api/v1/shop/package/id/' + data.id,
         method: 'delete',
         headers: {
             Authorization: `Bearer ${token}`

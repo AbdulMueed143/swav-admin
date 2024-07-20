@@ -97,6 +97,8 @@ export async function apiFetchBookings(token, barbersIds, fromDate, toDate) {
         bookingsToDate: toDate
     }
 
+    console.log("barber booking mate!", token);
+
     return ApiService.fetchData({
         url: '/barber-service/api/v1/shop/bookings',
         method: 'post',
