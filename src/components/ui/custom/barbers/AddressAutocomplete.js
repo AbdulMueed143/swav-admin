@@ -2,7 +2,7 @@ import React from 'react';
 import Autocomplete from 'react-google-autocomplete';
 import { useFormikContext } from 'formik';
 
-const AddressAutocomplete = ({ setBusinessName, setGoogleAddress, setWebsite, 
+const AddressAutocomplete = ({ currentAddress, setBusinessName, setGoogleAddress, setWebsite, 
   setPlaceId, setOpeningHours, setPhoneNumber, setPostCode,setState, setCity, setCountry, setLat, setLng }) => {
   const [value, setValue] = React.useState('');
 
