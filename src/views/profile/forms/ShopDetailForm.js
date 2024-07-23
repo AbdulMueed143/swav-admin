@@ -16,6 +16,7 @@ import useBusinesssService from 'utils/hooks/CustomServices/useBusinessService';
 import './shopdetail.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
+import { Loading } from 'components/shared';
 
 const validationSchema = Yup.object().shape({
 })
@@ -89,7 +90,7 @@ const ShopDetailForm = () => {
         }
         else {
             //refresh the page obviously mate!
-            fetchShopDetail();
+            await fetchShopDetail();
         }
         
         setLoading(false);
@@ -168,6 +169,7 @@ const ShopDetailForm = () => {
 
     return (
         <div>
+            <Loading loading={loading}> 
 
                 <div className="booking-info-container">
                     <h4>Booking Information</h4>
@@ -187,193 +189,190 @@ const ShopDetailForm = () => {
 
                 </div>
 
-               
+                <div style={{padding: '10px'}}></div>
+                <Formik
+                    initialValues={{
+                        businessName: shopName,
+                        shopName: shopName ,
+                        country: country,
+                        city: city,
+                        postcode: postCode,
+                        website: website,
+                        state: state,
+                        phoneNumber : phoneNumber,
+                        address: address,
+                        properties: {},
+                        placeId: placeId,
+                        bookingServiceUrl : bookingServiceUrl,
+                        padding: 30,
+                    }}
 
+                    enableReinitialize
+                    validationSchema={validationSchema}
+                    onSubmit={(values, { resetForm, setSubmitting }) => {
+                        setTimeout(() => {
+                            setSubmitting(false)
+                            resetForm()
+                        }, 400)
+                    }}
+                >
+                    {({ values, touched, errors, resetForm }) => (
+                        <Form>
+                            <FormContainer>
+                                <FormItem
+                                        label="Search Your Barber Shop To Point Via GPS"
+                                        invalid={errors.shopName && touched.shopName}
+                                        errorMessage={errors.shopName}>
 
-
-            <div style={{padding: '10px'}}></div>
-
-            <Formik
-                 initialValues={{
-                    businessName: shopName,
-                    shopName: shopName ,
-                    country: country,
-                    city: city,
-                    postcode: postCode,
-                    website: website,
-                    state: state,
-                    phoneNumber : phoneNumber,
-                    address: address,
-                    properties: {},
-                    placeId: placeId,
-                    bookingServiceUrl : bookingServiceUrl,
-                    padding: 30,
-                }}
-
-                enableReinitialize
-                validationSchema={validationSchema}
-                onSubmit={(values, { resetForm, setSubmitting }) => {
-                    setTimeout(() => {
-                        setSubmitting(false)
-                        resetForm()
-                    }, 400)
-                }}
-            >
-                {({ values, touched, errors, resetForm }) => (
-                    <Form>
-                        <FormContainer>
-                            <FormItem
-                                    label="Search Your Barber Shop To Point Via GPS"
+                                    <AddressAutocomplete 
+                                                setBusinessName={setShopName}
+                                                setGoogleAddress={setAddress}
+                                                setWebsite={setWebsite}
+                                                setPlaceId={setPlaceId}
+                                                setOpeningHours={setOpeningHours}
+                                                setPhoneNumber={setPhoneNumber}
+                                                setState={setState}
+                                                setCity={setCity}
+                                                setPostCode={setPostCode}
+                                                setCountry={setCountry}
+                                                setLat={setLat}
+                                                setLng={setLng}
+                                    />
+                                </FormItem>
+                                <FormItem
+                                    label="Shop Name"
                                     invalid={errors.shopName && touched.shopName}
                                     errorMessage={errors.shopName}>
 
-                                <AddressAutocomplete 
-                                            setBusinessName={setShopName}
-                                            setGoogleAddress={setAddress}
-                                            setWebsite={setWebsite}
-                                            setPlaceId={setPlaceId}
-                                            setOpeningHours={setOpeningHours}
-                                            setPhoneNumber={setPhoneNumber}
-                                            setState={setState}
-                                            setCity={setCity}
-                                            setPostCode={setPostCode}
-                                            setCountry={setCountry}
-                                            setLat={setLat}
-                                            setLng={setLng}
-                                />
-                            </FormItem>
-                            <FormItem
-                                label="Shop Name"
-                                invalid={errors.shopName && touched.shopName}
-                                errorMessage={errors.shopName}>
-
-                                <Field
-                                    type="text"
-                                    autoComplete="off"
-                                    name="shopName"
-                                    placeholder="Shop Name"
-                                    component={Input}
-                            />
-                            </FormItem>
-
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}> 
-
-                                <FormItem
-                                    label="Website"
-                                    invalid={errors.website && touched.website}
-                                    errorMessage={errors.website}
-                                    style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
-
                                     <Field
                                         type="text"
                                         autoComplete="off"
-                                        name="website"
-                                        placeholder="Website (Optional)"
+                                        name="shopName"
+                                        placeholder="Shop Name"
                                         component={Input}
                                 />
                                 </FormItem>
 
-                                <FormItem
-                                    label="Phone Number"
-                                    invalid={errors.phoneNumber && touched.phoneNumber}
-                                    errorMessage={errors.phoneNumber}
-                                    style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="phoneNumber"
-                                        placeholder="Phone Number (Optional)"
-                                        component={Input}
-                                />
-                                </FormItem>
-
-                            </div>
-                                <FormItem
-                                    label="Address"
-                                    invalid={errors.address && touched.address}
-                                    errorMessage={errors.address}>
-
-                                    <Field
-                                        type="text"
-                                        autoComplete="off"
-                                        name="address"
-                                        placeholder="Address"
-                                        component={Input}
-                                />
-                                </FormItem>
-
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}> 
 
                                     <FormItem
-                                        label="State"
-                                        invalid={errors.state && touched.state}
-                                        errorMessage={errors.state}
-                                    >
+                                        label="Website"
+                                        invalid={errors.website && touched.website}
+                                        errorMessage={errors.website}
+                                        style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
+
                                         <Field
                                             type="text"
                                             autoComplete="off"
-                                            name="state"
-                                            placeholder="State"
-                                            component={Input} />
+                                            name="website"
+                                            placeholder="Website (Optional)"
+                                            component={Input}
+                                    />
                                     </FormItem>
 
                                     <FormItem
-                                        label="City"
-                                        invalid={errors.city && touched.city}
-                                        errorMessage={errors.city}
-                                    >
-                                                    <Field
-                                                        type="text"
-                                                        autoComplete="off"
-                                                        name="city"
-                                                        placeholder="City"
-                                                        component={Input} />
-                                    </FormItem>
-
-                                    <FormItem
-                                        label="Postcode"
-                                        invalid={errors.postcode && touched.postcode}
-                                        errorMessage={errors.postcode}
-                                    >
+                                        label="Phone Number"
+                                        invalid={errors.phoneNumber && touched.phoneNumber}
+                                        errorMessage={errors.phoneNumber}
+                                        style={{ flex: 1, flexBasis: '50%', padding: 0, margin: 0 }}>
                                         <Field
                                             type="text"
                                             autoComplete="off"
-                                            name="postcode"
-                                            placeholder="Postcode"
-                                            component={Input} />
+                                            name="phoneNumber"
+                                            placeholder="Phone Number (Optional)"
+                                            component={Input}
+                                    />
                                     </FormItem>
 
                                 </div>
-
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-
                                     <FormItem
-                                        label="Country"
-                                        invalid={errors.country && touched.country}
-                                        errorMessage={errors.country}
-                                    >
-                                                    <Field
-                                                        type="text"
-                                                        autoComplete="off"
-                                                        name="country"
-                                                        placeholder="Country"
-                                                        component={Input} />
+                                        label="Address"
+                                        invalid={errors.address && touched.address}
+                                        errorMessage={errors.address}>
+
+                                        <Field
+                                            type="text"
+                                            autoComplete="off"
+                                            name="address"
+                                            placeholder="Address"
+                                            component={Input}
+                                    />
                                     </FormItem>
 
-                                </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+
+                                        <FormItem
+                                            label="State"
+                                            invalid={errors.state && touched.state}
+                                            errorMessage={errors.state}
+                                        >
+                                            <Field
+                                                type="text"
+                                                autoComplete="off"
+                                                name="state"
+                                                placeholder="State"
+                                                component={Input} />
+                                        </FormItem>
+
+                                        <FormItem
+                                            label="City"
+                                            invalid={errors.city && touched.city}
+                                            errorMessage={errors.city}
+                                        >
+                                                        <Field
+                                                            type="text"
+                                                            autoComplete="off"
+                                                            name="city"
+                                                            placeholder="City"
+                                                            component={Input} />
+                                        </FormItem>
+
+                                        <FormItem
+                                            label="Postcode"
+                                            invalid={errors.postcode && touched.postcode}
+                                            errorMessage={errors.postcode}
+                                        >
+                                            <Field
+                                                type="text"
+                                                autoComplete="off"
+                                                name="postcode"
+                                                placeholder="Postcode"
+                                                component={Input} />
+                                        </FormItem>
+
+                                    </div>
+
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+
+                                        <FormItem
+                                            label="Country"
+                                            invalid={errors.country && touched.country}
+                                            errorMessage={errors.country}
+                                        >
+                                                        <Field
+                                                            type="text"
+                                                            autoComplete="off"
+                                                            name="country"
+                                                            placeholder="Country"
+                                                            component={Input} />
+                                        </FormItem>
+
+                                    </div>
 
 
 
-                            
-                                <div className='right-column' style={{marginRight : '1px'}}>
-                                    <ButtonWithIcon label="Update" onClick={() => handleUpdate(values)} />
-                                </div>
-            
-                        </FormContainer>
-                    </Form>
-                )}
-            </Formik>
+                                
+                                    <div className='right-column' style={{marginRight : '1px'}}>
+                                        <ButtonWithIcon label="Update" onClick={() => handleUpdate(values)} />
+                                    </div>
+                
+                            </FormContainer>
+                        </Form>
+                    )}
+                </Formik>
+            </Loading>
         </div>
+            
     )
 }
 
