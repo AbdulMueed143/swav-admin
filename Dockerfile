@@ -7,6 +7,19 @@ RUN mkdir /app-ui
 RUN mv ./node_modules ./app-ui
 WORKDIR /app-ui
 COPY . .
+
+
+#adding the variables
+ARG REACT_APP_GOOGLE_API_KEY
+ENV REACT_APP_GOOGLE_API_KEY=$REACT_APP_GOOGLE_API_KEY
+
+ARG REACT_APP_BARBER_BOOKING_SERVICE_URL
+ENV REACT_APP_BARBER_BOOKING_SERVICE_URL=$REACT_APP_BARBER_BOOKING_SERVICE_URL
+
+ARG REACT_APP_BASE_URL
+ENV REACT_APP_BASE_URL=$REACT_APP_BASE_URL
+
+
 # in this step the static React files are created. For more info see package.json
 RUN npm run build
 
