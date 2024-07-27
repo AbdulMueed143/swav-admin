@@ -67,8 +67,6 @@ const SchedulingLimitForm = () => {
             setServerErrorMessage(response.message);
         }
         else {
-            console.log("fetching shop detail response else", response);
-
             setBarberShopDetail(response);
             console.log("Selected ", response)
             const matchedIndex = options.findIndex(option => option.value === response.paddingInMinutes);

@@ -32,16 +32,12 @@ const CancellationPolicyForm = () => {
             let payload = {
                 cancellationPolicy : values.cancellationPolicy,
             }
-
-            console.log("Payload ", payload);
-
             const response = await updateBarberShopCancellationPolicies(payload);
 
             if(response.status == -1) {
                 
             }
             else {
-                console.log("fetching shop detail response else", response);
                 await fetchShopDetail();
             }
 
