@@ -23,7 +23,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # copy the .conf template
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 
 ## Remove default nginx index page and replace it with the static files we created in the first step
 RUN rm -rf /usr/share/nginx/html/*
