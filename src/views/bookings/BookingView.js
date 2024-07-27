@@ -34,10 +34,7 @@ const Home = () => {
     const today = new Date();
     const colorMap = new Map();
     const userInfo = useSelector((state) => state.auth.user);
-    const dispatch = useDispatch();
-
-    console.log("User information, barber information ", userInfo);
-    
+    const dispatch = useDispatch();    
 
     const { fetchBookings, updateBarberBookings } = useBookingServices();
     const { getServices } = useBookingServices();
@@ -107,6 +104,7 @@ const Home = () => {
     ];
     //The services ends there
 
+    console.log("Services information ", services);
 
     const [selectedPackage, setSelectedPackage] = useState(null);
     const [selectedService, setSelectedService] =  React.useState([]);
@@ -564,7 +562,6 @@ const Home = () => {
                 isOpen={isEditBookingDialogOpen}
                  onClose={handleOnEditBookingDialogClose}
                 onRequestClose={handleOnEditBookingDialogClose}
-                style={{ minWidth: '680px', overflow:'auto' }}
                 >
                 <h5 className="mb-4">Edit Bookings</h5>
                 <EditableBookingsListView selectedDate={currentSelectedDate} bookingData={monthlyBookings} onBarberStatusChange={onHandleBabarberStatusChange} />
@@ -588,12 +585,12 @@ const Home = () => {
                 isOpen={isCreateAppointmentDialogOpen}
                  onClose={handleOpenAppointmentDialogClose}
                 onRequestClose={handleOpenAppointmentDialogClose}
-                style={{ minWidth: '680px', overflow:'auto' }}
-                >
+            >
                 <h5 className="mb-4">Create Booking</h5>
 
 
                 <Formik
+
                     enableReinitialize
                     initialValues={{
                         barberName: userInfo.firstName + ' '+ userInfo.lastName,
@@ -609,7 +606,9 @@ const Home = () => {
                 >
 
             {({ values, touched, errors, resetForm, submitForm }) => (
-                <div>
+                <div 
+                style={{ height: '80vh', overflow:'auto' }}
+                >
 
                 <Form>
                             <FormContainer>
@@ -696,6 +695,7 @@ const Home = () => {
                                             <Field type="checkbox" name="segment" value={service.name} />
                                             <div className="segment-content">
                                                 <div className="segment-title">{service.name}</div>
+                                                <div className="segment-title">({service.price}$ / {service.averageTimeInMinutes} Min)</div>
                                                 <div className="segment-description">{service.description}</div>
                                             </div>
                                             </label>

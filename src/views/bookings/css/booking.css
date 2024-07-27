@@ -1,7 +1,12 @@
 .segment-container {
     display: flex;
     gap: 10px;
+    overflow-y: auto;
+    overflow-x: auto; /* Ensure horizontal scrolling if needed */
+    border: 1px solid #ccc; /* Optional: add a border */
     margin-bottom: 20px;
+    padding: 10px;
+    flex-wrap: nowrap; /* Keep items in a single line */
 }
 
 .available-time-container {
@@ -21,6 +26,7 @@
     align-items: center;
     transition: border-color 0.3s;
     position: relative;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .available-time-option {
