@@ -22,12 +22,9 @@ const validationSchema = Yup.object().shape({
 })
 
 const ShopDetailForm = () => {
-
-    console.log("The react env variables key ",  process.env.REACT_APP_GOOGLE_API_KEY);
-
-    const bookingURL = process.env.REACT_APP_BARBER_BOOKING_SERVICE_URL;
-    // const bookingURL = "https://swav-booking-frontend-hk57lvgnsq-ts.a.run.app";
-    console.log("The react env variables  booking url",  bookingURL);
+    
+    // const bookingURL = process.env.REACT_APP_BARBER_BOOKING_SERVICE_URL;
+    const bookingURL = "https://swav-booking-frontend-hk57lvgnsq-ts.a.run.app";
 
     const [bookingServiceUrl, setBookingServiceUrl] = useState("");
     const [shopName, setShopName] = useState("");
