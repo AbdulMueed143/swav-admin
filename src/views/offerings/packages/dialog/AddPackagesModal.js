@@ -204,7 +204,7 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
 
                                         <span>
                                         <h6 className="text-sm">Total</h6>
-                                            <span className="text-xs"> <p>{totalCost} AUD, {totalTime} Mint</p></span>
+                                            <span className="text-xs"> <p>{totalCost} AUD, {totalTime} Mins</p></span>
                                         </span>
 
                                         <span>

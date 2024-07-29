@@ -58,7 +58,7 @@ const PackagesCard = ({currentPackage,  onUpdateClick, onDeleteClick}) => {
                             shape="circle"
                             src="https://images.unsplash.com/photo-1630827020718-3433092696e7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVucyUyMGhhaXJjdXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80"
                         />
-                        <span className="text-sm">{service.name}, {service.price} AUD, {service.time} Mint</span>
+                        <span className="text-sm">{service.name}, {service.price} AUD, {service.time} Mins</span>
                     </div>
                 ))}
         {services.length > MAX_SERVICES_DISPLAYED && (

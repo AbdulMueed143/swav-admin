@@ -17,7 +17,7 @@ const ServiceCard = ({ service, onUpdateClick, onDeleteClick }) => {
                 <span>
                     <h6 className="text-sm">Duration</h6>
                     <span className="text-xs">
-                        Takes approx {averageTimeInMinutes} Mint
+                        Takes approx {averageTimeInMinutes} mins
                     </span>
                 </span>
             </div>
