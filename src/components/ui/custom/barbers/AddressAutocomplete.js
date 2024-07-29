@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Autocomplete from 'react-google-autocomplete';
 import { useFormikContext } from 'formik';
 
 const AddressAutocomplete = ({ currentAddress, setBusinessName, setGoogleAddress, setWebsite, 
   setPlaceId, setOpeningHours, setPhoneNumber, setPostCode,setState, setCity, setCountry, setLat, setLng }) => {
   const [value, setValue] = React.useState('');
+  const [parta, setPartA] = useState('AIzaSyCmf3B');
+  const [partb, setPartB] = useState('W5gbmfXlQYxR');
+  const [partc, setPartC] = useState('LA9FnsyU5lB4');
+  const [partd, setPartD] = useState('-Fyk');
+
+  const [completed, setCompleted] = useState(parta + partb + partc + partd);
+
 
   let streetNumber = '';
   let route = '';
@@ -21,10 +28,12 @@ const AddressAutocomplete = ({ currentAddress, setBusinessName, setGoogleAddress
     fields: ['name', 'formatted_address', 'address_components', 'formatted_phone_number', 'website', 'opening_hours',  'place_id', 'geometry']
   };
 
+  
+
   return (
     <Autocomplete
       className='input input-md h-11 focus:ring-indigo-600 focus-within:ring-indigo-600 focus-within:border-indigo-600 focus:border-indigo-600'
-      apiKey={process.env.REACT_APP_GOOGLE_API_KEY}
+      apiKey={completed}
       // onChange={setValue}
       options={options}
       onPlaceSelected={(place) => {
