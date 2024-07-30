@@ -294,9 +294,15 @@ const Home = () => {
             });
         } 
 
+        const getFrom = arg.start;
+        const getTill = arg.end;
+
         //Get current Date
         const currentDate = arg.start;
         currentDate.setMonth(currentDate.getMonth()); // Add one month, now we are at current month
+
+
+        console.log("Selected arg ",arg);
 
         //current month will always be +1
         const currentMonth = currentDate.getMonth() + 1;
@@ -305,8 +311,10 @@ const Home = () => {
         //first time set current date ...
         setCurrentStartDate(new Date(today.getFullYear(), today.getMonth(), 1));
         setCurrentEndDate(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+
+        console.log("Fetching for the month and year ", currentMonth, currentYear,);
         
-        fetchBookingsForMonth(checkedBarbers, currentStartDate, currentEndDate);
+        fetchBookingsForMonth(checkedBarbers, getFrom, getTill);
     }
 
     const renderEventContent = (eventInfo) => {
@@ -362,14 +370,14 @@ const Home = () => {
     //Bookings for range of dates ...
     //also barberId or Id's
     // ================================================================= fetch data =========================================================
-    const fetchBookingsForMonth = async (barberIds, year, month) => {
+    const fetchBookingsForMonth = async (barberIds, from, till) => {
         barberIds.forEach((barberId, index) => {
             const color = idToColor(barberId);
             colorMap.set(barberId, color);
         });
 
         setIsFetchingData(true);
-        const response =  await fetchBookings(barberIds, formatDateToYYYYMMDD(currentStartDate), formatDateToYYYYMMDD(currentEndDate));
+        const response =  await fetchBookings(barberIds, formatDateToYYYYMMDD(from), formatDateToYYYYMMDD(till));
 
         if(response.status == -1) {
             //show error ...
