@@ -130,11 +130,6 @@ const Home = () => {
     const handleCreateBookingFormSubmit = async (values) => {
 
         setLoadingBookingCreate(true);
-        // console.log('Selected Time:', values.availableTime);
-        // console.log('Selected Services:', values.segment);
-        // console.log('Selected Values:', values);
-
-
          //need to send request to create the booking ...
          const payload = {
             "bookingStartDateTime": values.availableTime,
@@ -147,14 +142,8 @@ const Home = () => {
             // "packagesIds": selectedPackage.id,
         }
 
-        console.log("Booking Request ", payload);
-
-        //send request to create the booking .... 
-
         //now se send the request to mark bookings as completed
         const response = await createBooking(payload);
-
-        console.log("Server responses ", response);
 
         if(response.status == -1) {
             //failed 
@@ -164,16 +153,12 @@ const Home = () => {
         else {
             //otherwise
             //reload
-
             setLoadingBookingCreate(false);
-        }
 
+            fetchBookingsForMonth(checkedBarbers, currentStartDate, currentEndDate);
+        }
         setIsCreateAppointmentDialogOpen(false);
 
-    }
-
-    function validateCreateBookingItems() {
-        //Make sure either 1 service or package is selected
     }
 
     const { fetchAvailabilitySlots  } = useAvailabilityService();
@@ -206,8 +191,6 @@ const Home = () => {
     }
 
     const handleSetSelectedPackage  = (event) => {
-
-        console.log("Selected ", event, event.target)
         setSelectedPackage(event);
     };
 
@@ -392,8 +375,6 @@ const Home = () => {
     }
 
     function transformBookingsToCalendarEvents(bookings) {
-
-        console.log("transforming booking ", bookings);
 
         return bookings.map((booking, index) => ({
             id: index.toString(),
@@ -604,7 +585,6 @@ const Home = () => {
                         barberName: userInfo.firstName + ' '+ userInfo.lastName,
                         bookingDate: new Date(),
                         userMobileNumber: '',
-
                     }}
                     validationSchema={validationSchema}
                     onSubmit={(values, { setSubmitting }) => {
@@ -639,22 +619,6 @@ const Home = () => {
                                         </FormItem>
                                 </div>
 
-                                <div>
-
-                                    <FormItem 
-                                        label="User (Mobile Number)">
-                                            <div>Please make sure your add correct mobile number.</div>
-                                            <Field
-                                                placeholder="User Mobile Number (0413 XXX XXX)"
-                                                asterick
-                                                type="text"
-                                                autoComplete="off"
-                                                name="userMobileNumber"
-                                                component={Input}
-                                           / >
-                                    </FormItem>
-                                </div>
-
                                 <FormItem
                                     asterisk
                                     label="Booking Date"
@@ -667,6 +631,7 @@ const Home = () => {
                                             }}
                                             placeholder="Pick booking date" />
                                 </FormItem>
+                                
 
                                 <div>
                                 <FormItem
@@ -689,6 +654,22 @@ const Home = () => {
 
                                     </FormItem>
                                 </div>
+
+                                <div>
+
+<FormItem 
+    label="User (Mobile Number)">
+        <div>Please make sure your add correct mobile number.</div>
+        <Field
+            placeholder="User Mobile Number (0413 XXX XXX)"
+            asterick
+            type="text"
+            autoComplete="off"
+            name="userMobileNumber"
+            component={Input}
+       / >
+</FormItem>
+</div>
 
                                 <div>
                                     <FormItem
