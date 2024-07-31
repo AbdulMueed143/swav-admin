@@ -119,7 +119,6 @@ const Home = () => {
                 //failed
             }
             else {
-                console.log("Bookigns we set ",response.data);
                 setBookings(response.data);
             }
 
