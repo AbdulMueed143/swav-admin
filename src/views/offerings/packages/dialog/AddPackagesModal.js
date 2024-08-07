@@ -12,6 +12,7 @@ import * as Yup from 'yup'
 import { Autocomplete } from '@mui/lab';
 import useBookingServices from 'utils/hooks/useBookingService'
 import Select from 'components/ui/Select'
+import ButtonWithIcon from 'components/ui/custom/barbers/ButtonWithIcon';
 
 const validationSchema = Yup.object().shape({
     // input: Yup.string()
@@ -71,32 +72,33 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
             let total = selectedAmenities.map(service => service.price).reduce((a, b) => a + b, 0);
             setTotalTime(time);
             setTotalCost(total);
-            const discount = getDiscountValue(formIkRef.current?.values?.discountPercentage || 0);
-            setDiscountedCost(total - discount);
+            // const discount = getDiscountValue(formIkRef.current?.values?.discountPercentage || 0);
+            setDiscountedCost(total - 0);
         }
 
     }, [selectedAmenities]);
 
     const handleChange = (values) => {
-        setDiscountedCost(totalCost - getDiscountValue(values.discountPercentage)); 
+        //the values, the only problem is that it should not be greater than total cost
+        setDiscountedCost(totalCost -  values.discountedAmount); 
     };
 
-    const getDiscountValue = (discountPercentage) => {
-        if(discountPercentage >=0 && discountPercentage <= 100) {
-            return totalCost * (discountPercentage/100);
-        }    
-    }
+    // const getDiscountValue = (discountPercentage) => {
+    //     if(discountPercentage >=0 && discountPercentage <= 100) {
+    //         return totalCost * (discountPercentage/100);
+    //     }    
+    // }
 
 
     return (
         <div stlye={{}}>
             <Dialog open={open} onClose={handleToClose}  fullWidth={true}
-            PaperProps={{
-                style: {
-                    minWidth: '400px', // Your desired minimum width
-                    maxWidth: '600px', // Your desired maximum width
-                },
-                }}> 
+                PaperProps={{
+                        style: {
+                            minWidth: '400px', // Your desired minimum width
+                            maxWidth: '600px', // Your desired maximum width
+                        },
+            }}> 
 
                 <DialogTitle>{"Add Package"}</DialogTitle>
 
@@ -106,6 +108,7 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
                     enableReinitialize
                     initialValues={{
                         discountPercentage : 0,
+                        discountedAmount : 0,
                         name: '',
                         amenities: services,
                         description: '',
@@ -178,25 +181,26 @@ export default function AddPackageModal({open,handleToSave, handleToClose}) {
 
                             <FormItem
                             asterisk
-                                label="Discount Percentage (%)"
-                                invalid={errors.discountPercentage && touched.discountPercentage}
-                                errorMessage={errors.discountPercentage}
+                                label="Discounted Amount($)"
+                                invalid={errors.discountedAmount && touched.discountedAmount}
+                                errorMessage={errors.discountedAmount}
                                 >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <Field
-                                    type="number"
-                                    name="discountPercentage"
-                                    placeholder="Discount"
-                                    component={Input}
-                                    inputMode="numeric"
-                                    min="0"
-                                    max="100"
-                                    style={{ flex: 1 }}
+                                        type="number"
+                                        name="discountedAmount"
+                                        placeholder="Discount"
+                                        component={Input}
+                                        inputMode="numeric"
+                                        min="0"
+                                        style={{ flex: 1 }}
                                     />
-                                    <span>%</span>
-                                    <Button className="mr-2 mb-2" variant="twoTone" color="green-600" onClick={() => handleChange(values)}>
-                                        Add Discount
-                                    </Button>
+                                    <ButtonWithIcon 
+                                        label="Add Discount"
+                                        onClick={() => handleChange(values)}
+                                    >
+                                       
+                                    </ButtonWithIcon>
                                 </div>
                             </FormItem>
 

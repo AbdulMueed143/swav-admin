@@ -93,7 +93,7 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
 
     const handleChange = (values) => {
         console.log("Changing Discount ", values.discountPercentage, totalCost, getDiscountValue(values.discountPercentage));
-        setDiscountedCost(totalCost - getDiscountValue(values.discountPercentage)); 
+        setDiscountedCost(totalCost - values.discountedAmount); 
     };
 
     const getDiscountValue = (discountPercentage) => {
@@ -192,14 +192,14 @@ export default function UpdatePackageModal({packageData, servicesAvailable, open
 
                             <FormItem
                             asterisk
-                                label="Discount Percentage (%)"
-                                invalid={errors.discountPercentage && touched.discountPercentage}
-                                errorMessage={errors.discountPercentage}
+                                label="Discount Amount ($)"
+                                invalid={errors.discountedAmount && touched.discountedAmount}
+                                errorMessage={errors.discountedAmount}
                                 >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',   }}>
                                     <Field
                                     type="number"
-                                    name="discountPercentage"
+                                    name="discountedAmount"
                                     placeholder="Discount"
                                     component={Input}
                                     inputMode="numeric"

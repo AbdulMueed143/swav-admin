@@ -20,7 +20,7 @@ const PackagesCard = ({currentPackage,  onUpdateClick, onDeleteClick}) => {
             <div className="flex items-center mb-2">
                 <span>
                     <h6 className="text-sm">Total</h6>
-                    <span className="text-xs"> <p>{discountedCost} AUD, {totalTime} Mint</p></span>
+                    <span className="text-xs"> <p>{discountedCost} AUD, {totalTime} Mins</p></span>
                 </span>
             </div>
 
